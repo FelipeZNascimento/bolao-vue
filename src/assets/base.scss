@@ -1,9 +1,84 @@
+/* ------------------- */
+/* ---- VARIABLES ---- */
+/* ------------------- */
+$spacings: (
+  "none": 0px,
+  "xxs": 2px,
+  "xs": 4px,
+  "s": 8px,
+  "m": 12px,
+  "l": 16px,
+  "xl": 20px,
+  "xxl": 32px,
+  "xxxl": 64px
+);
+
+$font-sizes: (
+  "xxs": 8px,
+  "xs": 12px,
+  "s": 16px,
+  "m": 18px,
+  "m2": 20px,
+  "l": 24px,
+  "xl": 36px,
+  "xxl": 48px
+);
+
+$colors: (
+  "gold": #f4b303,
+  "green": #197b30,
+  "mint": #29c84e,
+  "blue": #1565c0,
+  "sky": #03a9f4,
+  "red": #be2a2a,
+  "orange": #dc6d31,
+  "navy": #1b2f42,
+
+  "grey1": #eceff1,
+  "grey2": #cfd8dc,
+  "grey3": #9da4a7,
+  "grey4": #757a7c,
+  "grey5": #545859,
+  "black": #000000
+);
+/* ------------------- */
+/* ---- VARIABLES ---- */
+/* ------------------- */
+
+/* -------------------- */
+/* ------ MIXINS ------ */
+/* -------------------- */
+:root {
+  @each $key_name, $pixels in $spacings {
+    --#{$key_name}-spacing: #{$pixels};
+  }
+
+  @each $key_name, $color in $colors {
+    --bolao-c-#{$key_name}: #{$color};
+    --bolao-c-#{$key_name}-t1: #{$color}44;
+    --bolao-c-#{$key_name}-t2: #{$color}88;
+    --bolao-c-#{$key_name}-t3: #{$color}cc;
+  }
+
+  @each $key_name, $font-size in $font-sizes {
+    --#{$key_name}-font-size: #{$font-size};
+  }
+}
+/* -------------------- */
+/* ------ MIXINS ------ */
+/* -------------------- */
+
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
+  --bolao-c-navbar: #1b2b3a;
   --nav-disabled: #545859;
   --nav-link: #9da4a7;
   --nav-link-hover: white;
-  --max-width: 1280px;
+  --page-width: 1280px;
+
+  // https://m3.material.io/
+  // --p-button-primary-background: var(--bolao-c-blue) !important;
+  // https://m3.material.io/
 
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -28,6 +103,8 @@
 
 /* semantic color variables for this project */
 :root {
+  --color-contrast: var(--vt-c-black);
+
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
@@ -42,6 +119,8 @@
 }
 
 [data-theme="dark"] {
+  --color-contrast: var(--vt-c-white);
+
   --color-background: var(--vt-c-black);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
@@ -60,7 +139,9 @@
   margin: 0;
   font-weight: normal;
 }
-
+html {
+  // scrollbar-gutter: stable;
+}
 body {
   min-height: 100vh;
   color: var(--color-text);

@@ -9,12 +9,12 @@ export enum ROUTE_ID {
 }
 
 export const ROUTES = [
-  {
-    id: ROUTE_ID.HOME,
-    display: 'Home',
-    url: '/home',
-    needCredentials: false,
-  },
+  // {
+  //   id: ROUTE_ID.HOME,
+  //   display: 'Home',
+  //   url: '/home',
+  //   needCredentials: false,
+  // },
   {
     id: ROUTE_ID.RESULTS,
     display: 'Resultados',
@@ -28,8 +28,8 @@ export const ROUTES = [
     needCredentials: true,
   },
   { id: ROUTE_ID.EXTRAS, display: 'Extras', url: '/extras', needCredentials: true },
-  { id: ROUTE_ID.RECORDS, display: 'Records', url: '/records', needCredentials: false },
-  { id: ROUTE_ID.RANKING, display: 'Ranking', url: '/ranking', needCredentials: false },
+  // { id: ROUTE_ID.RECORDS, display: 'Records', url: '/records', needCredentials: false },
+  // { id: ROUTE_ID.RANKING, display: 'Ranking', url: '/ranking', needCredentials: false },
   { id: ROUTE_ID.RULES, display: 'Regras', url: '/regras', needCredentials: false },
 ];
 
