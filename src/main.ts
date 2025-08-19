@@ -28,6 +28,9 @@ import PrimeTag from 'primevue/tag';
 import PrimeColorPicker from 'primevue/colorpicker';
 import PrimeToast from 'primevue/toast';
 import PrimeToastService from 'primevue/toastservice';
+import PrimeRadioButton from 'primevue/radiobutton';
+import PrimeRadioButtonGroup from 'primevue/radiobuttongroup';
+import PrimeDivider from 'primevue/divider';
 
 /* ---- PrimeVue ---- */
 
@@ -96,6 +99,9 @@ app.component('PrimeAutocomplete', PrimeAutocomplete);
 app.component('PrimeTag', PrimeTag);
 app.component('PrimeColorPicker', PrimeColorPicker);
 app.component('PrimeToast', PrimeToast);
+app.component('PrimeRadioButton', PrimeRadioButton);
+app.component('PrimeRadioButtonGroup', PrimeRadioButtonGroup);
+app.component('PrimeDivider', PrimeDivider);
 
 app.directive('tooltip', PrimeTooltip);
 

@@ -1,17 +1,24 @@
 <template>
-  <div class="outer-match" @click="handleMatchClick">
+  <div
+    class="outer-match"
+    :class="{ line: !isGridMode, grid: isGridMode }"
+    @click="handleMatchClick"
+  >
     <ClockComponent
       :ribbon="ribbon"
       :timestamp="match.timestamp"
       :status="match.status"
       :clock="match.clock"
     />
-    <ScoreComponent :away="match.away" :home="match.home" />
+    <ScoreComponent
+      :isBetting="isBetting"
+      :isGridMode="isGridMode"
+      :match="match"
+      :activeUserBet="match.loggedUserBets"
+    />
   </div>
   <BetsModal
-    :away="match.away"
-    :home="match.home"
-    :bets="match.bets"
+    :match="match"
     :activeUserBet="match.loggedUserBets"
     :correctBets="correctBets"
     :isOpen="isBetsModalOpen"
@@ -22,13 +29,24 @@
 import type { Match } from '@/stores/matches';
 import ClockComponent from './ClockComponent.vue';
 import ScoreComponent from './ScoreComponent.vue';
+
 import { computed, ref } from 'vue';
 import BetsModal from './BetsModal/BetsModal.vue';
 import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
-const props = defineProps<{
-  match: Match;
-}>();
 
+const props = withDefaults(
+  defineProps<{
+    match: Match;
+    isGridMode?: boolean;
+    isBetting?: boolean;
+  }>(),
+  {
+    isBetting: false,
+    isGridMode: false,
+  },
+);
+
+// ------ Refs ------
 const isBetsModalOpen = ref(false);
 
 // ------ Computed Properties ------
@@ -52,6 +70,9 @@ const ribbon = computed(() => {
 
 // ------ Functions ------
 function handleMatchClick() {
+  if (props.isBetting) {
+    return;
+  }
   isBetsModalOpen.value = true;
 }
 
@@ -62,15 +83,23 @@ function handleCloseModal() {
 <style scoped>
 .outer-match {
   display: flex;
-  height: 60px;
-  width: 100%;
-  margin: var(--s-spacing) 0;
-  opacity: 0.8;
+  opacity: 1;
   transition: 0.2s;
   cursor: pointer;
 
   &:hover {
-    opacity: 1;
+    opacity: 0.8;
   }
+}
+
+.line {
+  height: 60px;
+  width: 100%;
+}
+
+.grid {
+  flex-direction: column;
+  height: 150px;
+  width: 250px;
 }
 </style>

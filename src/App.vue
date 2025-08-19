@@ -34,7 +34,6 @@ function initializationCallback(isSuccess: boolean) {
 startupService.initialize(initializationCallback).then(() => {
   rankingService.initialize();
   clockStore.startClock();
-  rankingService.initialize();
 });
 
 // ------ Computed ------

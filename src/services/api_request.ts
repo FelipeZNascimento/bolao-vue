@@ -16,8 +16,8 @@ export default class ApiService {
 
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error);
+      const errrorObject = await response.json();
+      throw new Error(errrorObject.error);
     }
 
     return (await response.json()) as T;

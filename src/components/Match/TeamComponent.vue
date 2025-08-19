@@ -1,7 +1,7 @@
 <template>
   <div class="outer-team" :style="{ backgroundColor: team.background, color: team.foreground }">
-    <span class="team-shield"><img :src="teamLogoUrl" /></span>
-    <span class="team-alias">{{ team.alias }}</span>
+    <span class="team-shield"><img :src="`/team_logos/${props.team.id}.gif`" /></span>
+    <span class="team-alias">{{ isGridMode ? team.code : team.alias }}</span>
     <span class="team-score">{{ team.score }}</span>
   </div>
 </template>
@@ -10,9 +10,9 @@ import type { Team } from '@/stores/matches';
 
 const props = defineProps<{
   team: Team;
+  isGridMode: boolean;
+  isHomeTeam?: boolean;
 }>();
-
-const teamLogoUrl = `/team_logos/${props.team.id}.gif`;
 </script>
 <style scoped>
 .outer-team {

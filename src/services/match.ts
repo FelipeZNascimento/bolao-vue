@@ -41,4 +41,28 @@ export default class MatchService {
       this.matchesStore.setError(new Error(error));
     }
   }
+
+  public async updateBet(
+    matchId: number,
+    betValue: number,
+    callback?: (isSuccess: boolean, error?: Error) => void,
+  ) {
+    const betObject = {
+      matchId,
+      betValue,
+    };
+
+    try {
+      const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
+      // Deal with the response update the match in the store
+
+      if (callback) {
+        callback(true);
+      }
+    } catch (error: unknown) {
+      if (callback) {
+        callback(false, error as Error);
+      }
+    }
+  }
 }

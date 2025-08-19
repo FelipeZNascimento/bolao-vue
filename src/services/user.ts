@@ -7,14 +7,20 @@ import {
 } from '@/stores/activeProfile';
 import { faIconsList } from '@/constants/font-awesome';
 import { randomHexColorGenerator } from '@/util/colorGenerator';
+import { useRankingStore } from '@/stores/ranking';
+import { useMatchesStore } from '@/stores/matches';
 
 export default class UserService {
   private apiRequest;
   private activeProfileStore;
+  private rankingStore;
+  private matchesStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
+    this.rankingStore = useRankingStore();
+    this.matchesStore = useMatchesStore();
   }
 
   public async login(email: string, password: string, callback: (isSuccess: boolean) => void) {
@@ -31,9 +37,9 @@ export default class UserService {
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(error as Error);
       return callback(false);
     }
   }
@@ -45,6 +51,8 @@ export default class UserService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
+      this.rankingStore.setInitialState();
+      this.matchesStore.resetLoggedUserBets();
     } catch (error: any) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(new Error(error));
@@ -79,9 +87,9 @@ export default class UserService {
       this.activeProfileStore.setError(null);
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(error as Error);
 
       return callback(false);
     }
@@ -112,9 +120,9 @@ export default class UserService {
       this.activeProfileStore.setError(null);
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(error as Error);
       return callback(false);
     }
   }
@@ -142,9 +150,9 @@ export default class UserService {
       this.activeProfileStore.setError(null);
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(error as Error);
       return callback(false);
     }
   }
@@ -174,9 +182,9 @@ export default class UserService {
       this.activeProfileStore.setError(null);
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(error as Error);
       return callback(false);
     }
   }

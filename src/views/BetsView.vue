@@ -1,13 +1,49 @@
 <template>
-  <PaginatorComponent />
-  <div class="outer-matches">
-    <MatchComponent v-for="match in matches" :match="match" :key="match.id" />
+  <div style="display: flex">
+    <div class="outer-matches">
+      <PaginatorComponent />
+      <PrimeMessage
+        v-show="errorConfiguration"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
+        Ops, houve um problema de comunicação com o servidor.
+        <p>
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
+          entre em contato com os administradores do Bolão.
+        </p>
+        <p>{{ errorConfiguration }}</p>
+      </PrimeMessage>
+      <div v-if="isLoading" style="width: 100%">
+        <PrimeSkeleton v-for="index in 16" :key="index" class="skeleton-match" />
+      </div>
+      <PrimeMessage
+        v-else-if="errorMatches"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
+        Ops, houve um problema de comunicação com o servidor para buscar as partidas.
+        <p>
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
+          entre em contato com os administradores do Bolão.
+        </p>
+        <p>{{ errorMatches }}</p>
+      </PrimeMessage>
+      <div class="outer-line-mode">
+        <MatchComponent :isBetting="true" v-for="match in matches" :match="match" :key="match.id" />
+      </div>
+    </div>
+    <RankingComponent />
   </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import MatchComponent from '@/components/Match/MatchComponent.vue';
+import RankingComponent from '@/components/Ranking/RankingComponent.vue';
+
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
@@ -28,5 +64,19 @@ const errorMatches = computed(() => matchesStore.error);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
+}
+
+.outer-line-mode {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--m-spacing);
+}
+
+.skeleton-match {
+  height: 60px !important;
+  margin: var(--s-spacing) 0;
 }
 </style>

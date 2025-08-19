@@ -5,6 +5,11 @@ import { ref } from 'vue';
 export type ColumnsOption = 'COMPACT' | 'COMPLETE';
 export type RowSpacing = 'normal' | 'small';
 
+const initialState = {
+  columnsOption: 'COMPLETE' as ColumnsOption,
+  rowSpacing: 'normal' as RowSpacing,
+};
+
 export const useRankingStore = defineStore('ranking', () => {
   const isLoadingWeek = ref(false);
   const isLoadingSeason = ref(false);
@@ -12,8 +17,15 @@ export const useRankingStore = defineStore('ranking', () => {
   const errorSeason = ref<Error | null>(null);
   const seasonRanking = ref<RankingUser[]>([]);
   const currentWeekRanking = ref<RankingUser[]>([]);
-  const columnsOption = ref<ColumnsOption>('COMPLETE');
-  const rowSpacing = ref<RowSpacing>('normal');
+  const columnsOption = ref<ColumnsOption>(initialState.columnsOption);
+  const rowSpacing = ref<RowSpacing>(initialState.rowSpacing);
+
+  function setInitialState() {
+    columnsOption.value = initialState.columnsOption;
+    rowSpacing.value = initialState.rowSpacing;
+    localStorage.removeItem('ranking-columns');
+    localStorage.removeItem('ranking-spacing');
+  }
 
   function setSeason(newSeasonRanking: RankingUser[]) {
     seasonRanking.value = newSeasonRanking;
@@ -58,6 +70,7 @@ export const useRankingStore = defineStore('ranking', () => {
     currentWeekRanking,
     columnsOption,
     rowSpacing,
+    setInitialState,
     setSeason,
     setCurrentWeek,
     setLoadingWeek,

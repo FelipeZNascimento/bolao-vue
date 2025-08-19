@@ -31,7 +31,14 @@
         </p>
         <p>{{ errorMatches }}</p>
       </PrimeMessage>
-      <MatchComponent v-else v-for="match in matches" :match="match" :key="match.id" />
+      <div v-else :class="{ 'outer-line-mode': !isGridMode, 'outer-grid-mode': isGridMode }">
+        <MatchComponent
+          v-for="match in matches"
+          :isGridMode="view === 'grid'"
+          :match="match"
+          :key="match.id"
+        />
+      </div>
     </div>
     <RankingComponent />
   </div>
@@ -42,7 +49,10 @@ import { useMatchesStore } from '@/stores/matches';
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+
+// ------ Refs ------
+const isGridMode = ref(true);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
@@ -55,20 +65,38 @@ const matches = computed(() => matchesStore.matches);
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
 const errorConfiguration = computed(() => configurationStore.error);
 const errorMatches = computed(() => matchesStore.error);
+const view = computed(() => configurationStore.resultsView);
 </script>
 <style scoped>
 .outer-results {
   display: flex;
   flex: row;
-  gap: var(--l-spacing);
   position: relative;
+  justify-content: space-between;
 }
 
 .outer-matches {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 800px;
+  gap: var(--m-spacing);
+}
+
+.outer-line-mode {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--m-spacing);
+}
+
+.outer-grid-mode {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--xl-spacing);
 }
 
 .error-message {
@@ -79,6 +107,6 @@ const errorMatches = computed(() => matchesStore.error);
 .skeleton-match {
   width: 800px !important;
   height: 60px !important;
-  margin: var(--xl-spacing) 0;
+  margin: var(--s-spacing) 0;
 }
 </style>

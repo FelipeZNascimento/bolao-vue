@@ -38,10 +38,7 @@
           label="Login"
           @click="isLoginModalOpen = true"
         />
-        <a @click="toggleTheme">
-          <i v-if="isDarkMode" class="pi pi-sun icon-sun"></i>
-          <i v-else class="pi pi-moon icon-moon"></i>
-        </a>
+        <a @click="isConfigModalOpen = true"><i class="pi pi-cog"></i></a>
       </div>
       <PrimePopover ref="profilePopover">
         <div class="outer-profile-popover">
@@ -71,13 +68,20 @@
       </PrimePopover>
     </nav>
   </header>
-  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="handleCloseLoginModal" />
-  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="handleCloseProfileModal" />
-  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="handleClosePasswordModal" />
+  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="() => (isLoginModalOpen = false)" />
+  <ProfileModal
+    :isOpen="isProfileModalOpen"
+    :handleCloseModal="() => (isProfileModalOpen = false)"
+  />
+  <PasswordModal
+    :isOpen="isPasswordModalOpen"
+    :handleCloseModal="() => (isPasswordModalOpen = false)"
+  />
   <PreferencesModal
     :isOpen="isPreferencesModalOpen"
-    :handleCloseModal="handleClosePreferencesModal"
+    :handleCloseModal="() => (isPreferencesModalOpen = false)"
   />
+  <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="() => (isConfigModalOpen = false)" />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
@@ -90,6 +94,7 @@ import IconAndName from '../IconAndName.vue';
 import ProfileModal from './ProfileModal.vue';
 import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
+import ConfigModal from '@/components/Ranking/ConfigModal.vue';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
@@ -98,12 +103,13 @@ const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
 const isPreferencesModalOpen = ref(false);
 const profilePopover = ref();
+const isConfigModalOpen = ref(false);
 
 // ------ Initializations ------
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 configurationStore.initialize();
-isDarkMode.value = configurationStore.getTheme() === 'dark';
+isDarkMode.value = configurationStore.isDarkMode();
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
@@ -111,30 +117,9 @@ const isProfileLoading = computed(() => activeProfileStore.isLoading);
 const userService = new UserService();
 
 // ------ Functions ------
-function toggleTheme() {
-  configurationStore.toggleTheme();
-  isDarkMode.value = !isDarkMode.value;
-}
-
 function handleLogout() {
   userService.logout();
   profilePopover.value.toggle();
-}
-
-function handleCloseLoginModal() {
-  isLoginModalOpen.value = false;
-}
-
-function handleCloseProfileModal() {
-  isProfileModalOpen.value = false;
-}
-
-function handleClosePreferencesModal() {
-  isPreferencesModalOpen.value = false;
-}
-
-function handleClosePasswordModal() {
-  isPasswordModalOpen.value = false;
 }
 
 function togglePopover(event) {
@@ -202,17 +187,13 @@ nav a {
   color: var(--nav-disabled);
 }
 
-.icon-sun,
-.icon-moon {
-  transition: 0.2s;
-}
+i {
+  transition: all 0.2s;
+  font-size: var(--m-font-size);
 
-.icon-sun:hover {
-  color: gold;
-}
-
-.icon-moon:hover {
-  color: black;
+  &:hover {
+    color: var(--color-contrast);
+  }
 }
 
 .prime-dialog {

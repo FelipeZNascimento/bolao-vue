@@ -70,9 +70,9 @@
       <p style="text-align: center; padding-top: var(--l-spacing)" v-show="loginError">
         <PrimeTag
           severity="contrast"
-          icon="pi pi-times"
-          value="Houve um problema de comunicação com o servidor. Tente novamente."
-        ></PrimeTag>
+          icon="pi pi-exclamation-triangle"
+          :value="loginError?.message"
+        />
       </p>
     </Form>
     <template v-if="!isSignupMode" #footer>
@@ -153,6 +153,7 @@ function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
 }
 
 function onLoginSubmit(formData: FormSubmitEvent<Record<string, string>>) {
+  activeProfileStore.setError(null);
   if (!formData.values) {
     return;
   }
@@ -179,6 +180,7 @@ function loginCallback(isSuccess: boolean) {
 
 function toggleMode() {
   isSignupMode.value = !isSignupMode.value;
+  activeProfileStore.setError(null);
 }
 
 function resetState() {

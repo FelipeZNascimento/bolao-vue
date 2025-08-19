@@ -1,6 +1,7 @@
 <template>
   <div class="outer-clock">
     <div
+      v-if="activeProfile"
       class="ribbon"
       :class="{
         'green-bg': ribbon === 'BULLSEYE',
@@ -25,6 +26,7 @@
 <script lang="ts" setup>
 import type { Ribbon } from '@/constants/bets';
 import { MATCH_STATUS, MATCH_STATUS_LABELS, type MatchStatus } from '@/constants/match_status';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 import { computed } from 'vue';
 
@@ -35,8 +37,14 @@ const props = defineProps<{
   ribbon: Ribbon;
 }>();
 
+// ------ Initialization ------
 const clockStore = useClockStore();
+const activeProfileStore = useActiveProfileStore();
 
+// ------ Computed Properties ------
+const activeProfile = computed(() => {
+  return activeProfileStore.activeProfile;
+});
 const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.timestamp;
 });
@@ -60,18 +68,11 @@ const isClockStopped = computed(
   align-items: center;
   justify-content: center;
   width: 140px;
-  border: 1px solid var(--color-contrast);
   font-size: var(--m-font-size);
   position: relative;
-  background-color: var(--color-background-soft);
+  background-color: var(--color-background-mute);
 }
 
-.clock-date {
-}
-.clock-time {
-}
-
-/* HTML: <div class="ribbon">Your text content</div> */
 .ribbon {
   font-size: var(--m-font-size);
   font-weight: bold;

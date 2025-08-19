@@ -5,16 +5,17 @@
         class="toggle"
         :class="{ activeToggle: !isWeeklyRanking }"
         @click="isWeeklyRanking = false"
-        >Temporada</span
+      >
+        Temporada</span
       >
       <PrimeToggleSwitch v-model="isWeeklyRanking" />
       <span
         class="toggle"
         :class="{ activeToggle: isWeeklyRanking }"
         @click="isWeeklyRanking = true"
-        >Semana</span
       >
-      <div class="table-config" @click="isConfigModalOpen = true"><i class="pi pi-cog"></i></div>
+        Semana
+      </span>
     </div>
     <div class="ranking-container">
       <RankingTable
@@ -28,19 +29,12 @@
       />
     </div>
   </div>
-  <ConfigModal
-    :isOpen="isConfigModalOpen"
-    :columnConfig="columnsOption"
-    :rowSpacingConfig="rowSpacing"
-    :handlRowSpacingConfig="handlRowSpacingConfig"
-    :handleColumnConfig="handleColumnConfig"
-    :handleCloseModal="handleCloseModal"
-  />
+  <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="handleCloseModal" />
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useRankingStore, type ColumnsOption, type RowSpacing } from '@/stores/ranking';
+import { useRankingStore } from '@/stores/ranking';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import ConfigModal from '@/components/Ranking/ConfigModal.vue';
 import RankingTable from './RankingTable.vue';
@@ -49,6 +43,7 @@ import RankingTable from './RankingTable.vue';
 const isWeeklyRanking = ref(false);
 const isConfigModalOpen = ref(false);
 
+// ------ Initialization ------
 const configurationStore = useConfigurationStore();
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
@@ -70,16 +65,6 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 function handleCloseModal() {
   isConfigModalOpen.value = false;
 }
-
-function handleColumnConfig(newOption: ColumnsOption) {
-  console.log(`handleColumnConfig -> ${newOption}`);
-  rankingStore.setColumnsOption(newOption);
-}
-
-function handlRowSpacingConfig(newOption: RowSpacing) {
-  console.log(`handlRowSpacingConfig -> ${newOption}`);
-  rankingStore.setRowSpacing(newOption);
-}
 </script>
 <style scoped>
 .outer-ranking {
@@ -87,9 +72,9 @@ function handlRowSpacingConfig(newOption: RowSpacing) {
   right: 0;
 
   position: sticky;
-  flex: 1;
   border-left: 1px solid var(--color-background-mute);
-  width: 460px;
+  min-width: 480px;
+  width: 480px;
   max-height: calc(100vh - 80px);
 }
 
@@ -125,27 +110,6 @@ function handlRowSpacingConfig(newOption: RowSpacing) {
 .activeToggle {
   color: var(--color-contrast);
   text-decoration: underline;
-}
-
-.table-config {
-  position: absolute;
-  top: 0;
-  right: var(--xs-spacing);
-  height: 50px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  i {
-    font-size: var(--l-font-size);
-    transition: 0.2s;
-  }
-
-  &:hover {
-    i {
-      color: var(--color-contrast);
-    }
-  }
 }
 
 .error-message {

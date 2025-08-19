@@ -51,7 +51,7 @@ import type { RankingUser } from '@/services/ranking';
 import type { User } from '@/stores/activeProfile';
 import type { ColumnsOption, RowSpacing } from '@/stores/ranking';
 
-const props = defineProps<{
+defineProps<{
   isWeekly: boolean;
   isLoading: boolean;
   rankingData: RankingUser[];

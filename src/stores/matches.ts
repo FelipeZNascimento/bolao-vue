@@ -32,13 +32,19 @@ export interface Match {
   away: Team;
   home: Team;
   bets: Bet[];
-  loggedUserBets: Bet;
+  loggedUserBets: Bet | null;
 }
 
 export const useMatchesStore = defineStore('matches', () => {
   const isLoading = ref<boolean>(false);
   const matches = ref<Match[]>([]);
   const error = ref<Error | null>(null);
+
+  function resetLoggedUserBets() {
+    matches.value.forEach((match) => {
+      match.loggedUserBets = null;
+    });
+  }
 
   function setMatches(newMatches: Match[]) {
     matches.value = newMatches;
@@ -52,5 +58,5 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
-  return { setLoading, setMatches, setError, isLoading, matches, error };
+  return { resetLoggedUserBets, setLoading, setMatches, setError, isLoading, matches, error };
 });

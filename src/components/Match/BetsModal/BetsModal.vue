@@ -11,31 +11,31 @@
       <h2>Apostas</h2>
     </template>
     <div class="teams-outer">
-      <ScoreComponent :away="away" :home="home" />
+      <ScoreComponent :match="match" :activeUserBet="match.loggedUserBets" />
     </div>
     <div class="bets-outer">
       <BetsColumn
-        :bets="bets"
+        :bets="match.bets"
         :columnValue="BETS_VALUES.AWAY_EASY"
-        :activeUserBet="activeUserBet"
+        :activeUserBet="match.loggedUserBets"
         :correctBets="correctBets"
       />
       <BetsColumn
-        :bets="bets"
+        :bets="match.bets"
         :columnValue="BETS_VALUES.AWAY_HARD"
-        :activeUserBet="activeUserBet"
+        :activeUserBet="match.loggedUserBets"
         :correctBets="correctBets"
       />
       <BetsColumn
-        :bets="bets"
+        :bets="match.bets"
         :columnValue="BETS_VALUES.HOME_HARD"
-        :activeUserBet="activeUserBet"
+        :activeUserBet="match.loggedUserBets"
         :correctBets="correctBets"
       />
       <BetsColumn
-        :bets="bets"
+        :bets="match.bets"
         :columnValue="BETS_VALUES.HOME_EASY"
-        :activeUserBet="activeUserBet"
+        :activeUserBet="match.loggedUserBets"
         :correctBets="correctBets"
       />
     </div>
@@ -43,7 +43,7 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import type { Bet, Team } from '@/stores/matches';
+import type { Match } from '@/stores/matches';
 import { ref, watch } from 'vue';
 import ScoreComponent from '../ScoreComponent.vue';
 import { BETS_VALUES } from '@/constants/bets';
@@ -52,12 +52,9 @@ import BetsColumn from './BetsColumn.vue';
 
 const props = defineProps<{
   isOpen: boolean;
-  handleCloseModal: () => void;
-  bets: Bet[];
-  activeUserBet: Bet | null;
   correctBets: CorrectBets;
-  home: Team;
-  away: Team;
+  match: Match;
+  handleCloseModal: () => void;
 }>();
 
 const isVisible = ref(false);
