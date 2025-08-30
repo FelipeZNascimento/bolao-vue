@@ -5,29 +5,11 @@ export default class ApiService {
     this.baseUrl = baseUrl;
   }
 
-  public async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
-    const requestOptions: RequestInit = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...headers },
-      body: JSON.stringify(data),
-      credentials: 'include',
-    };
-    const url = `${this.baseUrl}${endpoint}`;
-
-    const response = await fetch(url, requestOptions);
-    if (!response.ok) {
-      const errrorObject = await response.json();
-      throw new Error(errrorObject.error);
-    }
-
-    return (await response.json()) as T;
-  }
-
   public async get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
     const requestOptions: RequestInit = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json', ...headers },
       credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...headers },
+      method: 'GET',
     };
     const url = `${this.baseUrl}${endpoint}`;
 
@@ -36,6 +18,24 @@ export default class ApiService {
       const error = await response.json();
       // get error message from body or default to response status
       throw new Error(error);
+    }
+
+    return (await response.json()) as T;
+  }
+
+  public async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+    const requestOptions: RequestInit = {
+      body: JSON.stringify(data),
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...headers },
+      method: 'POST',
+    };
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const response = await fetch(url, requestOptions);
+    if (!response.ok) {
+      const errrorObject = await response.json();
+      throw new Error(errrorObject.error);
     }
 
     return (await response.json()) as T;

@@ -15,11 +15,13 @@
       :key="activeUserBet.id"
     >
       <IconAndName
+        v-if="!isMobile"
         isActive
         :color="activeUserBet.user.color"
         :name="activeUserBet.user.name"
         :icon="activeUserBet.user.icon"
       />
+      <span v-else>{{ activeUserBet.user.name }}</span>
     </div>
     <!-- Render remaining bets -->
     <div
@@ -27,21 +29,30 @@
       v-for="bet in bets.filter((bet) => bet.value === columnValue)"
       :key="bet.id"
     >
-      <IconAndName :color="bet.user.color" :name="bet.user.name" :icon="bet.user.icon" />
+      <IconAndName
+        v-if="!isMobile"
+        :color="bet.user.color"
+        :name="bet.user.name"
+        :icon="bet.user.icon"
+      />
+      <span v-else>{{ bet.user.name }}</span>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { Bet } from '@/stores/matches';
-import { BETS_LABELS, type BetsValues } from '@/constants/bets';
+import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-import { isBullseye, isHalfBet, type CorrectBets } from '@/util/betsCalculator';
+
+import type { Bet } from '@/stores/matches';
+
 import IconAndName from '@/components/IconAndName.vue';
+import { BETS_LABELS, type BetsValues } from '@/constants/bets';
+import { type CorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
 const props = defineProps<{
+  activeUserBet: Bet | null;
   bets: Bet[];
   columnValue: BetsValues;
-  activeUserBet: Bet | null;
   correctBets: CorrectBets;
 }>();
 
@@ -58,7 +69,8 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
 <style lang="scss" scoped>
 .bets-column {
   display: flex;
-  flex: 1;
+  flex: 1 0 0;
+  min-width: 0;
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
@@ -86,5 +98,9 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
 .bets-line {
   display: flex;
   padding: var(--xxs-spacing) 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 </style>

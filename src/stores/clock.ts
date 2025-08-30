@@ -4,7 +4,7 @@ import { ref } from 'vue';
 export const useClockStore = defineStore('clock', () => {
   const currentTime = ref<Date>(new Date());
   const currentTimestamp = ref<number>(Math.floor(currentTime.value.getTime() / 1000));
-  let timer: number | null = null;
+  let timer: null | number = null;
 
   function startClock() {
     updateTime(); // Initial call
@@ -52,9 +52,9 @@ export const useClockStore = defineStore('clock', () => {
   return {
     currentTime,
     currentTimestamp,
-    startClock,
-    formattedTime,
     formattedDate,
+    formattedTime,
+    startClock,
     stopClock,
   };
 });

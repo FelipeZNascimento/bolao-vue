@@ -5,7 +5,7 @@
     v-model:visible="isVisible"
     :draggable="false"
     position="right"
-    :style="{ width: '400px' }"
+    :style="{ width: '500px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
@@ -45,6 +45,20 @@
     <PrimeDivider />
 
     <h2>Ranking</h2>
+    <div class="button-group" v-if="!isMobile">
+      <div class="label">Posição</div>
+      <PrimeSelectButton
+        fluid
+        :allowEmpty="false"
+        class="buttons"
+        v-model="rankingPositionLocalObj"
+        :options="rankingPositionOptions"
+        optionLabel="label"
+        dataKey="label"
+        size="small"
+        @click="() => handleRankingPositionConfig(rankingPositionLocalObj.value)"
+      />
+    </div>
     <div class="button-group">
       <div class="label">Espaçamento</div>
       <PrimeSelectButton
@@ -73,34 +87,46 @@
         @click="() => handleColumnConfig(columnLocalObj.value)"
       />
     </div>
-
     <template #footer> </template>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { useConfigurationStore, type ResultsView, type Theme } from '@/stores/configuration';
-import { useRankingStore, type ColumnsOption, type RowSpacing } from '@/stores/ranking';
+import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref, watch, watchEffect } from 'vue';
 
+import {
+  type RankingPosition,
+  type ResultsView,
+  type Theme,
+  useConfigurationStore,
+} from '@/stores/configuration';
+import { type ColumnsOption, type RowSpacing, useRankingStore } from '@/stores/ranking';
+
 const props = defineProps<{
-  isOpen: boolean;
   handleCloseModal: () => void;
+  isOpen: boolean;
 }>();
 
-type TRowSpacing = { label: string; value: RowSpacing };
 type TColumn = { label: string; value: ColumnsOption };
-type TTheme = { label: string; value: Theme };
+type TRankingPosition = { label: string; value: RankingPosition };
 type TResultsView = { label: string; value: ResultsView };
+type TRowSpacing = { label: string; value: RowSpacing };
+type TTheme = { label: string; value: Theme };
 
 // ------ Refs ------
 const isVisible = ref(false);
 const themeLocalObj = ref();
 const resultsViewLocalObj = ref();
+const rankingPositionLocalObj = ref();
 const rowSpacingLocalObj = ref();
 const columnLocalObj = ref();
 const themeOptions = ref<TTheme[]>([
   { label: 'Claro', value: 'light' },
   { label: 'Escuro', value: 'dark' },
+]);
+const rankingPositionOptions = ref<TRankingPosition[]>([
+  { label: 'Sempre ativo', value: 'active' },
+  { label: 'Modal (menu)', value: 'modal' },
 ]);
 const resultsViewOptions = ref<TResultsView[]>([
   { label: 'Grid', value: 'grid' },
@@ -108,11 +134,11 @@ const resultsViewOptions = ref<TResultsView[]>([
 ]);
 const rowSpacingOptions = ref<TRowSpacing[]>([
   { label: 'Pequeno', value: 'small' },
-  { label: 'Normal', value: 'normal' },
+  { label: 'Grande', value: 'normal' },
 ]);
 const columnOptions = ref<TColumn[]>([
-  { label: 'Compacto', value: 'COMPACT' },
-  { label: 'Completo', value: 'COMPLETE' },
+  { label: 'Compacto', value: 'compact' },
+  { label: 'Completo', value: 'complete' },
 ]);
 
 // ------ Initialization ------
@@ -120,6 +146,7 @@ const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
 
 // ------ Computed Properties ------
+const rankingPosition = computed(() => configurationStore.rankingPosition);
 const columnConfig = computed(() => rankingStore.columnsOption);
 const rowSpacingConfig = computed(() => rankingStore.rowSpacing);
 const theme = computed(() => configurationStore.theme);
@@ -130,16 +157,20 @@ function handleColumnConfig(newOption: ColumnsOption) {
   rankingStore.setColumnsOption(newOption);
 }
 
+function handleRankingPositionConfig(newOption: RankingPosition) {
+  configurationStore.setRankingPosition(newOption);
+}
+
+function handleResultsViewConfig(newOption: ResultsView) {
+  configurationStore.setResultsView(newOption);
+}
+
 function handleRowSpacingConfig(newOption: RowSpacing) {
   rankingStore.setRowSpacing(newOption);
 }
 
 function handleThemeConfig(newOption: Theme) {
   configurationStore.setTheme(newOption);
-}
-
-function handleResultsViewConfig(newOption: ResultsView) {
-  configurationStore.setResultsView(newOption);
 }
 
 // ------ Watch Effect Properties ------
@@ -152,6 +183,13 @@ watchEffect(
 
 watchEffect(
   () => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)),
+);
+
+watchEffect(
+  () =>
+    (rankingPositionLocalObj.value = rankingPositionOptions.value.find(
+      (option) => option.value === rankingPosition.value,
+    )),
 );
 
 watchEffect(

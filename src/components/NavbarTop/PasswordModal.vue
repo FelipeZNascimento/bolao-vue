@@ -85,15 +85,16 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
 import { Form, type FormSubmitEvent } from '@primevue/forms';
-import { updatePasswordResolver } from '@/util/zodResolvers';
+import { computed, ref, watch } from 'vue';
+
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { updatePasswordResolver } from '@/util/zodResolvers';
 
 const props = defineProps<{
-  isOpen: boolean;
   handleCloseModal: () => void;
+  isOpen: boolean;
 }>();
 
 // ------ Refs ------

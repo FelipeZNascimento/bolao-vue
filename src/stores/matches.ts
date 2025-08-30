@@ -1,38 +1,43 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { User } from './activeProfile';
+
 import type { MatchStatus } from '@/constants/match_status';
 
-export interface Team {
-  id: number;
-  name: string;
-  alias: string;
-  code: string;
-  background: string;
-  foreground: string;
-  winLosses: string;
-  possession: boolean;
-  score: number;
-}
+import type { User } from './activeProfile';
+import type { Conference, Division } from './extraBet';
 
 export interface Bet {
   id: number;
   matchId: number;
-  value: number;
   user: Omit<User, 'status, fullname, email'>;
+  value: number;
 }
 
 export interface Match {
-  id: number;
-  timestamp: number;
-  status: MatchStatus;
-  clock: string;
-  overUnder: string;
-  homeTeamOdds: string;
   away: Team;
-  home: Team;
   bets: Bet[];
+  clock: string;
+  home: Team;
+  homeTeamOdds: string;
+  id: number;
   loggedUserBets: Bet | null;
+  overUnder: string;
+  status: MatchStatus;
+  timestamp: number;
+}
+
+export interface Team {
+  alias: string;
+  background: string;
+  code: string;
+  conference: Conference;
+  division: Division;
+  foreground: string;
+  id: number;
+  name: string;
+  possession: boolean;
+  score: number;
+  winLosses: string;
 }
 
 export const useMatchesStore = defineStore('matches', () => {
@@ -58,5 +63,5 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
-  return { resetLoggedUserBets, setLoading, setMatches, setError, isLoading, matches, error };
+  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches };
 });

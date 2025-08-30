@@ -1,26 +1,31 @@
 import { sha1 } from 'js-sha1';
-import ApiService from './api_request';
+
+import { faIconsList } from '@/constants/font-awesome';
 import {
-  useActiveProfileStore,
   type UpdateProfileResponse,
+  useActiveProfileStore,
   type User,
 } from '@/stores/activeProfile';
-import { faIconsList } from '@/constants/font-awesome';
-import { randomHexColorGenerator } from '@/util/colorGenerator';
-import { useRankingStore } from '@/stores/ranking';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import { useRankingStore } from '@/stores/ranking';
+import { randomHexColorGenerator } from '@/util/colorGenerator';
+
+import ApiService from './api_request';
 
 export default class UserService {
-  private apiRequest;
   private activeProfileStore;
-  private rankingStore;
+  private apiRequest;
+  private configurationStore;
   private matchesStore;
+  private rankingStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.rankingStore = useRankingStore();
     this.matchesStore = useMatchesStore();
+    this.configurationStore = useConfigurationStore();
   }
 
   public async login(email: string, password: string, callback: (isSuccess: boolean) => void) {
@@ -52,6 +57,7 @@ export default class UserService {
       this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
       this.rankingStore.setInitialState();
+      this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
     } catch (error: any) {
       this.activeProfileStore.setLoading(false);
@@ -72,12 +78,12 @@ export default class UserService {
     const randomColor = randomHexColorGenerator();
 
     const registerObject = {
-      email,
-      password: encryptedPassword,
-      fullName: name,
-      name: username,
-      icon: randomIcon,
       color: randomColor,
+      email,
+      fullName: name,
+      icon: randomIcon,
+      name: username,
+      password: encryptedPassword,
     };
 
     try {
@@ -95,19 +101,19 @@ export default class UserService {
     }
   }
 
-  public async updateProfile(
+  public async updatePassword(
+    currentPassword: string,
+    newPassword: string,
     callback: (isSuccess: boolean) => void,
-    name: string,
-    username: string,
   ) {
     this.activeProfileStore.setLoading(true);
 
     const updatedProfile = {
       email: this.activeProfileStore.activeProfile?.email,
-      fullName: name,
-      name: username,
-      icon: this.activeProfileStore.activeProfile?.icon,
-      color: this.activeProfileStore.activeProfile?.color,
+      fullName: this.activeProfileStore.activeProfile?.fullName,
+      name: this.activeProfileStore.activeProfile?.name,
+      newPassword: sha1(newPassword).toString(),
+      password: sha1(currentPassword).toString(),
     };
 
     try {
@@ -136,8 +142,8 @@ export default class UserService {
     const formattedColor = newColor.includes('#') ? newColor : `#${newColor}`;
     alert(formattedColor);
     const updatedProfile = {
-      icon: newIcon || this.activeProfileStore.activeProfile?.icon,
       color: this.activeProfileStore.activeProfile?.color,
+      icon: newIcon || this.activeProfileStore.activeProfile?.icon,
     };
 
     try {
@@ -157,19 +163,19 @@ export default class UserService {
     }
   }
 
-  public async updatePassword(
-    currentPassword: string,
-    newPassword: string,
+  public async updateProfile(
     callback: (isSuccess: boolean) => void,
+    name: string,
+    username: string,
   ) {
     this.activeProfileStore.setLoading(true);
 
     const updatedProfile = {
-      fullName: this.activeProfileStore.activeProfile?.fullName,
-      name: this.activeProfileStore.activeProfile?.name,
+      color: this.activeProfileStore.activeProfile?.color,
       email: this.activeProfileStore.activeProfile?.email,
-      password: sha1(currentPassword).toString(),
-      newPassword: sha1(newPassword).toString(),
+      fullName: name,
+      icon: this.activeProfileStore.activeProfile?.icon,
+      name: username,
     };
 
     try {

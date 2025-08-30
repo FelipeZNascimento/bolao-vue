@@ -35,15 +35,16 @@
         <MatchComponent :isBetting="true" v-for="match in matches" :match="match" :key="match.id" />
       </div>
     </div>
-    <RankingComponent />
+    <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
   </div>
 </template>
 <script setup lang="ts">
+import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-import PaginatorComponent from '@/components/PaginatorComponent.vue';
-import MatchComponent from '@/components/Match/MatchComponent.vue';
-import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 
+import MatchComponent from '@/components/Match/MatchComponent.vue';
+import PaginatorComponent from '@/components/PaginatorComponent.vue';
+import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
@@ -56,6 +57,7 @@ const isConfigurationLoading = computed(() => configurationStore.isLoading);
 const isMatchesLoading = computed(() => matchesStore.isLoading);
 const matches = computed(() => matchesStore.matches);
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
+const rankingPosition = computed(() => configurationStore.rankingPosition);
 const errorConfiguration = computed(() => configurationStore.error);
 const errorMatches = computed(() => matchesStore.error);
 </script>
@@ -65,6 +67,8 @@ const errorMatches = computed(() => matchesStore.error);
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  gap: var(--m-spacing);
+  flex: 1;
 }
 
 .outer-line-mode {

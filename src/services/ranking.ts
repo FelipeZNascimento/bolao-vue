@@ -1,19 +1,21 @@
-import ApiService from './api_request';
-import { useRankingStore, type ColumnsOption, type RowSpacing } from '@/stores/ranking';
-import { useConfigurationStore } from '@/stores/configuration';
 import type { User } from '@/stores/activeProfile';
+
+import { useConfigurationStore } from '@/stores/configuration';
+import { type ColumnsOption, type RowSpacing, useRankingStore } from '@/stores/ranking';
+
+import ApiService from './api_request';
 
 export type RankingUser = User & {
   isOnline: boolean;
-  totalPoints: number;
-  totalBullseye: number;
-  totalWinners: number;
-  totalBets: number;
-  totalMatches: number;
-  totalPercentage: string;
-  totalExtras: number;
   position: number;
   previousPosition: number;
+  totalBets: number;
+  totalBullseye: number;
+  totalExtras: number;
+  totalMatches: number;
+  totalPercentage: string;
+  totalPoints: number;
+  totalWinners: number;
 };
 
 type SeasonRanking = {
@@ -28,8 +30,8 @@ type WeeklyRanking = SeasonRanking & {
 
 export default class RankingService {
   private apiRequest;
-  private rankingStore;
   private configurationStore;
+  private rankingStore;
 
   constructor() {
     this.apiRequest = new ApiService();
@@ -37,31 +39,18 @@ export default class RankingService {
     this.configurationStore = useConfigurationStore();
   }
 
-  public async initialize() {
-    this.initializePreferences();
-    const currentWeek = this.configurationStore.currentWeek;
+  public async fetchSeason() {
+    const season = this.configurationStore.currentSeason;
+    this.rankingStore.setLoadingSeason(true);
 
-    this.fetchSeason();
-
-    if (currentWeek) {
-      this.fetchWeek(currentWeek);
-    }
-  }
-
-  async initializePreferences() {
-    const rankingColumns = localStorage.getItem('ranking-columns');
-    const rankingSpacing = localStorage.getItem('ranking-spacing');
-
-    if (!rankingColumns) {
-      localStorage.setItem('ranking-columns', 'COMPLETE');
-    } else {
-      this.rankingStore.columnsOption = rankingColumns as ColumnsOption;
-    }
-
-    if (!rankingSpacing) {
-      localStorage.setItem('ranking-spacing', 'normal');
-    } else {
-      this.rankingStore.rowSpacing = rankingSpacing as RowSpacing;
+    try {
+      const response = await this.apiRequest.get<SeasonRanking>(`ranking/season/${season}`);
+      this.rankingStore.setLoadingSeason(false);
+      this.rankingStore.setSeason(response.users);
+      this.rankingStore.setErrorSeason(null);
+    } catch (error: any) {
+      this.rankingStore.setLoadingSeason(false);
+      this.rankingStore.setErrorSeason(new Error(error));
     }
   }
 
@@ -80,18 +69,31 @@ export default class RankingService {
     }
   }
 
-  public async fetchSeason() {
-    const season = this.configurationStore.currentSeason;
-    this.rankingStore.setLoadingSeason(true);
+  public async initialize() {
+    this.initializePreferences();
+    const currentWeek = this.configurationStore.currentWeek;
 
-    try {
-      const response = await this.apiRequest.get<SeasonRanking>(`ranking/season/${season}`);
-      this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setSeason(response.users);
-      this.rankingStore.setErrorSeason(null);
-    } catch (error: any) {
-      this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setErrorSeason(new Error(error));
+    this.fetchSeason();
+
+    if (currentWeek) {
+      this.fetchWeek(currentWeek);
+    }
+  }
+
+  async initializePreferences() {
+    const rankingColumns = localStorage.getItem('ranking-columns');
+    const rankingSpacing = localStorage.getItem('ranking-spacing');
+
+    if (!rankingColumns) {
+      localStorage.setItem('ranking-columns', 'complete');
+    } else {
+      this.rankingStore.columnsOption = rankingColumns as ColumnsOption;
+    }
+
+    if (!rankingSpacing) {
+      localStorage.setItem('ranking-spacing', 'normal');
+    } else {
+      this.rankingStore.rowSpacing = rankingSpacing as RowSpacing;
     }
   }
 }

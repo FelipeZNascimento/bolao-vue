@@ -93,17 +93,20 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch, watchEffect } from 'vue';
-import UserService from '@/services/user';
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import IconAndName from '../IconAndName.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faIconsListObj } from '@/constants/font-awesome';
 import type { PageState } from 'primevue';
 
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed, ref, watch, watchEffect } from 'vue';
+
+import { faIconsListObj } from '@/constants/font-awesome';
+import UserService from '@/services/user';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+
+import IconAndName from '../IconAndName.vue';
+
 const props = defineProps<{
-  isOpen: boolean;
   handleCloseModal: () => void;
+  isOpen: boolean;
 }>();
 
 // ------ Refs ------
@@ -173,17 +176,17 @@ function handleReset() {
   newIcon.value = activeProfile.value?.icon as string;
 }
 
-function updateCallback(isSuccess: boolean) {
-  if (isSuccess) {
-    isUpdateSuccess.value = true;
-  }
-}
-
 function resetState() {
   isUpdateSuccess.value = false;
   iconSearch.value = '';
   newColor.value = activeProfile.value?.color as string;
   newIcon.value = activeProfile.value?.icon as string;
+}
+
+function updateCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    isUpdateSuccess.value = true;
+  }
 }
 
 // ------ Watches ------

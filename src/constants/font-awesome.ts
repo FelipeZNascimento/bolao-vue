@@ -900,27 +900,3 @@ export const faIconsList = [
 ];
 
 export const faIconsListObj = faIconsList.map((icon, index) => ({ id: index, value: icon }));
-
-// <PrimeDataTable :value="filteredIcons" :rows="5" tableStyle="min-width: 50rem">
-//           <PrimeColumn v-for="index in numOfColumns" :key="index" field="value">
-//             <template #body="slotProps">
-//               <FontAwesomeIcon
-//                 v-tooltip.top="filteredIcons[slotProps.index * numOfColumns + (index - 1)].value"
-//                 class="icon"
-//                 :class="{ selected: slotProps.data.value === newIcon }"
-//                 :icon="filteredIcons[slotProps.index * numOfColumns + (index - 1)].value"
-//                 :style="{ color: newColor }"
-//                 @click="
-//                   () =>
-//                     console.log(
-//                       `index: ${calculateIconIndex(index, slotProps.index, 0)} - ${index - 1} - ${JSON.stringify(slotProps.index)}`,
-//                     )
-//                 "
-//               />
-//               <!-- @click="newIcon = slotProps.data.value" -->
-//             </template>
-//           </PrimeColumn>
-//           <!-- <PrimeColumn field="value" style="width: 25%"></PrimeColumn>
-//           <PrimeColumn field="value" style="width: 25%"></PrimeColumn>
-//           <PrimeColumn field="value" style="width: 25%"></PrimeColumn> -->
-//         </PrimeDataTable>

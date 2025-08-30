@@ -1,48 +1,48 @@
 import './assets/main.scss';
 
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-
-/* ---- PrimeVue ---- */
-import PrimeVue from 'primevue/config';
-import Aura from '@primeuix/themes/aura';
+/* ---- FontAwesome Config ---- */
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { definePreset } from '@primeuix/themes';
-
+import Aura from '@primeuix/themes/aura';
+import { createPinia } from 'pinia';
+import PrimeAutocomplete from 'primevue/autocomplete';
+import PrimeAvatar from 'primevue/avatar';
 // Componentss
 import PrimeButton from 'primevue/button';
-import PrimeDialog from 'primevue/dialog';
-import PrimeInputText from 'primevue/inputtext';
-import PrimeMessage from 'primevue/message';
-import PrimePassword from 'primevue/password';
-import PrimeFloatLabel from 'primevue/floatlabel';
-import PrimePopover from 'primevue/popover';
-import PrimeDataTable from 'primevue/datatable';
-import PrimeColumn from 'primevue/column';
-import PrimeSelectButton from 'primevue/selectbutton';
-import PrimeToggleSwitch from 'primevue/toggleswitch';
-import PrimeSkeleton from 'primevue/skeleton';
-import PrimeTooltip from 'primevue/tooltip';
-import PrimePaginator from 'primevue/paginator';
-import PrimeAutocomplete from 'primevue/autocomplete';
-import PrimeTag from 'primevue/tag';
 import PrimeColorPicker from 'primevue/colorpicker';
-import PrimeToast from 'primevue/toast';
-import PrimeToastService from 'primevue/toastservice';
+import PrimeColumn from 'primevue/column';
+/* ---- PrimeVue ---- */
+import PrimeVue from 'primevue/config';
+import PrimeDataTable from 'primevue/datatable';
+import PrimeDialog from 'primevue/dialog';
+import PrimeDivider from 'primevue/divider';
+import PrimeFloatLabel from 'primevue/floatlabel';
+import PrimeInputText from 'primevue/inputtext';
+import PrimeKnob from 'primevue/knob';
+import PrimeMenubar from 'primevue/menubar';
+import PrimeMessage from 'primevue/message';
+import PrimeOverlayBadge from 'primevue/overlaybadge';
+import PrimePaginator from 'primevue/paginator';
+import PrimePassword from 'primevue/password';
+import PrimePopover from 'primevue/popover';
 import PrimeRadioButton from 'primevue/radiobutton';
 import PrimeRadioButtonGroup from 'primevue/radiobuttongroup';
-import PrimeDivider from 'primevue/divider';
-
+import PrimeSelectButton from 'primevue/selectbutton';
+import PrimeSkeleton from 'primevue/skeleton';
+import PrimeTag from 'primevue/tag';
 /* ---- PrimeVue ---- */
+import PrimeToast from 'primevue/toast';
+import PrimeToastService from 'primevue/toastservice';
+import PrimeToggleSwitch from 'primevue/toggleswitch';
+import PrimeTooltip from 'primevue/tooltip';
+import { createApp } from 'vue';
 
 import App from './App.vue';
 import router from './router';
-
-/* ---- FontAwesome Config ---- */
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 
 library.add(fas, fab, far);
 /* ---- FontAwesome Config ---- */
@@ -73,10 +73,10 @@ const MyPreset = definePreset(Aura, {
 
 app.use(PrimeVue, {
   theme: {
-    preset: MyPreset,
     options: {
       darkModeSelector: '.dark-mode',
     },
+    preset: MyPreset,
   },
 });
 
@@ -102,6 +102,10 @@ app.component('PrimeToast', PrimeToast);
 app.component('PrimeRadioButton', PrimeRadioButton);
 app.component('PrimeRadioButtonGroup', PrimeRadioButtonGroup);
 app.component('PrimeDivider', PrimeDivider);
+app.component('PrimeMenubar', PrimeMenubar);
+app.component('PrimeAvatar', PrimeAvatar);
+app.component('PrimeKnob', PrimeKnob);
+app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 
 app.directive('tooltip', PrimeTooltip);
 

@@ -13,12 +13,13 @@ export interface User {
   fullName: string;
   icon: string;
   id: number;
+  isOnline: boolean;
   name: string;
   status: number;
 }
 
 export const useActiveProfileStore = defineStore('activeProfile', () => {
-  const activeProfile = ref<User | null>(null);
+  const activeProfile = ref<null | User>(null);
   const isLoading = ref(false);
   const error = ref<Error | null>(null);
 
@@ -26,7 +27,7 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     isLoading.value = loadingState;
   }
 
-  function setActiveProfile(profile: User | null) {
+  function setActiveProfile(profile: null | User) {
     activeProfile.value = profile;
     isLoading.value = false;
   }
@@ -35,5 +36,5 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     error.value = newError;
   }
 
-  return { activeProfile, isLoading, error, setLoading, setActiveProfile, setError };
+  return { activeProfile, error, isLoading, setActiveProfile, setError, setLoading };
 });

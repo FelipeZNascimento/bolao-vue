@@ -1,17 +1,37 @@
 <template>
-  <div class="outer-team" :style="{ backgroundColor: team.background, color: team.foreground }">
-    <span class="team-shield"><img :src="`/team_logos/${props.team.id}.gif`" /></span>
-    <span class="team-alias">{{ isGridMode ? team.code : team.alias }}</span>
-    <span class="team-score">{{ team.score }}</span>
+  <div
+    class="outer-team"
+    :class="isNameless ? 'outer-team-nameless' : ''"
+    :style="{ backgroundColor: team.background, color: team.foreground }"
+  >
+    <span
+      :class="{
+        'team-shield-line': !isGridMode,
+        'team-shield-grid': isGridMode,
+      }"
+      class="team-shield"
+    >
+      <img
+        :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
+        :src="`/team_logos/${props.team.id}.gif`"
+      />
+    </span>
+    <span v-if="!isNameless" class="team-alias">{{
+      isGridMode || isAlias ? team.code : team.alias
+    }}</span>
+    <span v-if="!isScoreless" class="team-score">{{ team.score }}</span>
   </div>
 </template>
 <script lang="ts" setup>
 import type { Team } from '@/stores/matches';
 
 const props = defineProps<{
-  team: Team;
+  isAlias?: boolean;
   isGridMode: boolean;
   isHomeTeam?: boolean;
+  isNameless?: boolean;
+  isScoreless?: boolean;
+  team: Team;
 }>();
 </script>
 <style scoped>
@@ -20,36 +40,73 @@ const props = defineProps<{
   flex: 1;
   align-items: center;
   justify-content: flex-end;
-  height: 100%;
+  height: 60px;
+  max-height: 60px;
   background-image: url('/match_layer.png');
   position: relative;
   overflow: hidden;
 }
+.outer-team-nameless {
+  min-width: 60px;
+}
 
-.team-shield {
+.team-shield-grid {
   position: absolute;
-  top: -50%;
-  left: 20px;
   height: 60px;
-  img {
-    height: 120px;
-    z-index: -1;
+  left: 20px;
+  top: -50%;
+
+  @media (max-width: 1024px) {
+    top: 0%;
   }
 }
 
+.team-shield-line {
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translate(0, -50%);
+
+  @media (max-width: 1024px) {
+    left: 5%;
+    top: 0%;
+    transform: none;
+  }
+}
+
+.team-shield-image {
+  height: 100px;
+  z-index: -1;
+
+  @media (max-width: 1024px) {
+    height: 60px;
+  }
+}
+
+.team-shield-image-small {
+  height: 60px;
+  z-index: -1;
+}
+
 .team-alias {
-  font-size: var(--l-font-size);
   padding-right: var(--s-spacing);
   font-weight: bold;
+  z-index: 99;
+  font-size: var(--l-font-size);
+
+  @media (max-width: 1024px) {
+    font-size: var(--m-font-size);
+  }
 }
 
 .team-score {
-  width: 60px;
+  min-width: 30px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--l-font-size);
   background-color: #0003;
+  padding: 0 var(--m-spacing);
 }
 </style>

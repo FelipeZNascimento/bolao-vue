@@ -6,10 +6,17 @@
     :draggable="false"
     :style="{ width: '1024px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
+    contentClass="content-class"
   >
     <template #header>
-      <h2>Apostas</h2>
+      <ClockComponent
+        :timestamp="match.timestamp"
+        :status="match.status"
+        :clock="match.clock"
+        :ribbon="ribbon"
+      />
     </template>
+
     <div class="teams-outer">
       <ScoreComponent :match="match" :activeUserBet="match.loggedUserBets" />
     </div>
@@ -43,18 +50,23 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import type { Match } from '@/stores/matches';
 import { ref, watch } from 'vue';
-import ScoreComponent from '../ScoreComponent.vue';
-import { BETS_VALUES } from '@/constants/bets';
+
+import type { Match } from '@/stores/matches';
+
+import { BETS_VALUES, type Ribbon } from '@/constants/bets';
 import { type CorrectBets } from '@/util/betsCalculator';
+
+import ClockComponent from '../ClockComponent.vue';
+import ScoreComponent from '../ScoreComponent.vue';
 import BetsColumn from './BetsColumn.vue';
 
 const props = defineProps<{
-  isOpen: boolean;
   correctBets: CorrectBets;
-  match: Match;
   handleCloseModal: () => void;
+  isOpen: boolean;
+  match: Match;
+  ribbon: null | Ribbon;
 }>();
 
 const isVisible = ref(false);
@@ -74,7 +86,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style scoped>
+<style>
 .teams-outer {
   display: flex;
   width: 100%;
@@ -90,5 +102,11 @@ watch(isVisible, async (newValue) => {
 
 .bets-outer {
   display: flex;
+  overflow-x: hidden !important;
+}
+
+.content-class {
+  padding: 0 !important;
+  overflow-x: hidden !important;
 }
 </style>

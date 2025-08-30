@@ -91,16 +91,17 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
+
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = defineProps<{
-  isOpen: boolean;
   handleCloseModal: () => void;
+  isOpen: boolean;
 }>();
 
 // ------ Refs ------
@@ -108,8 +109,8 @@ const isVisible = ref(false);
 const isSignupMode = ref(false);
 const initialValues = ref({
   email: '',
-  password: '',
   name: '',
+  password: '',
   username: '',
 });
 const loginResolver = ref(
@@ -125,8 +126,8 @@ const signupResolver = ref(
   zodResolver(
     z.object({
       email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
       name: z.string().min(1, { message: 'Nome está vazio' }),
+      password: z.string().min(1, { message: 'Senha está vazia' }),
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
@@ -142,6 +143,13 @@ const activeProfileStore = useActiveProfileStore();
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);
 const loginError = computed(() => activeProfileStore.error);
+
+function loginCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    isVisible.value = false;
+    props.handleCloseModal();
+  }
+}
 
 // ------ Functions  ------
 function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
@@ -167,24 +175,17 @@ function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
     return;
   }
 
-  const { email, password, name, username } = formData.values;
+  const { email, name, password, username } = formData.values;
   userService.signup(email, password, name, username, loginCallback);
-}
-
-function loginCallback(isSuccess: boolean) {
-  if (isSuccess) {
-    isVisible.value = false;
-    props.handleCloseModal();
-  }
-}
-
-function toggleMode() {
-  isSignupMode.value = !isSignupMode.value;
-  activeProfileStore.setError(null);
 }
 
 function resetState() {
   isSignupMode.value = false;
+  activeProfileStore.setError(null);
+}
+
+function toggleMode() {
+  isSignupMode.value = !isSignupMode.value;
   activeProfileStore.setError(null);
 }
 

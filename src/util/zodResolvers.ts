@@ -15,8 +15,8 @@ export const signupResolver = ref(
   zodResolver(
     z.object({
       email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
       name: z.string().min(1, { message: 'Nome está vazio' }),
+      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })

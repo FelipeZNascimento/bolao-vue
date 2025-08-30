@@ -1,10 +1,11 @@
 <template>
   <div
     class="outer-match"
-    :class="{ line: !isGridMode, grid: isGridMode }"
+    :class="{ line: !isGridMode, grid: isGridMode, clickable: !isBetting }"
     @click="handleMatchClick"
   >
     <ClockComponent
+      v-if="isDesktop"
       :ribbon="ribbon"
       :timestamp="match.timestamp"
       :status="match.status"
@@ -22,23 +23,27 @@
     :activeUserBet="match.loggedUserBets"
     :correctBets="correctBets"
     :isOpen="isBetsModalOpen"
+    :ribbon="ribbon"
     :handleCloseModal="handleCloseModal"
   />
 </template>
 <script lang="ts" setup>
+import { isDesktop } from '@basitcodeenv/vue3-device-detect';
+import { computed, ref } from 'vue';
+
 import type { Match } from '@/stores/matches';
+
+import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
+
+import BetsModal from './BetsModal/BetsModal.vue';
 import ClockComponent from './ClockComponent.vue';
 import ScoreComponent from './ScoreComponent.vue';
 
-import { computed, ref } from 'vue';
-import BetsModal from './BetsModal/BetsModal.vue';
-import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
-
 const props = withDefaults(
   defineProps<{
-    match: Match;
-    isGridMode?: boolean;
     isBetting?: boolean;
+    isGridMode?: boolean;
+    match: Match;
   }>(),
   {
     isBetting: false,
@@ -68,6 +73,10 @@ const ribbon = computed(() => {
   return 'MISS';
 });
 
+function handleCloseModal() {
+  isBetsModalOpen.value = false;
+}
+
 // ------ Functions ------
 function handleMatchClick() {
   if (props.isBetting) {
@@ -75,17 +84,16 @@ function handleMatchClick() {
   }
   isBetsModalOpen.value = true;
 }
-
-function handleCloseModal() {
-  isBetsModalOpen.value = false;
-}
 </script>
 <style scoped>
 .outer-match {
   display: flex;
   opacity: 1;
-  transition: 0.2s;
+}
+
+.clickable {
   cursor: pointer;
+  transition: 0.2s;
 
   &:hover {
     opacity: 0.8;
@@ -93,13 +101,21 @@ function handleCloseModal() {
 }
 
 .line {
-  height: 60px;
+  min-height: 60px;
   width: 100%;
 }
 
 .grid {
   flex-direction: column;
-  height: 150px;
-  width: 250px;
+
+  @media (max-width: 1023px) {
+    height: 120px;
+    width: 170px;
+  }
+
+  @media (min-width: 1024px) {
+    height: 150px;
+    width: 250px;
+  }
 }
 </style>

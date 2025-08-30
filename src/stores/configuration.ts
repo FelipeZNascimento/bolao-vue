@@ -1,42 +1,38 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+export type RankingPosition = 'active' | 'modal';
+export type ResultsView = 'grid' | 'lines';
 export type Theme = 'dark' | 'light';
-export type ResultsView = 'lines' | 'grid';
+
+const initialState = {
+  rankingPosition: 'active' as RankingPosition,
+  resultsView: 'grid' as ResultsView,
+  theme: 'dark' as Theme,
+};
 
 export const useConfigurationStore = defineStore('configuration', () => {
-  const currentSeason = ref<number | null>(null);
-  const currentWeek = ref<number | null>(null);
-  const selectedWeek = ref<number | null>(null);
-  const isLoading = ref<boolean>(false);
+  const currentSeason = ref<null | number>(null);
+  const seasonStart = ref<null | number>(null);
+  const currentWeek = ref<null | number>(null);
+  const selectedWeek = ref<null | number>(null);
+  const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
-  const theme = ref<Theme>('dark');
-  const resultsView = ref<ResultsView>('grid');
+  const theme = ref<Theme>(initialState.theme);
+  const resultsView = ref<ResultsView>(initialState.resultsView);
+  const rankingPosition = ref<RankingPosition>(initialState.rankingPosition);
 
-  // Add a function to reset the store to its initial state
+  function setInitialState() {
+    theme.value = initialState.theme;
+    resultsView.value = initialState.resultsView;
+    rankingPosition.value = initialState.rankingPosition;
+    localStorage.removeItem('ranking-columns');
+    localStorage.removeItem('theme-preference');
+    localStorage.removeItem('ranking-position');
+  }
 
-  function initialize() {
-    const themePreference = localStorage.getItem('theme-preference');
-    const resultsViewPreference = localStorage.getItem('results-view');
-    if (resultsViewPreference) {
-      resultsView.value = resultsViewPreference as ResultsView;
-    } else {
-      localStorage.setItem('results-view', 'grid');
-    }
-
-    if (themePreference) {
-      document.documentElement.setAttribute('data-theme', themePreference);
-      if (themePreference === 'dark') {
-        setTheme('dark');
-        document.documentElement.classList.add('dark-mode');
-      }
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      console.log('Dark mode is enabled');
-      setTheme('dark');
-    } else {
-      console.log('Light mode is enabled');
-      setTheme('light');
-    }
+  function setSeasonStart(timestamp: number) {
+    seasonStart.value = timestamp;
   }
 
   function isDarkMode() {
@@ -48,6 +44,11 @@ export const useConfigurationStore = defineStore('configuration', () => {
     document.documentElement.setAttribute('data-theme', newTheme);
     document.documentElement.classList.toggle('dark-mode');
     localStorage.setItem('theme-preference', newTheme);
+  }
+
+  function setRankingPosition(newValue: RankingPosition) {
+    rankingPosition.value = newValue;
+    localStorage.setItem('ranking-position', newValue);
   }
 
   function setResultsView(view: ResultsView) {
@@ -80,22 +81,26 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   return {
-    initialize,
-    setTheme,
-    toggleTheme,
-    setCurrentSeason,
-    setCurrentWeek,
-    setSelectedWeek,
-    setResultsView,
-    setLoading,
-    setError,
-    isDarkMode,
-    theme,
-    resultsView,
     currentSeason,
     currentWeek,
-    selectedWeek,
-    isLoading,
     error,
+    isDarkMode,
+    isLoading,
+    rankingPosition,
+    resultsView,
+    seasonStart,
+    selectedWeek,
+    setCurrentSeason,
+    setCurrentWeek,
+    setError,
+    setInitialState,
+    setLoading,
+    setRankingPosition,
+    setResultsView,
+    setSeasonStart,
+    setSelectedWeek,
+    setTheme,
+    theme,
+    toggleTheme,
   };
 });

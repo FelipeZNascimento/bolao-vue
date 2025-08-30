@@ -1,30 +1,33 @@
 <template>
-  <div style="position: relative">
-    <!-- :disabled="isLoading || isMatchStarted" -->
-    <PrimeRadioButton
-      v-for="(BET_VALUE, index) in BETS_VALUES"
-      :key="index"
-      :name="BETS_LABELS[BET_VALUE]"
-      :value="BET_VALUE"
-      v-model="radioButton"
-      class="betting-radio-button"
-      size="large"
-      @change="(e: any) => handleNewBet(e, BET_VALUE)"
-      v-tooltip.top="renderTootlip(BET_VALUE)"
-    />
+  <div>
+    <span v-for="(BET_VALUE, index) in BETS_VALUES" :key="index" style="position: relative">
+      <PrimeRadioButton
+        :name="BETS_LABELS[BET_VALUE]"
+        :disabled="isLoading || isMatchStarted"
+        :value="BET_VALUE"
+        v-model="radioButton"
+        class="betting-radio-button"
+        size="large"
+        @change="(e: any) => handleNewBet(e, BET_VALUE)"
+        v-tooltip.top="renderTootlip(BET_VALUE)"
+      />
+      <span class="betting-label">{{ BETS_LABELS[BET_VALUE] }}</span>
+    </span>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue';
-import { BETS_VALUES, BETS_LABELS, type BetsValues } from '@/constants/bets';
-import MatchService from '@/services/match';
-import type { Bet, Match } from '@/stores/matches';
 import { useToast } from 'primevue/usetoast';
+import { computed, ref, watchEffect } from 'vue';
+
+import type { Bet, Match } from '@/stores/matches';
+
+import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
+import MatchService from '@/services/match';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
-  match: Match;
   activeUserBet: Bet | null;
+  match: Match;
 }>();
 
 // ------ Refs ------
@@ -48,18 +51,29 @@ watchEffect(
   () => (radioButtonPrevValue.value = props.activeUserBet ? props.activeUserBet.value : null),
 );
 
-// ------ Functions ------
-function renderTootlip(value: BetsValues) {
-  if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
-    return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
+function callback(isSuccess: boolean, error?: Error) {
+  isLoading.value = false;
+  if (isSuccess) {
+    radioButtonPrevValue.value = radioButton.value; // Update previous value to current
+    toast.add({
+      detail: `Aposta ${props.match.away.code} @ ${props.match.home.code} atualizada com sucesso`,
+      life: 3000,
+      severity: 'success',
+      summary: 'Aposta atualizada',
+    });
   } else {
-    return `${BETS_LABELS[value]} para ${props.match.home.alias}`;
+    radioButton.value = radioButtonPrevValue.value; // Revert to previous value
+    console.error('Error updating bet:', error);
+    toast.add({
+      detail: `Erro ao atualizar aposta: ${error?.message}`,
+      life: 5000,
+      severity: 'error',
+      summary: 'Erro ao atualizar aposta',
+    });
   }
 }
 
 function handleNewBet(e: Event, newBet: BetsValues) {
-  console.log(`e: ${e.target as HTMLInputElement}`);
-  console.log(`e: ${JSON.stringify(e.target)}`);
   isLoading.value = true;
 
   // If nothing changed, do not update the bet
@@ -70,31 +84,31 @@ function handleNewBet(e: Event, newBet: BetsValues) {
   matchService.updateBet(props.match.id, newBet, callback);
 }
 
-function callback(isSuccess: boolean, error?: Error) {
-  isLoading.value = false;
-  if (isSuccess) {
-    radioButtonPrevValue.value = radioButton.value; // Update previous value to current
-    console.log('Bet updated successfully');
-    toast.add({
-      severity: 'success',
-      summary: 'Aposta atualizada',
-      detail: `Aposta ${props.match.away.code} @ ${props.match.home.code} atualizada com sucesso`,
-      life: 3000,
-    });
+// ------ Functions ------
+function renderTootlip(value: BetsValues) {
+  if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
+    return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
   } else {
-    radioButton.value = radioButtonPrevValue.value; // Revert to previous value
-    console.error('Error updating bet:', error);
-    toast.add({
-      severity: 'error',
-      summary: 'Erro ao atualizar aposta',
-      detail: `Erro ao atualizar aposta: ${error?.message}`,
-      life: 5000,
-    });
+    return `${BETS_LABELS[value]} para ${props.match.home.alias}`;
   }
 }
 </script>
 <style lang="scss" scoped>
 .betting-radio-button {
-  margin: var(--xs-spacing);
+  margin: var(--m-spacing);
+
+  @media (min-width: 1440px) {
+    margin: var(--l-spacing);
+  }
+}
+
+.betting-label {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateY(-100%) translateX(-50%);
+  font-size: var(--xs-font-size);
+  color: var(--text-color);
+  z-index: 1;
 }
 </style>

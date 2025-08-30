@@ -1,5 +1,7 @@
 import { BETS_VALUES, type BetsValues } from '@/constants/bets';
 
+export type CorrectBets = { bullseye: BetsValues[]; half: BetsValues[] };
+
 export function calculateCorrectBets(awayScore: number, homeScore: number) {
   if (awayScore === homeScore) {
     return {
@@ -49,5 +51,3 @@ export function isBullseye(correctBets: CorrectBets, betValue: BetsValues) {
 export function isHalfBet(correctBets: CorrectBets, betValue: BetsValues) {
   return correctBets.half.find((halfBet) => halfBet === betValue) !== undefined;
 }
-
-export type CorrectBets = { bullseye: BetsValues[]; half: BetsValues[] };

@@ -1,7 +1,7 @@
 <template>
   <div class="outer-clock">
     <div
-      v-if="activeProfile"
+      v-if="activeProfile && ribbon"
       class="ribbon"
       :class="{
         'green-bg': ribbon === 'BULLSEYE',
@@ -24,17 +24,19 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { computed } from 'vue';
+
 import type { Ribbon } from '@/constants/bets';
+
 import { MATCH_STATUS, MATCH_STATUS_LABELS, type MatchStatus } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
-import { computed } from 'vue';
 
 const props = defineProps<{
-  status: MatchStatus;
   clock: string;
+  ribbon?: Ribbon;
+  status: MatchStatus;
   timestamp: number;
-  ribbon: Ribbon;
 }>();
 
 // ------ Initialization ------
@@ -67,21 +69,45 @@ const isClockStopped = computed(
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 140px;
   font-size: var(--m-font-size);
   position: relative;
-  background-color: var(--color-background-mute);
+  background-color: var(--bolao-c-navy-t2);
+  color: var(--bolao-c-grey1);
+  padding: 0 0 0 var(--xxl-spacing);
+
+  span {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 1023px) {
+    min-width: 100px;
+    font-size: var(--s-font-size);
+  }
+
+  @media (min-width: 1024px) {
+    min-width: 100px;
+    font-size: var(--s-font-size);
+  }
+
+  @media (min-width: 1440px) {
+    width: 200px;
+    max-width: 200px;
+    font-size: var(--m-font-size);
+  }
 }
 
-.ribbon {
-  font-size: var(--m-font-size);
-  font-weight: bold;
-  color: #fff;
-}
 .ribbon {
   --f: 0.2em; /* control the folded part */
   --r: 0.2em; /* control the cutout */
 
+  font-size: var(--m-font-size);
+  font-weight: bold;
+  color: #fff;
   position: absolute;
   left: 2px;
   top: calc(-1 * var(--f));
@@ -101,6 +127,15 @@ const isClockStopped = computed(
     calc(2 * var(--f)) var(--f),
     0 var(--f)
   );
+
+  @media (max-width: 1023px) {
+    height: 30px;
+    left: 0px;
+    padding: 0 0.2em;
+    i {
+      font-size: var(--xs-font-size);
+    }
+  }
 }
 
 .green-bg {

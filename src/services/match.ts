@@ -1,11 +1,12 @@
-import ApiService from './api_request';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useMatchesStore, type Match } from '@/stores/matches';
+import { type Match, useMatchesStore } from '@/stores/matches';
+
+import ApiService from './api_request';
 
 interface fetchMatch {
+  matches: Match[];
   season: string;
   week: string;
-  matches: Match[];
 }
 
 export default class MatchService {
@@ -19,7 +20,7 @@ export default class MatchService {
     this.matchesStore = useMatchesStore();
   }
 
-  public async fetch(week?: number | null, season?: number | null) {
+  public async fetch(week?: null | number, season?: null | number) {
     this.matchesStore.setLoading(true);
     // Week may be "0" so needs to be checked against null and undefined
     if (week === undefined || week === null) {
@@ -48,13 +49,14 @@ export default class MatchService {
     callback?: (isSuccess: boolean, error?: Error) => void,
   ) {
     const betObject = {
-      matchId,
       betValue,
+      matchId,
     };
 
     try {
-      const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
-      // Deal with the response update the match in the store
+      await this.apiRequest.post<Match>(`bet/update/`, betObject);
+      // const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
+      // Deal with the response update the match in the store?
 
       if (callback) {
         callback(true);

@@ -1,5 +1,5 @@
 <template>
-  <div class="outer-ranking">
+  <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
       <span
         class="toggle"
@@ -29,19 +29,27 @@
       />
     </div>
   </div>
-  <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="handleCloseModal" />
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import ConfigModal from '@/components/Ranking/ConfigModal.vue';
+
 import RankingTable from './RankingTable.vue';
+
+withDefaults(
+  defineProps<{
+    isModal?: boolean;
+  }>(),
+  {
+    isModal: false,
+  },
+);
 
 // ------ Refs ------
 const isWeeklyRanking = ref(false);
-const isConfigModalOpen = ref(false);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
@@ -60,11 +68,6 @@ const isLoadingSeason = computed(
 const seasonRanking = computed(() => rankingStore.seasonRanking);
 const currentWeekRanking = computed(() => rankingStore.currentWeekRanking);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-
-// ------ Functions  ------
-function handleCloseModal() {
-  isConfigModalOpen.value = false;
-}
 </script>
 <style scoped>
 .outer-ranking {
@@ -73,8 +76,7 @@ function handleCloseModal() {
 
   position: sticky;
   border-left: 1px solid var(--color-background-mute);
-  min-width: 480px;
-  width: 480px;
+  min-width: 310px;
   max-height: calc(100vh - 80px);
 }
 

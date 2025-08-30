@@ -20,15 +20,20 @@
       :first="selectedWeek && selectedWeek - 1"
       :rows="1"
       :totalRecords="weeks.filter((week) => !week.hidden).length"
+      :template="{
+        '1024px': 'FirstPageLink PrevPageLink NextPageLink LastPageLink',
+      }"
       @page="handlePageChange"
     />
   </div>
 </template>
 <script setup lang="ts">
+import type { PageState } from 'primevue';
+
+import { computed, ref } from 'vue';
+
 import { WEEKS } from '@/constants/weeks';
 import { useConfigurationStore } from '@/stores/configuration';
-import type { PageState } from 'primevue';
-import { computed, ref } from 'vue';
 
 // ------ Refs ------
 const weeks = ref(WEEKS);
@@ -55,15 +60,19 @@ function handlePageChangeFromDropdown(e: Event) {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: var(--m-spacing);
+  padding: var(--m-spacing);
+  gap: var(--l-spacing);
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+  @media (min-width: 1025px) {
+    flex-direction: row;
+  }
 }
 
 .week-selector {
   height: 30px;
   width: 140px;
-}
-
-.paginator {
-  flex: 1;
 }
 </style>

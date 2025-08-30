@@ -1,13 +1,14 @@
-import type { RankingUser } from '@/services/ranking';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export type ColumnsOption = 'COMPACT' | 'COMPLETE';
+import type { RankingUser } from '@/services/ranking';
+
+export type ColumnsOption = 'compact' | 'complete';
 export type RowSpacing = 'normal' | 'small';
 
 const initialState = {
-  columnsOption: 'COMPLETE' as ColumnsOption,
-  rowSpacing: 'normal' as RowSpacing,
+  columnsOption: 'complete' as ColumnsOption,
+  rowSpacing: 'small' as RowSpacing,
 };
 
 export const useRankingStore = defineStore('ranking', () => {
@@ -25,6 +26,7 @@ export const useRankingStore = defineStore('ranking', () => {
     rowSpacing.value = initialState.rowSpacing;
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('ranking-spacing');
+    localStorage.removeItem('ranking-position');
   }
 
   function setSeason(newSeasonRanking: RankingUser[]) {
@@ -62,22 +64,22 @@ export const useRankingStore = defineStore('ranking', () => {
   }
 
   return {
-    isLoadingWeek,
-    isLoadingSeason,
-    errorWeek,
-    errorSeason,
-    seasonRanking,
-    currentWeekRanking,
     columnsOption,
+    currentWeekRanking,
+    errorSeason,
+    errorWeek,
+    isLoadingSeason,
+    isLoadingWeek,
     rowSpacing,
-    setInitialState,
-    setSeason,
-    setCurrentWeek,
-    setLoadingWeek,
-    setLoadingSeason,
-    setErrorWeek,
-    setErrorSeason,
+    seasonRanking,
     setColumnsOption,
+    setCurrentWeek,
+    setErrorSeason,
+    setErrorWeek,
+    setInitialState,
+    setLoadingSeason,
+    setLoadingWeek,
     setRowSpacing,
+    setSeason,
   };
 });
