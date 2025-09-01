@@ -75,7 +75,6 @@ export const useExtraBetStore = defineStore('extras', () => {
 
   const allUsersBets = ref<ExtraBet[]>([]);
   const correctExtraBets = ref<ExtraBet[]>([]);
-  const normalizedCorrectExtraBets = ref<NormalizedExtraBets>({ ...initialNormalizedExtraBets });
   const loggedUserBets = ref<ExtraBet[]>([]);
   const normalizedLoggedUserBets = ref<NormalizedExtraBets>({ ...initialNormalizedExtraBets });
 
@@ -86,6 +85,10 @@ export const useExtraBetStore = defineStore('extras', () => {
   const isUpdating = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
   const error = ref<Error | null>(null);
+
+  function setNormalizedLoggedUserBets(newValue: NormalizedExtraBets) {
+    normalizedLoggedUserBets.value = newValue;
+  }
 
   function setLoggedUserBetsByCategory(
     newWildcard: ExtrasTeam[],
@@ -163,7 +166,6 @@ export const useExtraBetStore = defineStore('extras', () => {
     loggedUserBets,
     loggedUserBetsByCategory,
     nfcTeams,
-    normalizedCorrectExtraBets,
     normalizedLoggedUserBets,
     resetLoggedUserBets,
     setAfcTeams,
@@ -176,6 +178,7 @@ export const useExtraBetStore = defineStore('extras', () => {
     setLoggedUserBets,
     setLoggedUserBetsByCategory,
     setNfcTeams,
+    setNormalizedLoggedUserBets,
     setUpdating,
   };
 });

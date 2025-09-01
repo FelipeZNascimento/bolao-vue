@@ -33,9 +33,17 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/Extras/ExtrasView.vue'),
+      component: () => import('../views/ExtrasView.vue'),
       name: 'extras',
       path: '/extras',
+    },
+    {
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/RulesView.vue'),
+      name: 'regras',
+      path: '/regras',
     },
   ],
 });

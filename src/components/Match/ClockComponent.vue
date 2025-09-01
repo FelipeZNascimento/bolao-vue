@@ -64,16 +64,16 @@ const isClockStopped = computed(
     props.status === MATCH_STATUS.CANCELLED,
 );
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .outer-clock {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   font-size: var(--m-font-size);
   position: relative;
   background-color: var(--bolao-c-navy-t2);
   color: var(--bolao-c-grey1);
-  padding: 0 0 0 var(--xxl-spacing);
+  padding: 0 var(--xxl-spacing);
 
   span {
     display: -webkit-box;
@@ -101,6 +101,12 @@ const isClockStopped = computed(
   }
 }
 
+.clock-date {
+  font-size: var(--m2-font-size);
+}
+.clock-time {
+  font-size: var(--s-font-size);
+}
 .ribbon {
   --f: 0.2em; /* control the folded part */
   --r: 0.2em; /* control the cutout */

@@ -174,7 +174,7 @@ function handleLogout() {
   profilePopover.value.toggle();
 }
 
-function togglePopover(event) {
+function togglePopover(event: Event) {
   profilePopover.value.toggle(event);
 }
 </script>

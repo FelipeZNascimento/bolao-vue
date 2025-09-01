@@ -53,7 +53,6 @@ import { computed, ref, watchEffect } from 'vue';
 
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
-import { useConfigurationStore } from '@/stores/configuration';
 import {
   type Conference,
   type Division,

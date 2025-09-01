@@ -166,7 +166,7 @@ function isHighlighted(winnersList: ExtrasTeam[], teamId: number) {
   return winnersList.find((winner) => winner.id === teamId);
 }
 
-function onRowClick(event) {
+function onRowClick(event: any) {
   modalInfo.value = { ...event.data } as ModalInfo;
 }
 </script>

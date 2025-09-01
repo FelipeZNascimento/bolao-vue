@@ -1,5 +1,6 @@
 <template>
   <PrimeDialog
+    v-if="team"
     dismissableMask
     modal
     v-model:visible="isVisible"
@@ -12,22 +13,22 @@
       <TeamComponent isScoreless :isGridMode="false" :team="team" />
     </div>
     <div class="bets-outer" v-if="bets">
-      <ExtrasAfterAllBetsTableColumn
+      <ExtrasBetsModalColumn
         :isCorrect="isCorrect(correctBetsByCategory.wildcard, team.id)"
         title="Wild Card"
         :users="[...bets.wildcard].sort((a, b) => a.name.localeCompare(b.name))"
       />
-      <ExtrasAfterAllBetsTableColumn
+      <ExtrasBetsModalColumn
         title="Divisão"
         :users="[...bets.division].sort((a, b) => a.name.localeCompare(b.name))"
         :isCorrect="isCorrect(correctBetsByCategory.division, team.id)"
       />
-      <ExtrasAfterAllBetsTableColumn
+      <ExtrasBetsModalColumn
         title="Conferência"
         :users="[...bets.conference].sort((a, b) => a.name.localeCompare(b.name))"
         :isCorrect="isCorrect(correctBetsByCategory.conference, team.id)"
       />
-      <ExtrasAfterAllBetsTableColumn
+      <ExtrasBetsModalColumn
         title="Super Bowl"
         :users="[...bets.superbowl].sort((a, b) => a.name.localeCompare(b.name))"
         :isCorrect="
@@ -43,12 +44,12 @@ import { computed, ref, watch } from 'vue';
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { type BetByCategory, type ExtrasTeam, useExtraBetStore } from '@/stores/extraBet';
 
-import ExtrasAfterAllBetsTableColumn from '../After/ExtrasAfterAllBetsTableColumn.vue';
+import ExtrasBetsModalColumn from './ExtrasBetsModalColumn.vue';
 
 const props = defineProps<{
   bets: BetByCategory | null;
   handleCloseModal: () => void;
-  team: ExtrasTeam;
+  team: ExtrasTeam | null;
 }>();
 
 // ------ Initialization ------

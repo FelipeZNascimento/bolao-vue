@@ -10,8 +10,8 @@ import ExtraBetService from '@/services/extra_bet';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 
-import ExtrasAfter from './ExtrasAfter.vue';
-import ExtrasBefore from './ExtrasBefore.vue';
+import ExtrasAfter from './Extras/ExtrasAfter.vue';
+import ExtrasBefore from './Extras/ExtrasBefore.vue';
 
 // ------ Initialization ------
 const extraBetService = new ExtraBetService();

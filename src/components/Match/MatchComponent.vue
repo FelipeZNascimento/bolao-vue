@@ -5,7 +5,7 @@
     @click="handleMatchClick"
   >
     <ClockComponent
-      v-if="isDesktop"
+      v-if="isDesktop && !isDemo"
       :ribbon="ribbon"
       :timestamp="match.timestamp"
       :status="match.status"
@@ -33,6 +33,7 @@ import { computed, ref } from 'vue';
 
 import type { Match } from '@/stores/matches';
 
+import { useClockStore } from '@/stores/clock';
 import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
 import BetsModal from './BetsModal/BetsModal.vue';
@@ -42,11 +43,13 @@ import ScoreComponent from './ScoreComponent.vue';
 const props = withDefaults(
   defineProps<{
     isBetting?: boolean;
+    isDemo?: boolean;
     isGridMode?: boolean;
     match: Match;
   }>(),
   {
     isBetting: false,
+    isDemo: false,
     isGridMode: false,
   },
 );
@@ -54,13 +57,19 @@ const props = withDefaults(
 // ------ Refs ------
 const isBetsModalOpen = ref(false);
 
+// ------ Initialization ------
+const clockStore = useClockStore();
+
 // ------ Computed Properties ------
 const correctBets = computed(() =>
   calculateCorrectBets(props.match.away.score, props.match.home.score),
 );
+const isMatchStarted = computed(() => {
+  return clockStore.currentTimestamp >= props.match.timestamp;
+});
 
 const ribbon = computed(() => {
-  if (!props.match.loggedUserBets) {
+  if (!props.match.loggedUserBets || !isMatchStarted.value) {
     return null;
   }
 
@@ -79,7 +88,7 @@ function handleCloseModal() {
 
 // ------ Functions ------
 function handleMatchClick() {
-  if (props.isBetting) {
+  if (props.isBetting || props.isDemo) {
     return;
   }
   isBetsModalOpen.value = true;

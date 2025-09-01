@@ -51,7 +51,9 @@ export default class ExtraBetService {
       // Processing logged user extra bets
       this.processExtraBets(response.userBets, 'loggedUser');
       // Processing extra bets results
-      this.processExtraBets(response.results, 'results');
+      if (response.results) {
+        this.processExtraBets(response.results, 'results');
+      }
       // Processing all users extra bets results
       this.processAllUsersExtraBets(response.bets);
 
@@ -126,7 +128,7 @@ export default class ExtraBetService {
     superbowlBet: ExtrasTeam | null;
     wildcardBets: ExtrasTeam[];
   } {
-    const normalizedExtraBets: NormalizedExtraBets = initialNormalizedExtraBets;
+    const normalizedExtraBets: NormalizedExtraBets = { ...initialNormalizedExtraBets };
     const championBets: ExtrasTeam[] = [];
     const conferenceBets: ExtrasTeam[] = [];
     let wildcardBets: ExtrasTeam[] = [];
@@ -177,6 +179,7 @@ export default class ExtraBetService {
 
     if (mode === 'loggedUser') {
       this.extraBetStore.setLoggedUserBets(newExtras);
+      this.extraBetStore.setNormalizedLoggedUserBets(normalizedExtraBets);
       this.extraBetStore.setLoggedUserBetsByCategory(
         wildcardBets,
         championBets,

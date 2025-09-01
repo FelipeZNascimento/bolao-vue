@@ -27,6 +27,7 @@ import PrimeMenubar from 'primevue/menubar';
 import PrimeMessage from 'primevue/message';
 import PrimeOverlayBadge from 'primevue/overlaybadge';
 import PrimePaginator from 'primevue/paginator';
+import PrimePanel from 'primevue/panel';
 import PrimePassword from 'primevue/password';
 import PrimePopover from 'primevue/popover';
 import PrimeRadioButton from 'primevue/radiobutton';
@@ -106,6 +107,7 @@ app.component('PrimeMenubar', PrimeMenubar);
 app.component('PrimeAvatar', PrimeAvatar);
 app.component('PrimeKnob', PrimeKnob);
 app.component('PrimeOverlayBadge', PrimeOverlayBadge);
+app.component('PrimePanel', PrimePanel);
 
 app.directive('tooltip', PrimeTooltip);
 
