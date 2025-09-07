@@ -1,40 +1,31 @@
 <template>
   <PrimePanel style="width: 100%" header="Resultado da Aposta" toggleable>
     <p>
-      <span style="color: var(--bolao-c-mint); font-weight: bold">Na Mosca</span>: acertar o
-      vencedor e a margem de vitória.
+      <span style="color: var(--bolao-c-mint); font-weight: bold">Na Mosca</span>: acertar o vencedor e a margem de
+      vitória.
     </p>
     <p>
-      <span style="color: var(--bolao-c-blue); font-weight: bold">Vencedor Correto</span>: acertar o
-      vencedor mas errar a margem de vitória.
+      <span style="color: var(--bolao-c-blue); font-weight: bold">Vencedor Correto</span>: acertar o vencedor mas errar
+      a margem de vitória.
     </p>
     <p>
-      <span style="color: var(--bolao-c-red); font-weight: bold">Errar o vencedor</span>: zero
-      pontos. Sem choro nem vela nem fica amarela gravada com o nome dela.
+      <span style="color: var(--bolao-c-red); font-weight: bold">Errar o vencedor</span>: zero pontos. Sem choro nem
+      vela nem fica amarela gravada com o nome dela.
     </p>
     <p style="padding-top: var(--l-spacing)">
-      Caso uma partida termine em empate, um acerto parcial é concedido a todos que apostaram em
-      vitória difícil.
+      Caso uma partida termine em empate, um acerto parcial é concedido a todos que apostaram em vitória difícil.
     </p>
   </PrimePanel>
   <PrimePanel style="width: 100%" header="Quanto vale uma aposta" toggleable>
     <p style="padding-bottom: var(--l-spacing)">
-      Ao longo da temporada, as apostas mudam de valor. Quanto mais importante uma partida, mais
-      pontos tem uma aposta correta.
+      Ao longo da temporada, as apostas mudam de valor. Quanto mais importante uma partida, mais pontos tem uma aposta
+      correta.
     </p>
     <PrimeDataTable showGridlines rowHover :value="tableScores">
       <PrimeColumn field="text" header="Fase"></PrimeColumn>
-      <PrimeColumn
-        field="valueBullseye"
-        header="Mosca"
-        style="color: var(--bolao-c-mint); font-weight: bold"
-      >
+      <PrimeColumn field="valueBullseye" header="Mosca" style="color: var(--bolao-c-mint); font-weight: bold">
       </PrimeColumn>
-      <PrimeColumn
-        field="valueWinner"
-        header="Vencedor"
-        style="color: var(--bolao-c-blue); font-weight: bold"
-      >
+      <PrimeColumn field="valueWinner" header="Vencedor" style="color: var(--bolao-c-blue); font-weight: bold">
       </PrimeColumn>
     </PrimeDataTable>
   </PrimePanel>
@@ -53,8 +44,7 @@
       de vantagem sobre o perdedor.
     </p>
     <p style="padding-bottom: var(--l-spacing)">
-      No exemplo abaixo, os Packers tem apenas 4 pontos de vantagem sobre os Bears. Ou seja, uma
-      vitória difícil.
+      No exemplo abaixo, os Packers tem apenas 4 pontos de vantagem sobre os Bears. Ou seja, uma vitória difícil.
     </p>
     <MatchComponent :match="hardMatch" isDemo :isGridMode="false" />
   </PrimePanel>

@@ -16,14 +16,12 @@
         :src="`/team_logos/${props.team.id}.gif`"
       />
     </span>
-    <span v-if="!isNameless" class="team-alias">{{
-      isGridMode || isAlias ? team.code : team.alias
-    }}</span>
+    <span v-if="!isNameless" class="team-alias">{{ isGridMode || isAlias ? team.code : team.alias }}</span>
     <span v-if="!isScoreless" class="team-score">{{ team.score }}</span>
   </div>
 </template>
 <script lang="ts" setup>
-import type { Team } from '@/stores/matches';
+import type { ITeam } from '@/stores/matches.types';
 
 const props = defineProps<{
   isAlias?: boolean;
@@ -31,10 +29,10 @@ const props = defineProps<{
   isHomeTeam?: boolean;
   isNameless?: boolean;
   isScoreless?: boolean;
-  team: Team;
+  team: Partial<ITeam>;
 }>();
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .outer-team {
   display: flex;
   flex: 1;
@@ -46,6 +44,7 @@ const props = defineProps<{
   position: relative;
   overflow: hidden;
 }
+
 .outer-team-nameless {
   min-width: 60px;
 }
@@ -95,12 +94,16 @@ const props = defineProps<{
   font-size: var(--l-font-size);
 
   @media (max-width: 1024px) {
+    font-size: var(--s-font-size);
+  }
+
+  @media (max-width: 1444px) {
     font-size: var(--m-font-size);
   }
 }
 
 .team-score {
-  min-width: 30px;
+  min-width: 55px;
   height: 100%;
   display: flex;
   align-items: center;

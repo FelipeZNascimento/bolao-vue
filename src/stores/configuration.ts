@@ -1,14 +1,19 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export type RankingPosition = 'active' | 'modal';
-export type ResultsView = 'grid' | 'lines';
-export type Theme = 'dark' | 'light';
+import type {
+  TRankingPosition,
+  TRankingPositionValue,
+  TResultsView,
+  TResultsViewValue,
+  TTheme,
+  TThemeValue,
+} from './configuration.types';
 
 const initialState = {
-  rankingPosition: 'active' as RankingPosition,
-  resultsView: 'grid' as ResultsView,
-  theme: 'dark' as Theme,
+  rankingPosition: 'active' as TRankingPositionValue,
+  resultsView: 'grid' as TResultsViewValue,
+  theme: 'dark' as TThemeValue,
 };
 
 export const useConfigurationStore = defineStore('configuration', () => {
@@ -18,9 +23,9 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const selectedWeek = ref<null | number>(null);
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
-  const theme = ref<Theme>(initialState.theme);
-  const resultsView = ref<ResultsView>(initialState.resultsView);
-  const rankingPosition = ref<RankingPosition>(initialState.rankingPosition);
+  const theme = ref<TThemeValue>(initialState.theme);
+  const resultsView = ref<TResultsViewValue>(initialState.resultsView);
+  const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
 
   function setInitialState() {
     theme.value = initialState.theme;
@@ -39,19 +44,19 @@ export const useConfigurationStore = defineStore('configuration', () => {
     return theme.value === 'dark';
   }
 
-  function setTheme(newTheme: Theme) {
+  function setTheme(newTheme: TThemeValue) {
     theme.value = newTheme;
     document.documentElement.setAttribute('data-theme', newTheme);
     document.documentElement.classList.toggle('dark-mode');
     localStorage.setItem('theme-preference', newTheme);
   }
 
-  function setRankingPosition(newValue: RankingPosition) {
+  function setRankingPosition(newValue: TRankingPositionValue) {
     rankingPosition.value = newValue;
     localStorage.setItem('ranking-position', newValue);
   }
 
-  function setResultsView(view: ResultsView) {
+  function setResultsView(view: TResultsViewValue) {
     resultsView.value = view;
     localStorage.setItem('results-view', view);
   }
@@ -69,6 +74,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setSelectedWeek(week: number) {
+    console.log('Setting selected week to:', week);
     selectedWeek.value = week;
   }
 

@@ -10,32 +10,34 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type Conference, type Division, useExtraBetStore } from '@/stores/extraBet';
+import type { TConference, TDivision } from '@/stores/matches.types';
+
+import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasResultTable from './ExtrasAfterUserTable.vue';
 
 defineProps<{
-  conference: Conference;
+  conference: TConference;
 }>();
 
 // ------ Initialization ------
-const divisionsObj: Division[] = ['North', 'East', 'South', 'West'];
+const divisionsObj: TDivision[] = ['North', 'East', 'South', 'West'];
 const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties ------
 const conferenceTeams = computed(() => {
   return {
     AFC: {
-      East: extraBetStore.afcTeams.east,
-      North: extraBetStore.afcTeams.north,
-      South: extraBetStore.afcTeams.south,
-      West: extraBetStore.afcTeams.west,
+      East: extraBetStore.afcTeams.East,
+      North: extraBetStore.afcTeams.North,
+      South: extraBetStore.afcTeams.South,
+      West: extraBetStore.afcTeams.West,
     },
     NFC: {
-      East: extraBetStore.nfcTeams.east,
-      North: extraBetStore.nfcTeams.north,
-      South: extraBetStore.nfcTeams.south,
-      West: extraBetStore.nfcTeams.west,
+      East: extraBetStore.nfcTeams.East,
+      North: extraBetStore.nfcTeams.North,
+      South: extraBetStore.nfcTeams.South,
+      West: extraBetStore.nfcTeams.West,
     },
   };
 });

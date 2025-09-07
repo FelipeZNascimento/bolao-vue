@@ -9,12 +9,7 @@
     contentClass="content-class"
   >
     <template #header>
-      <ClockComponent
-        :timestamp="match.timestamp"
-        :status="match.status"
-        :clock="match.clock"
-        :ribbon="ribbon"
-      />
+      <ClockComponent :timestamp="match.timestamp" :status="match.status" :clock="match.clock" :ribbon="ribbon" />
     </template>
 
     <div class="teams-outer">
@@ -52,7 +47,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import type { Match } from '@/stores/matches';
+import type { IMatch } from '@/stores/matches.types';
 
 import { BETS_VALUES, type Ribbon } from '@/constants/bets';
 import { type CorrectBets } from '@/util/betsCalculator';
@@ -65,7 +60,7 @@ const props = defineProps<{
   correctBets: CorrectBets;
   handleCloseModal: () => void;
   isOpen: boolean;
-  match: Match;
+  match: IMatch;
   ribbon: null | Ribbon;
 }>();
 

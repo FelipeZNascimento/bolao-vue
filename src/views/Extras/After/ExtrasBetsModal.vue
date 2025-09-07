@@ -12,28 +12,26 @@
     <div class="teams-outer">
       <TeamComponent isScoreless :isGridMode="false" :team="team" />
     </div>
-    <div class="bets-outer" v-if="bets">
+    <div class="bets-outer" v-if="teamWithExtras && team">
       <ExtrasBetsModalColumn
-        :isCorrect="isCorrect(correctBetsByCategory.wildcard, team.id)"
+        :isCorrect="isCorrect(team.id, 'wildcard')"
         title="Wild Card"
-        :users="[...bets.wildcard].sort((a, b) => a.name.localeCompare(b.name))"
+        :users="getUsersFromTeamWithExtras('wildcard')"
       />
       <ExtrasBetsModalColumn
         title="Divisão"
-        :users="[...bets.division].sort((a, b) => a.name.localeCompare(b.name))"
-        :isCorrect="isCorrect(correctBetsByCategory.division, team.id)"
+        :users="getUsersFromTeamWithExtras('division')"
+        :isCorrect="isCorrect(team.id, 'division')"
       />
       <ExtrasBetsModalColumn
         title="Conferência"
-        :users="[...bets.conference].sort((a, b) => a.name.localeCompare(b.name))"
-        :isCorrect="isCorrect(correctBetsByCategory.conference, team.id)"
+        :users="getUsersFromTeamWithExtras('conference')"
+        :isCorrect="isCorrect(team.id, 'conference')"
       />
       <ExtrasBetsModalColumn
         title="Super Bowl"
-        :users="[...bets.superbowl].sort((a, b) => a.name.localeCompare(b.name))"
-        :isCorrect="
-          !!(correctBetsByCategory.superbowl && correctBetsByCategory.superbowl.id === team.id)
-        "
+        :users="getUsersFromTeamWithExtras('superbowl')"
+        :isCorrect="isCorrect(team.id, 'superbowl')"
       />
     </div>
   </PrimeDialog>
@@ -41,30 +39,108 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 
+import type { ITeamWithExtrasBet, TConference, TExtrasTeam } from '@/stores/extraBet.types';
+
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import { type BetByCategory, type ExtrasTeam, useExtraBetStore } from '@/stores/extraBet';
+import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModalColumn from './ExtrasBetsModalColumn.vue';
 
 const props = defineProps<{
-  bets: BetByCategory | null;
   handleCloseModal: () => void;
-  team: ExtrasTeam | null;
+  team: null | TExtrasTeam;
+  teamWithExtras: ITeamWithExtrasBet[];
 }>();
 
 // ------ Initialization ------
+
 const extraBetStore = useExtraBetStore();
 
 // ------ Refs ------
+
 const isVisible = ref(false);
 
 // ------ Computed Properties ------
-const correctBetsByCategory = computed(() => extraBetStore.correctBetsByCategory);
+
+const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
 
 // ------ Functions ------
-function isCorrect(correctBets: ExtrasTeam[], teamId: number) {
-  return correctBets.find((element) => element.id === teamId) !== undefined;
+
+function getUsersFromTeamWithExtras(type: 'conference' | 'division' | 'superbowl' | 'wildcard') {
+  if (!props.team) {
+    return [];
+  }
+  const conference: TConference = props.team.conference;
+
+  if (type === 'conference') {
+    const filtered = props.teamWithExtras
+      .filter((bet) => props.team && bet.type === EXTRA_BETS_VALUES[conference])
+      .map((bet) => bet.user)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return filtered;
+  } else if (type === 'division') {
+    const divisions = [
+      EXTRA_BETS_VALUES[`${conference}_EAST`],
+      EXTRA_BETS_VALUES[`${conference}_NORTH`],
+      EXTRA_BETS_VALUES[`${conference}_SOUTH`],
+      EXTRA_BETS_VALUES[`${conference}_WEST`],
+    ];
+    const filtered = props.teamWithExtras
+      .filter((bet) => divisions.includes(bet.type))
+      .map((bet) => bet.user)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return filtered;
+  } else if (type === 'superbowl') {
+    const filtered = props.teamWithExtras
+      .filter((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)
+      .map((bet) => bet.user)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return filtered;
+  } else if (type === 'wildcard') {
+    const filtered = props.teamWithExtras
+      .filter((bet) => props.team && bet.type === EXTRA_BETS_VALUES[`${conference}_WILDCARD`])
+      .map((bet) => bet.user)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return filtered;
+  }
+
+  return [];
 }
+
+function isCorrect(teamId: number, type: 'conference' | 'division' | 'superbowl' | 'wildcard') {
+  if (props.team === null || extraBetsResults.value === null) return false;
+
+  const conference: TConference = props.team.conference;
+
+  if (type === 'conference') {
+    const teams = extraBetsResults.value.bets.find(
+      (bet) => props.team && bet.type === EXTRA_BETS_VALUES[conference],
+    )?.teams;
+    return teams?.some((team) => team.id === teamId) ?? false;
+  } else if (type === 'division') {
+    const divisions = [
+      EXTRA_BETS_VALUES[`${conference}_EAST`],
+      EXTRA_BETS_VALUES[`${conference}_NORTH`],
+      EXTRA_BETS_VALUES[`${conference}_SOUTH`],
+      EXTRA_BETS_VALUES[`${conference}_WEST`],
+    ];
+    const teams = extraBetsResults.value.bets.filter((bet) => divisions.includes(bet.type)).flatMap((bet) => bet.teams);
+    return teams?.some((team) => team.id === teamId) ?? false;
+  } else if (type === 'superbowl') {
+    const teams = extraBetsResults.value.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)?.teams;
+    return teams?.some((team) => team.id === teamId) ?? false;
+  } else if (type === 'wildcard') {
+    const teams = extraBetsResults.value.bets
+      .filter((bet) => props.team && bet.type === EXTRA_BETS_VALUES[`${conference}_WILDCARD`])
+      .flatMap((bet) => bet.teams);
+    return teams?.some((team) => team.id === teamId) ?? false;
+  }
+
+  return false;
+}
+
+// test();
 
 watch(
   () => props.team,

@@ -1,25 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-export interface UpdateProfileResponse {
-  changedPassword: boolean;
-  changedUser: number;
-  user: User;
-}
-
-export interface User {
-  color: string;
-  email: string;
-  fullName: string;
-  icon: string;
-  id: number;
-  isOnline: boolean;
-  name: string;
-  status: number;
-}
+import type { IUser } from './activeProfile.types';
 
 export const useActiveProfileStore = defineStore('activeProfile', () => {
-  const activeProfile = ref<null | User>(null);
+  const activeProfile = ref<IUser | null>(null);
   const isLoading = ref(false);
   const error = ref<Error | null>(null);
 
@@ -27,7 +12,7 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     isLoading.value = loadingState;
   }
 
-  function setActiveProfile(profile: null | User) {
+  function setActiveProfile(profile: IUser | null) {
     activeProfile.value = profile;
     isLoading.value = false;
   }

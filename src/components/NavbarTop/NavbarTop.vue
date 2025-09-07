@@ -19,7 +19,7 @@
             @click="activeRoute = item.id"
             custom
           >
-            <a v-ripple @click="navigate()">
+            <a @click="navigate()">
               <span>{{ item.label }}</span>
             </a>
           </RouterLink>
@@ -29,7 +29,7 @@
             @click="isRankingModalOpen = true"
             custom
           >
-            <a v-ripple>
+            <a>
               <span>{{ item.label }}</span>
             </a>
           </RouterLink>
@@ -45,11 +45,7 @@
               variant="outlined"
               severity="secondary"
             >
-              <IconAndName
-                :color="activeProfile.color"
-                :icon="activeProfile.icon"
-                :name="activeProfile.name"
-              />
+              <IconAndName :color="activeProfile.color" :icon="activeProfile.icon" :name="activeProfile.name" />
             </PrimeButton>
             <PrimeButton
               v-else
@@ -91,23 +87,11 @@
     </nav>
   </header>
   <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="() => (isLoginModalOpen = false)" />
-  <ProfileModal
-    :isOpen="isProfileModalOpen"
-    :handleCloseModal="() => (isProfileModalOpen = false)"
-  />
-  <PasswordModal
-    :isOpen="isPasswordModalOpen"
-    :handleCloseModal="() => (isPasswordModalOpen = false)"
-  />
-  <PreferencesModal
-    :isOpen="isPreferencesModalOpen"
-    :handleCloseModal="() => (isPreferencesModalOpen = false)"
-  />
+  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="() => (isProfileModalOpen = false)" />
+  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="() => (isPasswordModalOpen = false)" />
+  <PreferencesModal :isOpen="isPreferencesModalOpen" :handleCloseModal="() => (isPreferencesModalOpen = false)" />
   <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="() => (isConfigModalOpen = false)" />
-  <RankingModal
-    :isOpen="isRankingModalOpen"
-    :handleCloseModal="() => (isRankingModalOpen = false)"
-  />
+  <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="() => (isRankingModalOpen = false)" />
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
@@ -160,9 +144,7 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isProfileLoading = computed(() => activeProfileStore.isLoading);
 const rankingPosition = computed(() => configurationStore.rankingPosition);
 const filteredRoutes = computed(() => {
-  const filtered: TROUTE[] = ROUTES.filter((route) =>
-    route.needCredentials ? activeProfile.value !== null : true,
-  );
+  const filtered: TROUTE[] = ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true));
   filtered.push(rankingRoute);
 
   return filtered;

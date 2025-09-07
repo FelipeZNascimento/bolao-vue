@@ -82,11 +82,7 @@
           />
         </div>
         <p v-show="isUpdateSuccess">
-          <PrimeTag
-            severity="success"
-            icon="pi pi-check"
-            value="Alterações salvas com sucesso"
-          ></PrimeTag>
+          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
         </p>
       </div>
     </template>
@@ -124,9 +120,7 @@ const numOfIconsPerPage = 80;
 
 // ------ Computed Properties ------
 const filteredIcons = computed(() => {
-  const filtered = faIconsListObj.filter((icon) =>
-    icon.value.includes(iconSearch.value.toLowerCase()),
-  );
+  const filtered = faIconsListObj.filter((icon) => icon.value.includes(iconSearch.value.toLowerCase()));
 
   return filtered;
 });
@@ -144,9 +138,7 @@ const maxNumOfIconsCurrentPage = computed(() => {
     return lastPageLength === 0 ? numOfIconsPerPage : lastPageLength;
   }
 
-  return filteredIcons.value.length < numOfIconsPerPage
-    ? filteredIcons.value.length
-    : numOfIconsPerPage;
+  return filteredIcons.value.length < numOfIconsPerPage ? filteredIcons.value.length : numOfIconsPerPage;
 });
 
 // ------ Watch Effect Properties ------
@@ -161,10 +153,7 @@ function calculateIconIndex(index: number) {
 
 function handleConfirm() {
   isUpdateSuccess.value = false;
-  if (
-    newColor.value === activeProfile.value?.color &&
-    newIcon.value === activeProfile.value?.icon
-  ) {
+  if (newColor.value === activeProfile.value?.color && newIcon.value === activeProfile.value?.icon) {
     return updateCallback(true);
   }
 
@@ -223,6 +212,7 @@ watch(isVisible, async (newValue) => {
     justify-content: flex-start;
   }
 }
+
 .outer-color {
   flex-direction: column;
   display: flex;
@@ -277,7 +267,7 @@ watch(isVisible, async (newValue) => {
 }
 
 .iconAndName {
-  font-size: var(--xl-font-size);
+  font-size: var(--m-font-size);
 }
 
 .buttons-container {

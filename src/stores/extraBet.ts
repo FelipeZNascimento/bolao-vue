@@ -1,144 +1,47 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { ExtraBet } from '@/services/extra_bet';
-import type { ConferenceChampions, DivisionChampions, Wildcards } from '@/views/Extras/types';
-
-import type { User } from './activeProfile';
-import type { Team } from './matches';
-
-export type BetByCategory = {
-  conference: Omit<User, 'email, fullName, status, isOnline'>[];
-  division: Omit<User, 'email, fullName, status, isOnline'>[];
-  superbowl: Omit<User, 'email, fullName, status, isOnline'>[];
-  wildcard: Omit<User, 'email, fullName, status, isOnline'>[];
-};
-export type Conference = 'AFC' | 'NFC';
-export type ConferenceTeams = {
-  east: ExtrasTeam[];
-  north: ExtrasTeam[];
-  south: ExtrasTeam[];
-  west: ExtrasTeam[];
-};
-
-export type Division = 'East' | 'North' | 'South' | 'West';
-
-export type ExtraBetsByCategory = {
-  conference: ExtrasTeam[];
-  division: ExtrasTeam[];
-  superbowl: ExtrasTeam | null;
-  wildcard: ExtrasTeam[];
-};
-
-export type ExtrasTeam = Omit<Team, 'possession, score'> & {
-  conference: Conference;
-  division: Division;
-};
-export type NormalizedExtraBets = {
-  conferenceChampions: ConferenceChampions;
-  divisionChampions: DivisionChampions;
-  superbowl: ExtrasTeam | null;
-  wildcards: Wildcards;
-};
-
-export type UserBetByTeam = {
-  bets: BetByCategory;
-  team: ExtrasTeam;
-};
-
-export const initialNormalizedExtraBets = {
-  conferenceChampions: {
-    AFC: null,
-    NFC: null,
-  },
-  divisionChampions: {
-    AFC: { East: null, North: null, South: null, West: null },
-    NFC: { East: null, North: null, South: null, West: null },
-  },
-  superbowl: null,
-  wildcards: {
-    AFC: [],
-    NFC: [],
-  },
-};
-
-const initialExtraBetsByCategory = {
-  conference: [],
-  division: [],
-  superbowl: null,
-  wildcard: [],
-};
+import type { IConferenceTeams, IExtraBet, ITeamWithExtras } from './extraBet.types';
 
 export const useExtraBetStore = defineStore('extras', () => {
-  const afcTeams = ref<ConferenceTeams>({ east: [], north: [], south: [], west: [] });
-  const nfcTeams = ref<ConferenceTeams>({ east: [], north: [], south: [], west: [] });
+  const afcTeams = ref<IConferenceTeams>({ East: [], North: [], South: [], West: [] });
+  const nfcTeams = ref<IConferenceTeams>({ East: [], North: [], South: [], West: [] });
 
-  const allUsersBets = ref<ExtraBet[]>([]);
-  const correctExtraBets = ref<ExtraBet[]>([]);
-  const loggedUserBets = ref<ExtraBet[]>([]);
-  const normalizedLoggedUserBets = ref<NormalizedExtraBets>({ ...initialNormalizedExtraBets });
+  const allUsersBets = ref<IExtraBet[]>([]);
+  const extraBetsResults = ref<IExtraBet | null>(null);
+  const loggedUserBets = ref<IExtraBet | null>(null);
 
-  const correctBetsByCategory = ref<ExtraBetsByCategory>({ ...initialExtraBetsByCategory });
-  const loggedUserBetsByCategory = ref<ExtraBetsByCategory>({ ...initialExtraBetsByCategory });
-  const allUsersBetsByTeam = ref<UserBetByTeam[]>([]);
+  const allUsersBetsByTeam = ref<ITeamWithExtras[]>([]);
 
   const isUpdating = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
   const error = ref<Error | null>(null);
 
-  function setNormalizedLoggedUserBets(newValue: NormalizedExtraBets) {
-    normalizedLoggedUserBets.value = newValue;
-  }
-
-  function setLoggedUserBetsByCategory(
-    newWildcard: ExtrasTeam[],
-    newDivision: ExtrasTeam[],
-    newConference: ExtrasTeam[],
-    newSuperbowl: ExtrasTeam | null,
-  ) {
-    loggedUserBetsByCategory.value.wildcard = newWildcard;
-    loggedUserBetsByCategory.value.division = newDivision;
-    loggedUserBetsByCategory.value.conference = newConference;
-    loggedUserBetsByCategory.value.superbowl = newSuperbowl;
-  }
-
-  function setCorrectBetsByCategory(
-    newWildcard: ExtrasTeam[],
-    newDivision: ExtrasTeam[],
-    newConference: ExtrasTeam[],
-    newSuperbowl: ExtrasTeam | null,
-  ) {
-    correctBetsByCategory.value.wildcard = newWildcard;
-    correctBetsByCategory.value.division = newDivision;
-    correctBetsByCategory.value.conference = newConference;
-    correctBetsByCategory.value.superbowl = newSuperbowl;
-  }
-
-  function setAllUsersBetsByTeam(newValue: UserBetByTeam[]) {
+  function setAllUsersBetsByTeam(newValue: ITeamWithExtras[]) {
     allUsersBetsByTeam.value = newValue;
   }
 
-  function setLoggedUserBets(newExtras: ExtraBet[]) {
+  function setLoggedUserBets(newExtras: IExtraBet | null) {
     loggedUserBets.value = newExtras;
   }
 
-  function setCorrectExtraBets(newExtras: ExtraBet[]) {
-    correctExtraBets.value = newExtras;
+  function setExtraBetsResults(newExtras: IExtraBet | null) {
+    extraBetsResults.value = newExtras;
   }
 
   function resetLoggedUserBets() {
-    loggedUserBets.value = [];
+    loggedUserBets.value = null;
   }
 
-  function setAllUsersBets(newExtras: ExtraBet[]) {
+  function setAllUsersBets(newExtras: IExtraBet[]) {
     allUsersBets.value = newExtras;
   }
 
-  function setAfcTeams(newTeams: ConferenceTeams) {
+  function setAfcTeams(newTeams: IConferenceTeams) {
     afcTeams.value = newTeams;
   }
 
-  function setNfcTeams(newTeams: ConferenceTeams) {
+  function setNfcTeams(newTeams: IConferenceTeams) {
     nfcTeams.value = newTeams;
   }
 
@@ -158,27 +61,21 @@ export const useExtraBetStore = defineStore('extras', () => {
     afcTeams,
     allUsersBets,
     allUsersBetsByTeam,
-    correctBetsByCategory,
-    correctExtraBets,
     error,
+    extraBetsResults,
     isLoading,
     isUpdating,
     loggedUserBets,
-    loggedUserBetsByCategory,
     nfcTeams,
-    normalizedLoggedUserBets,
     resetLoggedUserBets,
     setAfcTeams,
     setAllUsersBets,
     setAllUsersBetsByTeam,
-    setCorrectBetsByCategory,
-    setCorrectExtraBets,
     setError,
+    setExtraBetsResults,
     setLoading,
     setLoggedUserBets,
-    setLoggedUserBetsByCategory,
     setNfcTeams,
-    setNormalizedLoggedUserBets,
     setUpdating,
   };
 });

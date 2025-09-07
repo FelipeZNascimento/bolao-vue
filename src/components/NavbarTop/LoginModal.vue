@@ -68,11 +68,7 @@
         />
       </div>
       <p style="text-align: center; padding-top: var(--l-spacing)" v-show="loginError">
-        <PrimeTag
-          severity="contrast"
-          icon="pi pi-exclamation-triangle"
-          :value="loginError?.message"
-        />
+        <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="loginError?.message" />
       </p>
     </Form>
     <template v-if="!isSignupMode" #footer>

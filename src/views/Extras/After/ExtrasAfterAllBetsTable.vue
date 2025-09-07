@@ -17,12 +17,7 @@
       <PrimeColumn field="name">
         <template #body="slotProps">
           <div class="team-line-outer">
-            <TeamComponent
-              isScoreless
-              :isAlias="true"
-              :isGridMode="false"
-              :team="slotProps.data.team"
-            />
+            <TeamComponent isScoreless :isAlias="true" :isGridMode="false" :team="slotProps.data.team" />
           </div>
         </template>
       </PrimeColumn>
@@ -34,10 +29,10 @@
         </template>
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="slotProps.data.bets.wildcard.length">
+            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'wildcard')">
               <i
                 :class="{
-                  highlight: isHighlighted(correctBetsByCategory.wildcard, slotProps.data.team.id),
+                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'wildcard'),
                 }"
                 class="pi pi-star-fill star-icon orange-star"
                 v-tooltip.top="'Wild Card'"
@@ -54,10 +49,10 @@
         </template>
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="slotProps.data.bets.division.length">
+            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'division')">
               <i
                 :class="{
-                  highlight: isHighlighted(correctBetsByCategory.division, slotProps.data.team.id),
+                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'division'),
                 }"
                 class="pi pi-crown crown-icon golden-crown"
                 v-tooltip.top="'Divisão'"
@@ -75,13 +70,10 @@
 
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="slotProps.data.bets.conference.length">
+            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'conference')">
               <i
                 :class="{
-                  highlight: isHighlighted(
-                    correctBetsByCategory.conference,
-                    slotProps.data.team.id,
-                  ),
+                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'conference'),
                 }"
                 class="pi pi-sparkles sparkles-icon blue-sparkles"
                 v-tooltip.top="'Conferência'"
@@ -99,12 +91,10 @@
 
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="slotProps.data.bets.superbowl.length">
+            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'superbowl')">
               <i
                 :class="{
-                  highlight:
-                    correctBetsByCategory.superbowl &&
-                    correctBetsByCategory.superbowl.id === slotProps.data.team.id,
+                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'conference'),
                 }"
                 class="pi pi-trophy trophy-icon mint-trophy"
                 v-tooltip.top="'Superbowl'"
@@ -117,57 +107,109 @@
   </div>
   <ExtrasBetsModal
     :team="modalInfo.team"
-    :bets="modalInfo.bets"
+    :teamWithExtras="modalInfo.teamsWithExtras"
     :handleCloseModal="handleCloseModal"
   />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
+import type {
+  IExtraBetBet,
+  ITeamWithExtras,
+  ITeamWithExtrasBet,
+  TConference,
+  TExtrasTeam,
+} from '@/stores/extraBet.types';
+
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import {
-  type BetByCategory,
-  type Conference,
-  type ExtrasTeam,
-  useExtraBetStore,
-  type UserBetByTeam,
-} from '@/stores/extraBet';
+import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModal from './ExtrasBetsModal.vue';
 
-defineProps<{
-  conference: Conference;
-  teamsWithBets: UserBetByTeam[];
+const props = defineProps<{
+  conference: TConference;
+  teamsWithBets: ITeamWithExtras[];
   title?: string;
 }>();
 
 // ------ Types ------
+
 type ModalInfo = {
-  bets: BetByCategory | null;
-  team: ExtrasTeam | null;
+  team: null | TExtrasTeam;
+  teamsWithExtras: ITeamWithExtrasBet[];
 };
 
 // ------ Refs ------
-const modalInfo = ref<ModalInfo>({ bets: null, team: null });
+
+const modalInfo = ref<ModalInfo>({ team: null, teamsWithExtras: [] });
 
 // ------ Initialization ------
+
 const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties ------
-const correctBetsByCategory = computed(() => extraBetStore.correctBetsByCategory);
+
+const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
 
 // ------ Functions ------
+
+function countByType(betsArray: ITeamWithExtrasBet[], type: 'conference' | 'division' | 'superbowl' | 'wildcard') {
+  if (type === 'conference') {
+    return betsArray.filter((bet) => bet.type === EXTRA_BETS_VALUES[props.conference]).length;
+  } else if (type === 'division') {
+    const divisions = [
+      EXTRA_BETS_VALUES[`${props.conference}_EAST`],
+      EXTRA_BETS_VALUES[`${props.conference}_NORTH`],
+      EXTRA_BETS_VALUES[`${props.conference}_SOUTH`],
+      EXTRA_BETS_VALUES[`${props.conference}_WEST`],
+    ];
+    return betsArray.filter((bet) => divisions.includes(bet.type)).length;
+  } else if (type === 'superbowl') {
+    return betsArray.filter((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL).length;
+  } else if (type === 'wildcard') {
+    return betsArray.filter((bet) => bet.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`]).length;
+  }
+}
+
 function handleCloseModal() {
-  modalInfo.value.bets = null;
+  modalInfo.value.teamsWithExtras = [];
   modalInfo.value.team = null;
 }
 
-function isHighlighted(winnersList: ExtrasTeam[], teamId: number) {
-  return winnersList.find((winner) => winner.id === teamId);
+function isHighlighted(
+  winnersList: IExtraBetBet[],
+  teamId: number,
+  type: 'conference' | 'division' | 'superbowl' | 'wildcard',
+) {
+  if (type === 'conference') {
+    return winnersList.find(
+      (winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[props.conference],
+    );
+  } else if (type === 'division') {
+    const divisions = [
+      EXTRA_BETS_VALUES[`${props.conference}_EAST`],
+      EXTRA_BETS_VALUES[`${props.conference}_NORTH`],
+      EXTRA_BETS_VALUES[`${props.conference}_SOUTH`],
+      EXTRA_BETS_VALUES[`${props.conference}_WEST`],
+    ];
+    return winnersList.find((winner) => winner.teams[0].id === teamId && divisions.includes(winner.type));
+  } else if (type === 'superbowl') {
+    return winnersList.find((winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES.SUPERBOWL);
+  } else if (type === 'wildcard') {
+    return winnersList.find(
+      (winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`],
+    );
+  }
 }
 
 function onRowClick(event: any) {
-  modalInfo.value = { ...event.data } as ModalInfo;
+  const eventDate = event.data as ITeamWithExtras;
+  modalInfo.value = {
+    team: eventDate.team,
+    teamsWithExtras: eventDate.bets,
+  };
 }
 </script>
 <style lang="scss">
@@ -240,6 +282,7 @@ function onRowClick(event: any) {
     padding: var(--s-spacing);
     font-size: var(--l-font-size);
   }
+
   .golden-crown {
     color: var(--bolao-c-gold);
   }

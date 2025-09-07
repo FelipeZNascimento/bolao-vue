@@ -8,27 +8,21 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { type Conference, useExtraBetStore } from '@/stores/extraBet';
+import type { TConference } from '@/stores/matches.types';
+
+import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasAfterAllBetsTable from './ExtrasAfterAllBetsTable.vue';
 
 defineProps<{
-  conference: Conference;
+  conference: TConference;
 }>();
 
 // ------ Initialization ------
 const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties ------
-const allUsersBetsByTeam = computed(() => {
-  return extraBetStore.allUsersBetsByTeam.filter(
-    (team) =>
-      team.bets.wildcard.length > 0 ||
-      team.bets.division.length > 0 ||
-      team.bets.conference.length > 0 ||
-      team.bets.superbowl.length > 0,
-  );
-});
+const allUsersBetsByTeam = computed(() => extraBetStore.allUsersBetsByTeam);
 </script>
 <style lang="scss" scoped>
 .outer-extras {

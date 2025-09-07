@@ -1,22 +1,10 @@
 <template>
   <div class="outer-extras">
     <h1>Extras</h1>
-    <PrimeSelectButton
-      :allowEmpty="false"
-      size="small"
-      v-model="selectedToggle"
-      :options="buttonOptions"
-    />
+    <PrimeSelectButton :allowEmpty="false" size="small" v-model="selectedToggle" :options="buttonOptions" />
     <div
       v-if="isLoadingConfig || isLoadingExtras"
-      style="
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-      "
+      style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap"
     >
       <PrimeSkeleton class="skeleton-outer" />
       <PrimeSkeleton class="skeleton-outer" />
@@ -34,17 +22,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
+import type { TExtrasAfterToggle } from '@/stores/extraBet.types';
+
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
-
-import type { ExtrasAfterToggle } from './types';
 
 import ExtrasAfterAllBets from './After/ExtrasAfterAllBets.vue';
 import ExtrasAfterUserBets from './After/ExtrasAfterUserBets.vue';
 
 // ------ Refs ------
-const selectedToggle = ref<ExtrasAfterToggle>('Minhas');
-const buttonOptions = ref<ExtrasAfterToggle[]>(['Minhas', 'Geral']);
+const selectedToggle = ref<TExtrasAfterToggle>('Minhas');
+const buttonOptions = ref<TExtrasAfterToggle[]>(['Minhas', 'Geral']);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();

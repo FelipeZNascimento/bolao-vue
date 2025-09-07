@@ -33,13 +33,7 @@ import RulesSubscription from './Rules/RulesSubscription.vue';
 type RulesToggle = 'Apostas' | 'Extras' | 'Inscrição' | 'Pontuação' | 'Premiação';
 // ------ Refs ------
 const selectedButton = ref<RulesToggle>('Inscrição');
-const buttonOptions = ref<RulesToggle[]>([
-  'Inscrição',
-  'Pontuação',
-  'Apostas',
-  'Extras',
-  'Premiação',
-]);
+const buttonOptions = ref<RulesToggle[]>(['Inscrição', 'Pontuação', 'Apostas', 'Extras', 'Premiação']);
 
 // ------ Initialization ------
 const extraBetService = new ExtraBetService();

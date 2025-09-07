@@ -42,12 +42,8 @@ export const updatePasswordResolver = ref(
     z
       .object({
         currentPassword: z.string().min(6, { message: 'A sua senha tem pelo menos 6 caracteres' }),
-        newPassword: z
-          .string()
-          .min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
-        newPasswordConfirmation: z
-          .string()
-          .min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
+        newPassword: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
+        newPasswordConfirmation: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
       })
       .refine((data) => data.newPassword === data.newPasswordConfirmation, {
         message: 'A senha digitada no campo de confirmação deve ser idêntica à nova senha',

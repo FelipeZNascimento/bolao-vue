@@ -9,11 +9,7 @@
   >
     <p class="bets-column-header">{{ BETS_LABELS[columnValue] }}</p>
     <!-- Render active user bet first -->
-    <div
-      class="bets-line"
-      v-if="activeUserBet && activeUserBet?.value === columnValue"
-      :key="activeUserBet.id"
-    >
+    <div class="bets-line" v-if="activeUserBet && activeUserBet?.value === columnValue" :key="activeUserBet.id">
       <IconAndName
         v-if="!isMobile"
         isActive
@@ -24,17 +20,8 @@
       <span v-else>{{ activeUserBet.user.name }}</span>
     </div>
     <!-- Render remaining bets -->
-    <div
-      class="bets-line"
-      v-for="bet in bets.filter((bet) => bet.value === columnValue)"
-      :key="bet.id"
-    >
-      <IconAndName
-        v-if="!isMobile"
-        :color="bet.user.color"
-        :name="bet.user.name"
-        :icon="bet.user.icon"
-      />
+    <div class="bets-line" v-for="bet in bets.filter((bet) => bet.value === columnValue)" :key="bet.id">
+      <IconAndName v-if="!isMobile" :color="bet.user.color" :name="bet.user.name" :icon="bet.user.icon" />
       <span v-else>{{ bet.user.name }}</span>
     </div>
   </div>
@@ -43,26 +30,22 @@
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 
-import type { Bet } from '@/stores/matches';
+import type { IBet } from '@/stores/matches.types';
 
 import IconAndName from '@/components/IconAndName.vue';
 import { BETS_LABELS, type BetsValues } from '@/constants/bets';
 import { type CorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
 const props = defineProps<{
-  activeUserBet: Bet | null;
-  bets: Bet[];
+  activeUserBet: IBet | null;
+  bets: IBet[];
   columnValue: BetsValues;
   correctBets: CorrectBets;
 }>();
 
 // ------ Computed Properties ------
-const isBullseyeColumn = computed(
-  () => props.activeUserBet && isBullseye(props.correctBets, props.columnValue),
-);
-const isHalfBetColumn = computed(
-  () => props.activeUserBet && isHalfBet(props.correctBets, props.columnValue),
-);
+const isBullseyeColumn = computed(() => props.activeUserBet && isBullseye(props.correctBets, props.columnValue));
+const isHalfBetColumn = computed(() => props.activeUserBet && isHalfBet(props.correctBets, props.columnValue));
 const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.value);
 </script>
 
@@ -81,9 +64,11 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
 .green-bg {
   background-color: var(--bolao-c-green-t1);
 }
+
 .blue-bg {
   background-color: var(--bolao-c-blue-t1);
 }
+
 .red-bg {
   background-color: var(--bolao-c-red-t1);
 }

@@ -1,7 +1,7 @@
 <template>
   <PrimeSkeleton class="skeleton-outer" v-if="isLoadingConfig" />
   <ExtrasBefore v-else-if="!isSeasonStarted" />
-  <ExtrasAfter v-else />
+  <ExtrasAfter />
 </template>
 <script setup lang="ts">
 import { computed, watch } from 'vue';
@@ -25,8 +25,7 @@ if (!configurationStore.isLoading) {
 // ------ Computed Properties ------
 const isLoadingConfig = computed(() => configurationStore.isLoading);
 const isSeasonStarted = computed(
-  () =>
-    configurationStore.seasonStart && clockStore.currentTimestamp >= configurationStore.seasonStart,
+  () => configurationStore.seasonStart && clockStore.currentTimestamp >= configurationStore.seasonStart,
 );
 
 // ------ Watches ------

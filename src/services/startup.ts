@@ -1,22 +1,23 @@
-import { useActiveProfileStore, type User } from '@/stores/activeProfile';
-import {
-  type RankingPosition,
-  type ResultsView,
-  useConfigurationStore,
-} from '@/stores/configuration';
-import { type ConferenceTeams, useExtraBetStore } from '@/stores/extraBet';
+import type { IUser } from '@/stores/activeProfile.types';
+import type { TRankingPosition, TResultsView } from '@/stores/configuration.types';
+import type { IConferenceTeams } from '@/stores/extraBet.types';
+
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
+import { useExtraBetStore } from '@/stores/extraBet';
+import { isFulfilled, isRejected } from '@/util/promiseCheck';
 
 import ApiService from './api_request';
 
 export interface InitializeObj {
   currentSeason: number;
   currentWeek: number;
-  loggedUser: User;
   seasonStart: string;
-  teamsByConferenceAndDivision: {
-    afc: ConferenceTeams;
-    nfc: ConferenceTeams;
-  };
+}
+
+export interface TeamByConferenceAndDivision {
+  AFC: IConferenceTeams;
+  NFC: IConferenceTeams;
 }
 
 export default class StartupService {
@@ -38,23 +39,40 @@ export default class StartupService {
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const response = await this.apiRequest.get<InitializeObj>('initialize/');
+      const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
+        this.apiRequest.get<IUser>('user/activeProfile'),
+        this.apiRequest.get<InitializeObj>('season/current'),
+        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
+      ]);
+
+      if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
+        throw new Error('Falha ao inicializar a aplicação');
+      }
+
+      const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
+      const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
+      const teamByConferenceAndDivision = isFulfilled(teamResponse) ? teamResponse.value : null;
+
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(response.loggedUser);
+      this.activeProfileStore.setActiveProfile(loggedUser);
 
       // Set Configuration store properties
       this.configurationStore.setLoading(false);
-      this.configurationStore.setCurrentSeason(response.currentSeason);
-      this.configurationStore.setCurrentWeek(response.currentWeek);
-      this.configurationStore.setSelectedWeek(response.currentWeek);
-      this.configurationStore.setSeasonStart(parseInt(response.seasonStart));
-      this.configurationStore.setError(null);
+      if (seasonData) {
+        this.configurationStore.setCurrentSeason(seasonData.currentSeason);
+        this.configurationStore.setCurrentWeek(seasonData.currentWeek);
+        this.configurationStore.setSelectedWeek(seasonData.currentWeek);
+        this.configurationStore.setSeasonStart(parseInt(seasonData.seasonStart));
+        this.configurationStore.setError(null);
+      }
 
       // Set Extras store properties
       this.extraBetStore.setLoading(false);
-      this.extraBetStore.setAfcTeams(response.teamsByConferenceAndDivision.afc);
-      this.extraBetStore.setNfcTeams(response.teamsByConferenceAndDivision.nfc);
+      if (teamByConferenceAndDivision) {
+        this.extraBetStore.setAfcTeams(teamByConferenceAndDivision.AFC);
+        this.extraBetStore.setNfcTeams(teamByConferenceAndDivision.NFC);
+      }
 
       return callback(true);
     } catch (error: any) {
@@ -68,8 +86,8 @@ export default class StartupService {
 
   initializeLocalStoragePreferences() {
     const themePreference = localStorage.getItem('theme-preference');
-    const resultsViewPreference = localStorage.getItem('results-view') as ResultsView;
-    const rankingPositionPreference = localStorage.getItem('ranking-position') as RankingPosition;
+    const resultsViewPreference = localStorage.getItem('results-view') as TResultsView;
+    const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPosition;
 
     if (rankingPositionPreference) {
       this.configurationStore.setRankingPosition(rankingPositionPreference);

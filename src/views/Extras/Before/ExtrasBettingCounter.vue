@@ -62,27 +62,11 @@
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
     <PrimeDivider />
-    <PrimeKnob
-      v-model="progressPercentage"
-      :size="50"
-      valueTemplate="{value}%"
-      :valueColor="knobColor"
-      readonly
-    />
+    <PrimeKnob v-model="progressPercentage" :size="50" valueTemplate="{value}%" :valueColor="knobColor" readonly />
   </div>
-  <div
-    v-else
-    class="mobile-knobs-outer"
-    :class="alignment === 'left' ? 'left-aligned' : 'right-aligned'"
-  >
+  <div v-else class="mobile-knobs-outer" :class="alignment === 'left' ? 'left-aligned' : 'right-aligned'">
     <h3 style="text-align: center">{{ conference }}</h3>
-    <PrimeKnob
-      v-model="progressPercentage"
-      :size="40"
-      valueTemplate="{value}%"
-      :valueColor="knobColor"
-      readonly
-    />
+    <PrimeKnob v-model="progressPercentage" :size="40" valueTemplate="{value}%" :valueColor="knobColor" readonly />
   </div>
 </template>
 
@@ -90,16 +74,16 @@
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 
-import type { Conference, Division, ExtrasTeam } from '@/stores/extraBet';
+import type { TExtrasTeam, TSelectedDivisionChampions } from '@/stores/extraBet.types';
+import type { TConference } from '@/stores/matches.types';
 
-type SelectedDivisionChampions = { [key in Division]: ExtrasTeam | null };
 const props = defineProps<{
   alignment: 'left' | 'right';
-  conference: Conference;
-  selectedConferenceChampion: ExtrasTeam | null;
-  selectedDivisionChampions: SelectedDivisionChampions;
-  selectedSuperBowlWinner: ExtrasTeam | null;
-  selectedWildcards: ExtrasTeam[];
+  conference: TConference;
+  selectedConferenceChampion: null | TExtrasTeam;
+  selectedDivisionChampions: TSelectedDivisionChampions;
+  selectedSuperBowlWinner: null | TExtrasTeam;
+  selectedWildcards: TExtrasTeam[];
 }>();
 
 const knobColor = computed(() => {

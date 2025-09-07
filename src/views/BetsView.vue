@@ -2,32 +2,22 @@
   <div style="display: flex">
     <div class="outer-matches">
       <PaginatorComponent />
-      <PrimeMessage
-        v-show="errorConfiguration"
-        class="error-message"
-        severity="error"
-        variant="outlined"
-      >
+      <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
         Ops, houve um problema de comunicação com o servidor.
         <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
-          entre em contato com os administradores do Bolão.
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+          administradores do Bolão.
         </p>
         <p>{{ errorConfiguration }}</p>
       </PrimeMessage>
       <div v-if="isLoading" style="width: 100%">
         <PrimeSkeleton v-for="index in 16" :key="index" class="skeleton-match" />
       </div>
-      <PrimeMessage
-        v-else-if="errorMatches"
-        class="error-message"
-        severity="error"
-        variant="outlined"
-      >
+      <PrimeMessage v-else-if="errorMatches" class="error-message" severity="error" variant="outlined">
         Ops, houve um problema de comunicação com o servidor para buscar as partidas.
         <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
-          entre em contato com os administradores do Bolão.
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+          administradores do Bolão.
         </p>
         <p>{{ errorMatches }}</p>
       </PrimeMessage>

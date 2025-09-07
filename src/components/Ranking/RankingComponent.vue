@@ -1,27 +1,17 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
-      <span
-        class="toggle"
-        :class="{ activeToggle: !isWeeklyRanking }"
-        @click="isWeeklyRanking = false"
-      >
+      <span class="toggle" :class="{ activeToggle: !isWeeklyRanking }" @click="isWeeklyRanking = false">
         Temporada</span
       >
       <PrimeToggleSwitch v-model="isWeeklyRanking" />
-      <span
-        class="toggle"
-        :class="{ activeToggle: isWeeklyRanking }"
-        @click="isWeeklyRanking = true"
-      >
-        Semana
-      </span>
+      <span class="toggle" :class="{ activeToggle: isWeeklyRanking }" @click="isWeeklyRanking = true"> Semana </span>
     </div>
     <div class="ranking-container">
       <RankingTable
         :isWeekly="isWeeklyRanking"
         :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
-        :rankingData="isWeeklyRanking ? currentWeekRanking : seasonRanking"
+        :rankingData="isWeeklyRanking ? selectedWeekRanking : seasonRanking"
         :columnConfig="columnsOption"
         :rowSpacingConfig="rowSpacing"
         :activeProfile="activeProfile"
@@ -32,6 +22,8 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
+import type { IWeeklyRanking } from '@/stores/ranking.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -62,11 +54,15 @@ const rowSpacing = computed(() => rankingStore.rowSpacing);
 const errorWeek = computed(() => rankingStore.errorWeek);
 const errorSeason = computed(() => rankingStore.errorSeason);
 const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStore.isLoadingWeek);
-const isLoadingSeason = computed(
-  () => configurationStore.isLoading || rankingStore.isLoadingSeason,
-);
+const currentWeek = computed(() => configurationStore.currentWeek);
+const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
-const currentWeekRanking = computed(() => rankingStore.currentWeekRanking);
+const selectedWeekRanking = computed(() => {
+  return (
+    rankingStore.weeksRanking.find((weekRanking: IWeeklyRanking) => weekRanking.week === currentWeek.value)?.ranking ||
+    []
+  );
+});
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
 <style scoped>
@@ -84,10 +80,12 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   max-height: calc(100% - 50px);
   overflow-y: auto;
 }
+
 .outer-position {
   display: flex;
   gap: var(--s-spacing);
 }
+
 .ranking-header {
   display: flex;
   gap: var(--s-spacing);

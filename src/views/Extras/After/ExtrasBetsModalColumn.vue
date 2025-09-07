@@ -10,14 +10,14 @@
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 
-import type { User } from '@/stores/activeProfile';
+import type { IUser } from '@/stores/activeProfile.types';
 
 import IconAndName from '@/components/IconAndName.vue';
 
 defineProps<{
   isCorrect: boolean;
   title: string;
-  users: Omit<User, 'email, fullName, status, isOnline'>[];
+  users: Pick<IUser, 'color' | 'icon' | 'id' | 'name'>[];
 }>();
 
 // ------ Computed Properties ------

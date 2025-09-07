@@ -29,6 +29,7 @@ const extraBetStore = useExtraBetStore();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
+    console.log('Fetching initial matches and rankings...');
     matchService.fetch();
   }
 }
@@ -46,7 +47,6 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 // Fetches week's matches and week's ranking when selectedWeek is changed
 watch(selectedWeek, async (newValue, oldValue) => {
   if (newValue && oldValue && newValue !== oldValue) {
-    rankingService.fetchWeek(newValue);
     matchService.fetch();
   }
 });
@@ -54,7 +54,8 @@ watch(selectedWeek, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async () => {
-  rankingService.fetchSeason();
+  console.log('Fetching matches for active profile change...');
+  rankingService.fetch();
   matchService.fetch();
 
   if (!activeProfile.value) {
@@ -64,7 +65,7 @@ watch(activeProfile, async () => {
   if (!selectedWeek.value) {
     return;
   }
-  rankingService.fetchWeek(selectedWeek.value);
+  // rankingService.fetchWeek(selectedWeek.value);
 });
 </script>
 

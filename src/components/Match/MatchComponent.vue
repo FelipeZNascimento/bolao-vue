@@ -10,6 +10,7 @@
       :timestamp="match.timestamp"
       :status="match.status"
       :clock="match.clock"
+      :isGridMode="isGridMode"
     />
     <ScoreComponent
       :isBetting="isBetting"
@@ -31,7 +32,7 @@
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref } from 'vue';
 
-import type { Match } from '@/stores/matches';
+import type { IMatch } from '@/stores/matches.types';
 
 import { useClockStore } from '@/stores/clock';
 import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
@@ -45,7 +46,7 @@ const props = withDefaults(
     isBetting?: boolean;
     isDemo?: boolean;
     isGridMode?: boolean;
-    match: Match;
+    match: IMatch;
   }>(),
   {
     isBetting: false,
@@ -61,9 +62,7 @@ const isBetsModalOpen = ref(false);
 const clockStore = useClockStore();
 
 // ------ Computed Properties ------
-const correctBets = computed(() =>
-  calculateCorrectBets(props.match.away.score, props.match.home.score),
-);
+const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
 const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.match.timestamp;
 });

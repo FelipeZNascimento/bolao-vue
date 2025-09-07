@@ -1,12 +1,6 @@
 <template>
   <div class="outer-extras-betting-table">
-    <PrimeDataTable
-      tableClass="extras-table"
-      :value="teams"
-      dataKey="id"
-      size="small"
-      showGridlines
-    >
+    <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
       <template #header>
         <div>
           <h2>{{ title }}</h2>
@@ -31,18 +25,12 @@
           <div
             v-else
             class="icon-outer"
-            @click="
-              () =>
-                handleSelectWildcard &&
-                handleSelectWildcard(slotProps.data.conference, slotProps.data)
-            "
+            @click="() => handleSelectWildcard && handleSelectWildcard(slotProps.data.conference, slotProps.data)"
           >
             <i
               class="pi star-icon"
               :class="
-                selectedWildcards?.find((t) => t.id === slotProps.data.id)
-                  ? 'orange-star pi-star-fill'
-                  : 'pi-star'
+                selectedWildcards?.find((t) => t.id === slotProps.data.id) ? 'orange-star pi-star-fill' : 'pi-star'
               "
             >
             </i>
@@ -60,11 +48,7 @@
             @click="
               () =>
                 handleSelectConferenceChampion &&
-                handleSelectConferenceChampion(
-                  slotProps.data.conference,
-                  slotProps.data.division,
-                  slotProps.data,
-                )
+                handleSelectConferenceChampion(slotProps.data.conference, slotProps.data.division, slotProps.data)
             "
           >
             <i
@@ -85,11 +69,7 @@
             @click="
               () =>
                 handleSelectChampion &&
-                handleSelectChampion(
-                  slotProps.data.conference,
-                  slotProps.data.division,
-                  slotProps.data,
-                )
+                handleSelectChampion(slotProps.data.conference, slotProps.data.division, slotProps.data)
             "
           >
             <i
@@ -105,11 +85,7 @@
           <div v-if="isUpdating">
             <i class="pi pi-spin pi-spinner"></i>
           </div>
-          <div
-            v-else
-            class="icon-outer"
-            @click="() => handleSelectSuperBowl && handleSelectSuperBowl(slotProps.data)"
-          >
+          <div v-else class="icon-outer" @click="() => handleSelectSuperBowl && handleSelectSuperBowl(slotProps.data)">
             <i
               class="pi trophy-icon pi-trophy"
               :class="selectedSuperBowl?.id === slotProps.data.id ? 'mint-trophy' : ''"
@@ -124,29 +100,23 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import type { TExtrasTeam } from '@/stores/extraBet.types';
+import type { TConference, TDivision } from '@/stores/matches.types';
+
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import {
-  type Conference,
-  type Division,
-  type ExtrasTeam,
-  useExtraBetStore,
-} from '@/stores/extraBet';
+import { useExtraBetStore } from '@/stores/extraBet';
 
 defineProps<{
-  division?: Division;
-  handleSelectChampion?: (conference: Conference, division: Division, team: ExtrasTeam) => void;
-  handleSelectConferenceChampion?: (
-    conference: Conference,
-    division: Division,
-    team: ExtrasTeam,
-  ) => void;
-  handleSelectSuperBowl?: (team: ExtrasTeam) => void;
-  handleSelectWildcard?: (conference: Conference, team: ExtrasTeam) => void;
-  selectedChampion?: ExtrasTeam | null;
-  selectedConferenceChampion?: ExtrasTeam | null;
-  selectedSuperBowl?: ExtrasTeam | null;
-  selectedWildcards?: ExtrasTeam[];
-  teams: ExtrasTeam[];
+  division?: TDivision;
+  handleSelectChampion?: (conference: TConference, division: TDivision, team: TExtrasTeam) => void;
+  handleSelectConferenceChampion?: (conference: TConference, division: TDivision, team: TExtrasTeam) => void;
+  handleSelectSuperBowl?: (team: TExtrasTeam) => void;
+  handleSelectWildcard?: (conference: TConference, team: TExtrasTeam) => void;
+  selectedChampion?: null | TExtrasTeam;
+  selectedConferenceChampion?: null | TExtrasTeam;
+  selectedSuperBowl?: null | TExtrasTeam;
+  selectedWildcards?: TExtrasTeam[];
+  teams: TExtrasTeam[];
   title: string;
 }>();
 
@@ -224,6 +194,7 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
       font-size: var(--s-font-size);
       gap: var(--xxs-spacing);
       flex-direction: column;
+
       img {
         height: 60px;
       }
@@ -262,6 +233,7 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
   .blue-sparkles {
     font-size: var(--l-font-size);
   }
+
   .golden-crown {
     color: var(--bolao-c-gold);
   }

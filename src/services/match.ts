@@ -1,10 +1,12 @@
+import type { IMatch } from '@/stores/matches.types';
+
 import { useConfigurationStore } from '@/stores/configuration';
-import { type Match, useMatchesStore } from '@/stores/matches';
+import { useMatchesStore } from '@/stores/matches';
 
 import ApiService from './api_request';
 
 interface fetchMatch {
-  matches: Match[];
+  matches: IMatch[];
   season: string;
   week: string;
 }
@@ -33,7 +35,7 @@ export default class MatchService {
     }
 
     try {
-      const response = await this.apiRequest.get<fetchMatch>(`match/list/${season}/${week}`);
+      const response = await this.apiRequest.get<fetchMatch>(`match/${season}/${week}`);
       this.matchesStore.setMatches(response.matches);
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
@@ -43,18 +45,14 @@ export default class MatchService {
     }
   }
 
-  public async updateBet(
-    matchId: number,
-    betValue: number,
-    callback?: (isSuccess: boolean, error?: Error) => void,
-  ) {
+  public async updateBet(matchId: number, betValue: number, callback?: (isSuccess: boolean, error?: Error) => void) {
     const betObject = {
       betValue,
       matchId,
     };
 
     try {
-      await this.apiRequest.post<Match>(`bet/update/`, betObject);
+      await this.apiRequest.post<IMatch>(`bet/update/`, betObject);
       // const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
       // Deal with the response update the match in the store?
 

@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { RankingUser } from '@/services/ranking';
-
-export type ColumnsOption = 'compact' | 'complete';
-export type RowSpacing = 'normal' | 'small';
+import type { TColumnsValue, TRowSpacingValue } from './configuration.types';
+import type { IRankingLine, IWeeklyRanking } from './ranking.types';
 
 const initialState = {
-  columnsOption: 'complete' as ColumnsOption,
-  rowSpacing: 'small' as RowSpacing,
+  columnsOption: 'complete' as TColumnsValue,
+  rowSpacing: 'small' as TRowSpacingValue,
 };
 
 export const useRankingStore = defineStore('ranking', () => {
@@ -16,10 +14,10 @@ export const useRankingStore = defineStore('ranking', () => {
   const isLoadingSeason = ref(false);
   const errorWeek = ref<Error | null>(null);
   const errorSeason = ref<Error | null>(null);
-  const seasonRanking = ref<RankingUser[]>([]);
-  const currentWeekRanking = ref<RankingUser[]>([]);
-  const columnsOption = ref<ColumnsOption>(initialState.columnsOption);
-  const rowSpacing = ref<RowSpacing>(initialState.rowSpacing);
+  const seasonRanking = ref<IRankingLine[]>([]);
+  const weeksRanking = ref<IWeeklyRanking[]>([]);
+  const columnsOption = ref<TColumnsValue>(initialState.columnsOption);
+  const rowSpacing = ref<TRowSpacingValue>(initialState.rowSpacing);
 
   function setInitialState() {
     columnsOption.value = initialState.columnsOption;
@@ -29,12 +27,12 @@ export const useRankingStore = defineStore('ranking', () => {
     localStorage.removeItem('ranking-position');
   }
 
-  function setSeason(newSeasonRanking: RankingUser[]) {
+  function setSeason(newSeasonRanking: IRankingLine[]) {
     seasonRanking.value = newSeasonRanking;
   }
 
-  function setCurrentWeek(newCurrentWeekRanking: RankingUser[]) {
-    currentWeekRanking.value = newCurrentWeekRanking;
+  function setWeeks(newWeeksRanking: IWeeklyRanking[]) {
+    weeksRanking.value = newWeeksRanking;
   }
 
   function setLoadingWeek(loadingState: boolean) {
@@ -53,19 +51,18 @@ export const useRankingStore = defineStore('ranking', () => {
     errorSeason.value = newError;
   }
 
-  function setColumnsOption(newValue: ColumnsOption) {
+  function setColumnsOption(newValue: TColumnsValue) {
     columnsOption.value = newValue;
     localStorage.setItem('ranking-columns', newValue);
   }
 
-  function setRowSpacing(newValue: RowSpacing) {
+  function setRowSpacing(newValue: TRowSpacingValue) {
     rowSpacing.value = newValue;
     localStorage.setItem('ranking-spacing', newValue);
   }
 
   return {
     columnsOption,
-    currentWeekRanking,
     errorSeason,
     errorWeek,
     isLoadingSeason,
@@ -73,7 +70,6 @@ export const useRankingStore = defineStore('ranking', () => {
     rowSpacing,
     seasonRanking,
     setColumnsOption,
-    setCurrentWeek,
     setErrorSeason,
     setErrorWeek,
     setInitialState,
@@ -81,5 +77,7 @@ export const useRankingStore = defineStore('ranking', () => {
     setLoadingWeek,
     setRowSpacing,
     setSeason,
+    setWeeks,
+    weeksRanking,
   };
 });

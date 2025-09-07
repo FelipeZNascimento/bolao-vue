@@ -6,8 +6,7 @@
       <RouterLink to="/apostar">clique aqui</RouterLink>).
     </p>
     <p style="padding-top: var(--xl-spacing); font-weight: bold">
-      Caso esteja sem acesso a internet ou não consiga acessar o portal, apostas por e-mail serão
-      aceitas.
+      Caso esteja sem acesso a internet ou não consiga acessar o portal, apostas por e-mail serão aceitas.
     </p>
     <p>Para: felipe@omegafox.me</p>
   </PrimePanel>

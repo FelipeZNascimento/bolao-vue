@@ -94,24 +94,25 @@
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref, watch, watchEffect } from 'vue';
 
-import {
-  type RankingPosition,
-  type ResultsView,
-  type Theme,
-  useConfigurationStore,
-} from '@/stores/configuration';
-import { type ColumnsOption, type RowSpacing, useRankingStore } from '@/stores/ranking';
+import type {
+  TColumn,
+  TColumnsValue,
+  TRankingPosition,
+  TRankingPositionValue,
+  TResultsView,
+  TResultsViewValue,
+  TRowSpacing,
+  TTheme,
+  TThemeValue,
+} from '@/stores/configuration.types';
+
+import { useConfigurationStore } from '@/stores/configuration';
+import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
 }>();
-
-type TColumn = { label: string; value: ColumnsOption };
-type TRankingPosition = { label: string; value: RankingPosition };
-type TResultsView = { label: string; value: ResultsView };
-type TRowSpacing = { label: string; value: RowSpacing };
-type TTheme = { label: string; value: Theme };
 
 // ------ Refs ------
 const isVisible = ref(false);
@@ -153,37 +154,32 @@ const theme = computed(() => configurationStore.theme);
 const resultsView = computed(() => configurationStore.resultsView);
 
 // ------ Functions  ------
-function handleColumnConfig(newOption: ColumnsOption) {
+function handleColumnConfig(newOption: TColumnsValue) {
   rankingStore.setColumnsOption(newOption);
 }
 
-function handleRankingPositionConfig(newOption: RankingPosition) {
+function handleRankingPositionConfig(newOption: TRankingPositionValue) {
   configurationStore.setRankingPosition(newOption);
 }
 
-function handleResultsViewConfig(newOption: ResultsView) {
+function handleResultsViewConfig(newOption: TResultsViewValue) {
   configurationStore.setResultsView(newOption);
 }
 
-function handleRowSpacingConfig(newOption: RowSpacing) {
+function handleRowSpacingConfig(newOption: TRowSpacing) {
   rankingStore.setRowSpacing(newOption);
 }
 
-function handleThemeConfig(newOption: Theme) {
+function handleThemeConfig(newOption: TThemeValue) {
   configurationStore.setTheme(newOption);
 }
 
 // ------ Watch Effect Properties ------
 watchEffect(
-  () =>
-    (resultsViewLocalObj.value = resultsViewOptions.value.find(
-      (option) => option.value === resultsView.value,
-    )),
+  () => (resultsViewLocalObj.value = resultsViewOptions.value.find((option) => option.value === resultsView.value)),
 );
 
-watchEffect(
-  () => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)),
-);
+watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)));
 
 watchEffect(
   () =>
@@ -193,18 +189,10 @@ watchEffect(
 );
 
 watchEffect(
-  () =>
-    (rowSpacingLocalObj.value = rowSpacingOptions.value.find(
-      (option) => option.value === rowSpacingConfig.value,
-    )),
+  () => (rowSpacingLocalObj.value = rowSpacingOptions.value.find((option) => option.value === rowSpacingConfig.value)),
 );
 
-watchEffect(
-  () =>
-    (columnLocalObj.value = columnOptions.value.find(
-      (option) => option.value === columnConfig.value,
-    )),
-);
+watchEffect(() => (columnLocalObj.value = columnOptions.value.find((option) => option.value === columnConfig.value)));
 
 // ------ Watches ------
 watch(
@@ -226,6 +214,7 @@ watch(isVisible, async (newValue) => {
 .input {
   padding-bottom: var(--m-spacing);
 }
+
 .buttons-container {
   display: flex;
   justify-content: center;

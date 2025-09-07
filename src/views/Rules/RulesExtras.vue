@@ -1,8 +1,8 @@
 <template>
   <PrimePanel style="width: 100%" header="Apostas Extras" toggleable>
     <p>
-      Apostas específicas sobre o campeão de cada divisão, de cada conferência e o vencedor do Super
-      Bowl. Essas apostas ficarão habilitadas até
+      Apostas específicas sobre o campeão de cada divisão, de cada conferência e o vencedor do Super Bowl. Essas apostas
+      ficarão habilitadas até
       <span style="font-weight: bold">{{ formatDate() }}</span
       >.
     </p>
@@ -13,8 +13,8 @@
   </PrimePanel>
   <PrimePanel style="width: 100%" header="Quanto vale uma Aposta Extra" toggleable>
     <p style="padding-bottom: var(--l-spacing)">
-      Ao longo da temporada, as apostas mudam de valor. Quanto mais importante uma partida, mais
-      pontos tem uma aposta correta.
+      Ao longo da temporada, as apostas mudam de valor. Quanto mais importante uma partida, mais pontos tem uma aposta
+      correta.
     </p>
     <PrimeDataTable showGridlines rowHover :value="tableScores">
       <PrimeColumn field="text" header="Fase"></PrimeColumn>

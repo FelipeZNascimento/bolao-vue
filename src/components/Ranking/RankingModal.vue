@@ -27,12 +27,6 @@ const props = defineProps<{
 // ------ Refs ------
 const isVisible = ref(false);
 
-// ------ Initializations ------
-
-// ------ Computed Properties ------
-
-// ------ Functions ------
-
 // ------ Watches ------
 watch(
   () => props.isOpen,
@@ -53,6 +47,7 @@ watch(isVisible, async (newValue) => {
 .input {
   padding-bottom: var(--m-spacing);
 }
+
 .buttons-container {
   display: flex;
   flex-direction: column;

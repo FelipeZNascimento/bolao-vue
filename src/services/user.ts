@@ -1,11 +1,7 @@
 import { sha1 } from 'js-sha1';
 
 import { faIconsList } from '@/constants/font-awesome';
-import {
-  type UpdateProfileResponse,
-  useActiveProfileStore,
-  type User,
-} from '@/stores/activeProfile';
+import { useActiveProfileStore, type User } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
@@ -41,8 +37,10 @@ export default class UserService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
+      console.log(response);
       return callback(true);
     } catch (error: unknown) {
+      console.log(error);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
       return callback(false);
@@ -101,28 +99,17 @@ export default class UserService {
     }
   }
 
-  public async updatePassword(
-    currentPassword: string,
-    newPassword: string,
-    callback: (isSuccess: boolean) => void,
-  ) {
+  public async updatePassword(currentPassword: string, newPassword: string, callback: (isSuccess: boolean) => void) {
     this.activeProfileStore.setLoading(true);
 
     const updatedProfile = {
-      email: this.activeProfileStore.activeProfile?.email,
-      fullName: this.activeProfileStore.activeProfile?.fullName,
-      name: this.activeProfileStore.activeProfile?.name,
+      currentPassword: sha1(currentPassword).toString(),
       newPassword: sha1(newPassword).toString(),
-      password: sha1(currentPassword).toString(),
     };
 
     try {
-      const response = await this.apiRequest.post<UpdateProfileResponse>(
-        'user/update',
-        updatedProfile,
-      );
+      await this.apiRequest.post<User>('user/password', updatedProfile);
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(response.user);
       this.activeProfileStore.setError(null);
 
       return callback(true);
@@ -133,26 +120,18 @@ export default class UserService {
     }
   }
 
-  public async updatePreferences(
-    newColor: string,
-    newIcon: string,
-    callback: (isSuccess: boolean) => void,
-  ) {
+  public async updatePreferences(newColor: string, newIcon: string, callback: (isSuccess: boolean) => void) {
     this.activeProfileStore.setLoading(true);
     const formattedColor = newColor.includes('#') ? newColor : `#${newColor}`;
-    alert(formattedColor);
     const updatedProfile = {
       color: this.activeProfileStore.activeProfile?.color,
       icon: newIcon || this.activeProfileStore.activeProfile?.icon,
     };
 
     try {
-      const response = await this.apiRequest.post<UpdateProfileResponse>(
-        'user/updatePreferences/',
-        updatedProfile,
-      );
+      const response = await this.apiRequest.post<User>('user/preferences/', updatedProfile);
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(response.user);
+      this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
 
       return callback(true);
@@ -163,28 +142,22 @@ export default class UserService {
     }
   }
 
-  public async updateProfile(
-    callback: (isSuccess: boolean) => void,
-    name: string,
-    username: string,
-  ) {
+  public async updateProfile(callback: (isSuccess: boolean) => void, name: string, username: string) {
     this.activeProfileStore.setLoading(true);
 
     const updatedProfile = {
       color: this.activeProfileStore.activeProfile?.color,
       email: this.activeProfileStore.activeProfile?.email,
-      fullName: name,
       icon: this.activeProfileStore.activeProfile?.icon,
-      name: username,
+      name: name,
+      username: username,
     };
 
     try {
-      const response = await this.apiRequest.post<UpdateProfileResponse>(
-        'user/update',
-        updatedProfile,
-      );
+      const response = await this.apiRequest.post<User>('user/profile', updatedProfile);
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(response.user);
+      console.log('Updated profile response:', response);
+      this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
 
       return callback(true);

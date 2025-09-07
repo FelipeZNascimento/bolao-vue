@@ -1,32 +1,10 @@
-import type { User } from '@/stores/activeProfile';
+import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
+import type { IRankingResponse } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
-import { type ColumnsOption, type RowSpacing, useRankingStore } from '@/stores/ranking';
+import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
-
-export type RankingUser = User & {
-  isOnline: boolean;
-  position: number;
-  previousPosition: number;
-  totalBets: number;
-  totalBullseye: number;
-  totalExtras: number;
-  totalMatches: number;
-  totalPercentage: string;
-  totalPoints: number;
-  totalWinners: number;
-};
-
-type SeasonRanking = {
-  season: string;
-  totalPossiblePoints: number;
-  users: RankingUser[];
-};
-
-type WeeklyRanking = SeasonRanking & {
-  week: string;
-};
 
 export default class RankingService {
   private apiRequest;
@@ -39,14 +17,14 @@ export default class RankingService {
     this.configurationStore = useConfigurationStore();
   }
 
-  public async fetchSeason() {
-    const season = this.configurationStore.currentSeason;
+  public async fetch() {
     this.rankingStore.setLoadingSeason(true);
 
     try {
-      const response = await this.apiRequest.get<SeasonRanking>(`ranking/season/${season}`);
+      const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/season/`);
       this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setSeason(response.users);
+      this.rankingStore.setSeason(rankingResponse.seasonRanking);
+      this.rankingStore.setWeeks(rankingResponse.weeklyRanking);
       this.rankingStore.setErrorSeason(null);
     } catch (error: any) {
       this.rankingStore.setLoadingSeason(false);
@@ -54,30 +32,9 @@ export default class RankingService {
     }
   }
 
-  public async fetchWeek(week: number) {
-    const season = this.configurationStore.currentSeason;
-    this.rankingStore.setLoadingWeek(true);
-
-    try {
-      const response = await this.apiRequest.get<WeeklyRanking>(`ranking/list/${season}/${week}`);
-      this.rankingStore.setLoadingWeek(false);
-      this.rankingStore.setCurrentWeek(response.users);
-      this.rankingStore.setErrorWeek(null);
-    } catch (error: any) {
-      this.rankingStore.setLoadingWeek(false);
-      this.rankingStore.setErrorWeek(new Error(error));
-    }
-  }
-
   public async initialize() {
     this.initializePreferences();
-    const currentWeek = this.configurationStore.currentWeek;
-
-    this.fetchSeason();
-
-    if (currentWeek) {
-      this.fetchWeek(currentWeek);
-    }
+    this.fetch();
   }
 
   async initializePreferences() {
@@ -87,13 +44,13 @@ export default class RankingService {
     if (!rankingColumns) {
       localStorage.setItem('ranking-columns', 'complete');
     } else {
-      this.rankingStore.columnsOption = rankingColumns as ColumnsOption;
+      this.rankingStore.columnsOption = rankingColumns as TColumnsValue;
     }
 
     if (!rankingSpacing) {
       localStorage.setItem('ranking-spacing', 'normal');
     } else {
-      this.rankingStore.rowSpacing = rankingSpacing as RowSpacing;
+      this.rankingStore.rowSpacing = rankingSpacing as TRowSpacingValue;
     }
   }
 }

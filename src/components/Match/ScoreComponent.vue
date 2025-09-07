@@ -9,48 +9,27 @@
       <TeamComponent isAlias :isGridMode="isGridMode" :isHomeTeam="false" :team="match.away" />
       <TeamComponent isAlias :isGridMode="isGridMode" :isHomeTeam="true" :team="match.home" />
     </span>
-    <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-    />
+    <BettingComponent v-if="isBetting && !isGridMode" :match="match" :activeUserBet="activeUserBet" />
   </div>
-  <div
-    v-else
-    :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }"
-  >
-    <TeamComponent
-      :isAlias="isBetting"
-      :isGridMode="isGridMode"
-      :isHomeTeam="false"
-      :team="match.away"
-    />
-    <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-    />
-    <TeamComponent
-      :isAlias="isBetting"
-      :isGridMode="isGridMode"
-      :isHomeTeam="true"
-      :team="match.home"
-    />
+  <div v-else :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }">
+    <TeamComponent :isAlias="isBetting" :isGridMode="isGridMode" :isHomeTeam="false" :team="match.away" />
+    <BettingComponent v-if="isBetting && !isGridMode" :match="match" :activeUserBet="activeUserBet" />
+    <TeamComponent :isAlias="isBetting" :isGridMode="isGridMode" :isHomeTeam="true" :team="match.home" />
   </div>
 </template>
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 
-import type { Bet, Match } from '@/stores/matches';
+import type { IBet, IMatch } from '@/stores/matches.types';
 
 import BettingComponent from './BettingComponent.vue';
 import TeamComponent from './TeamComponent.vue';
 withDefaults(
   defineProps<{
-    activeUserBet: Bet | null;
+    activeUserBet: IBet | null;
     isBetting?: boolean;
     isGridMode?: boolean;
-    match: Match;
+    match: IMatch;
   }>(),
   {
     isBetting: false,

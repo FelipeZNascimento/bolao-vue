@@ -1,30 +1,25 @@
 <template>
   <PrimeDataTable :value="rankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows>
-    <PrimeColumn field="position" header="" sortable>
+    <PrimeColumn field="user" header="" sortable>
       <template #body="slotProps">
         <div style="display: flex; flex-direction: row">
           <div class="outer-position">
-            {{
-              slotProps.data.position < 10 ? `0${slotProps.data.position}` : slotProps.data.position
-            }}
+            {{ slotProps.data.user.position < 10 ? `0${slotProps.data.user.position}` : slotProps.data.user.position }}
             <IconAndName
               :isShort="columnConfig === 'complete'"
-              :color="slotProps.data.color"
-              :name="slotProps.data.name"
-              :icon="slotProps.data.icon"
-              :isActive="activeProfile?.id === slotProps.data.id"
-              :isOnline="slotProps.data.isOnline"
+              :color="slotProps.data.user.color"
+              :name="slotProps.data.user.name"
+              :icon="slotProps.data.user.icon"
+              :isActive="activeProfile?.id === slotProps.data.user.id"
+              :isOnline="slotProps.data.user.isOnline"
             />
-            <div
-              class="badge"
-              :class="slotProps.data.isOnline ? 'badgeOnline' : 'badgeOffline'"
-            ></div>
+            <div class="badge" :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"></div>
           </div>
         </div>
       </template>
     </PrimeColumn>
-    <PrimeColumn field="totalPoints" header="Pts" sortable></PrimeColumn>
-    <PrimeColumn field="totalBullseye" sortable>
+    <PrimeColumn field="score.total" header="Pts" sortable></PrimeColumn>
+    <PrimeColumn field="score.bullseye" sortable>
       <template #header>
         <i v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
       </template>
@@ -34,39 +29,39 @@
         <i v-tooltip.top="'Vencedor correto'" class="pi pi-check"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="totalPercentage" sortable>
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.percentage" sortable>
       <template #header>
         <i v-tooltip.top="'Aproveitamento'" class="pi pi-percentage"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="!isWeekly && columnConfig === 'complete'" field="totalExtras" sortable>
+    <PrimeColumn v-if="!isWeekly && columnConfig === 'complete'" field="score.extras" sortable>
       <template #header> <i v-tooltip.top="'Extras'" class="pi pi-plus"></i> </template>
     </PrimeColumn>
   </PrimeDataTable>
   <PrimeMessage v-if="error" class="error-message" severity="error" variant="outlined">
     Ops, houve um problema de comunicação com o servidor para buscar o ranking.
     <p>
-      Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em
-      contato com os administradores do Bolão.
+      Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+      administradores do Bolão.
     </p>
     <p>{{ error }}</p>
   </PrimeMessage>
 </template>
 <script setup lang="ts">
-import type { RankingUser } from '@/services/ranking';
-import type { User } from '@/stores/activeProfile';
-import type { ColumnsOption, RowSpacing } from '@/stores/ranking';
+import type { IUser } from '@/stores/activeProfile.types';
+import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
+import type { IRankingLine } from '@/stores/ranking.types';
 
 import IconAndName from '@/components/IconAndName.vue';
 
 defineProps<{
-  activeProfile: null | User;
-  columnConfig: ColumnsOption;
+  activeProfile: IUser | null;
+  columnConfig: TColumnsValue;
   error: Error | null;
   isLoading: boolean;
   isWeekly: boolean;
-  rankingData: RankingUser[];
-  rowSpacingConfig: RowSpacing;
+  rankingData: IRankingLine[];
+  rowSpacingConfig: TRowSpacingValue;
 }>();
 </script>
 <style lang="scss" scoped>

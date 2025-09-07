@@ -1,16 +1,11 @@
 <template>
   <div class="outer-results">
     <div class="outer-matches">
-      <PrimeMessage
-        v-show="errorConfiguration"
-        class="error-message"
-        severity="error"
-        variant="outlined"
-      >
+      <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
         Ops, houve um problema de comunicação com o servidor.
         <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
-          entre em contato com os administradores do Bolão.
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+          administradores do Bolão.
         </p>
         <p>{{ errorConfiguration }}</p>
       </PrimeMessage>
@@ -18,8 +13,8 @@
       <PrimeMessage v-show="errorMatches" class="error-message" severity="error" variant="outlined">
         Ops, houve um problema de comunicação com o servidor para buscar as partidas.
         <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir,
-          entre em contato com os administradores do Bolão.
+          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+          administradores do Bolão.
         </p>
         <p>{{ errorMatches }}</p>
       </PrimeMessage>
@@ -40,13 +35,7 @@
             }"
           />
         </span>
-        <MatchComponent
-          v-else
-          v-for="match in matches"
-          :isGridMode="view === 'grid'"
-          :match="match"
-          :key="match.id"
-        />
+        <MatchComponent v-else v-for="match in matches" :isGridMode="view === 'grid'" :match="match" :key="match.id" />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />

@@ -19,14 +19,7 @@
       @submit="(formData) => onFormSubmit(formData)"
     >
       <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText
-          disabled
-          name="email"
-          v-model="initialValues.email"
-          type="email"
-          fluid
-          autofocus
-        />
+        <PrimeInputText disabled name="email" v-model="initialValues.email" type="email" fluid autofocus />
         <label for="email">Email</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel variant="in" class="input">
@@ -54,11 +47,10 @@
           :loading="isLoading"
         />
         <p v-show="isUpdateSuccess">
-          <PrimeTag
-            severity="success"
-            icon="pi pi-check"
-            value="Alterações salvas com sucesso"
-          ></PrimeTag>
+          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
+        </p>
+        <p style="text-align: center; padding-top: var(--l-spacing)" v-show="error">
+          <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="error?.message" />
         </p>
       </div>
     </Form>
@@ -87,6 +79,7 @@ const activeProfileStore = useActiveProfileStore();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);
+const error = computed(() => activeProfileStore.error);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const initialValues = computed(() => {
   return {
@@ -102,6 +95,7 @@ function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
     return;
   }
 
+  activeProfileStore.setError(null);
   isUpdateSuccess.value = false;
   const { name, username } = formData.values;
   if (name === activeProfile.value?.fullName && username === activeProfile.value.name) {
@@ -130,6 +124,7 @@ watch(
 watch(isVisible, async (newValue) => {
   if (!newValue) {
     isUpdateSuccess.value = false;
+    activeProfileStore.setError(null);
     props.handleCloseModal();
   }
 });
@@ -138,6 +133,7 @@ watch(isVisible, async (newValue) => {
 .input {
   padding-bottom: var(--m-spacing);
 }
+
 .buttons-container {
   display: flex;
   flex-direction: column;

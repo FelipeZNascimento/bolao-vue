@@ -19,15 +19,15 @@
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watchEffect } from 'vue';
 
-import type { Bet, Match } from '@/stores/matches';
+import type { IBet, IMatch } from '@/stores/matches.types';
 
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
-  activeUserBet: Bet | null;
-  match: Match;
+  activeUserBet: IBet | null;
+  match: IMatch;
 }>();
 
 // ------ Refs ------
@@ -47,9 +47,7 @@ const isMatchStarted = computed(() => {
 
 // ------ Watch Effect Properties ------
 watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));
-watchEffect(
-  () => (radioButtonPrevValue.value = props.activeUserBet ? props.activeUserBet.value : null),
-);
+watchEffect(() => (radioButtonPrevValue.value = props.activeUserBet ? props.activeUserBet.value : null));
 
 function callback(isSuccess: boolean, error?: Error) {
   isLoading.value = false;

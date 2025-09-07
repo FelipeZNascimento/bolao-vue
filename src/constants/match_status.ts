@@ -106,4 +106,4 @@ export const MATCH_STATUS = {
   THIRD: AMERICAN_FOOTBALL_MATCH_STATUS.THIRD_QUARTER,
 };
 
-export type MatchStatus = (typeof MATCH_STATUS)[keyof typeof MATCH_STATUS];
+export type TMatchStatus = (typeof MATCH_STATUS)[keyof typeof MATCH_STATUS];

@@ -13,43 +13,38 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import {
-  type Conference,
-  type Division,
-  type ExtrasTeam,
-  useExtraBetStore,
-} from '@/stores/extraBet';
+import type { TConference, TDivision, TDivisionChampions, TExtrasTeam } from '@/stores/extraBet.types';
+
+import { useExtraBetStore } from '@/stores/extraBet';
 import ExtrasBettingTable from '@/views/Extras/Before/ExtrasBettingTable.vue';
 
-import type { DivisionChampions } from '../types';
-
 const props = defineProps<{
-  conference: Conference;
-  handleSelectChampion: (conference: Conference, division: Division, team: ExtrasTeam) => void;
-  handleSelectWildcard: (conference: Conference, team: ExtrasTeam) => void;
-  selectedDivisionChampions: DivisionChampions;
-  selectedWildcards: ExtrasTeam[];
+  conference: TConference;
+  handleSelectChampion: (conference: TConference, division: TDivision, team: TExtrasTeam) => void;
+  handleSelectWildcard: (conference: TConference, team: TExtrasTeam) => void;
+  selectedDivisionChampions: TDivisionChampions;
+  selectedWildcards: TExtrasTeam[];
 }>();
 
 // ------ Initialization ------
 const extraBetStore = useExtraBetStore();
-const divisionsObj: Division[] = ['North', 'East', 'South', 'West'];
+const divisionsObj: TDivision[] = ['North', 'East', 'South', 'West'];
 
 // ------ Computed Properties ------
 const conferenceTeams = computed(() => {
   if (props.conference === 'NFC') {
     return {
-      East: extraBetStore.nfcTeams.east,
-      North: extraBetStore.nfcTeams.north,
-      South: extraBetStore.nfcTeams.south,
-      West: extraBetStore.nfcTeams.west,
+      East: extraBetStore.nfcTeams.East,
+      North: extraBetStore.nfcTeams.North,
+      South: extraBetStore.nfcTeams.South,
+      West: extraBetStore.nfcTeams.West,
     };
   } else {
     return {
-      East: extraBetStore.afcTeams.east,
-      North: extraBetStore.afcTeams.north,
-      South: extraBetStore.afcTeams.south,
-      West: extraBetStore.afcTeams.west,
+      East: extraBetStore.afcTeams.East,
+      North: extraBetStore.afcTeams.North,
+      South: extraBetStore.afcTeams.South,
+      West: extraBetStore.afcTeams.West,
     };
   }
 });

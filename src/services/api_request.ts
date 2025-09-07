@@ -20,7 +20,8 @@ export default class ApiService {
       throw new Error(error);
     }
 
-    return (await response.json()) as T;
+    const jsonResponse: { data: T } = await response.json();
+    return jsonResponse.data;
   }
 
   public async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
@@ -35,9 +36,9 @@ export default class ApiService {
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
       const errrorObject = await response.json();
-      throw new Error(errrorObject.error);
+      throw new Error(errrorObject.message);
     }
-
-    return (await response.json()) as T;
+    const jsonResponse: { data: T } = await response.json();
+    return jsonResponse.data;
   }
 }

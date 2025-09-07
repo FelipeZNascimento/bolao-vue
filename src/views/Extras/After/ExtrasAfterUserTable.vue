@@ -1,12 +1,6 @@
 <template>
   <div class="outer-extras-result-table">
-    <PrimeDataTable
-      tableClass="extras-table"
-      :value="teams"
-      dataKey="id"
-      size="small"
-      showGridlines
-    >
+    <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
       <template v-if="title" #header>
         <div>
           <h2>{{ title }}</h2>
@@ -28,13 +22,11 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(correctBetsByCategory.wildcard, slotProps.data.id),
+                highlight: isHighlighted(wildcardResults, slotProps.data.id),
               }"
             >
               <i
-                v-if="
-                  loggedUserBetsByCategory.wildcard.find((team) => team.id === slotProps.data.id)
-                "
+                v-if="wildcardBets.find((team) => team.id === slotProps.data.id)"
                 class="pi pi-star-fill star-icon orange-star"
                 v-tooltip.top="'Wild Card'"
               ></i>
@@ -42,13 +34,11 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(correctBetsByCategory.division, slotProps.data.id),
+                highlight: isHighlighted(divisionResults, slotProps.data.id),
               }"
             >
               <i
-                v-if="
-                  loggedUserBetsByCategory.division.find((team) => team.id === slotProps.data.id)
-                "
+                v-if="divisionBets.find((team) => team.id === slotProps.data.id)"
                 class="pi pi-crown crown-icon golden-crown"
                 v-tooltip.top="'Campeão Divisão'"
               ></i>
@@ -56,13 +46,11 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(correctBetsByCategory.conference, slotProps.data.id),
+                highlight: isHighlighted(conferenceResults, slotProps.data.id),
               }"
             >
               <i
-                v-if="
-                  loggedUserBetsByCategory.conference.find((team) => team.id === slotProps.data.id)
-                "
+                v-if="conferenceBets.find((team) => team.id === slotProps.data.id)"
                 class="pi pi-sparkles sparkles-icon blue-sparkles"
                 v-tooltip.top="'Campeão Conferência'"
               ></i>
@@ -70,14 +58,11 @@
             <div
               class="spacer"
               :class="{
-                highlight: correctBetsByCategory.superbowl?.id === slotProps.data.id,
+                highlight: isHighlighted(superbowlResults, slotProps.data.id),
               }"
             >
               <i
-                v-if="
-                  loggedUserBetsByCategory.superbowl &&
-                  loggedUserBetsByCategory.superbowl.id === slotProps.data.id
-                "
+                v-if="superbowlBet.find((team) => team.id === slotProps.data.id)"
                 class="pi pi-trophy trophy-icon mint-trophy"
                 v-tooltip.top="'Super Bowl'"
               ></i>
@@ -89,28 +74,118 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, type Ref } from 'vue';
+
+import type { IExtraBetBet, TExtrasTeam } from '@/stores/extraBet.types';
+import type { ITeam, TConference } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import { type Conference, type ExtrasTeam, useExtraBetStore } from '@/stores/extraBet';
+import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { useExtraBetStore } from '@/stores/extraBet';
 
-defineProps<{
-  conference: Conference;
-  teams: ExtrasTeam[];
+const props = defineProps<{
+  conference: TConference;
+  teams: TExtrasTeam[];
   title?: string;
 }>();
 
+// ------ Refs ------
+
+const wildcardBets = ref<ITeam[]>([]);
+const divisionBets = ref<ITeam[]>([]);
+const conferenceBets = ref<ITeam[]>([]);
+const superbowlBet = ref<ITeam[]>([]);
+const wildcardResults = ref<ITeam[]>([]);
+const divisionResults = ref<ITeam[]>([]);
+const conferenceResults = ref<ITeam[]>([]);
+const superbowlResults = ref<ITeam[]>([]);
+
 // ------ Initialization ------
+
 const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties ------
-const correctBetsByCategory = computed(() => extraBetStore.correctBetsByCategory);
-const loggedUserBetsByCategory = computed(() => extraBetStore.loggedUserBetsByCategory);
+
+const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
+const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
 
 // ------ Functions ------
-function isHighlighted(winnersList: ExtrasTeam[], teamId: number) {
+
+function findConferenceChampions(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {
+  if (!betsArray) return [];
+  const conferenceChampions: ITeam[] = [];
+
+  betsArray.forEach((bet) => {
+    const betType = bet.type;
+    if (betType === EXTRA_BETS_VALUES.AFC || betType === EXTRA_BETS_VALUES.NFC) {
+      conferenceChampions.push(...bet.teams);
+    }
+  });
+
+  referenceVar.value = [...conferenceChampions];
+}
+
+function findDivisionChampions(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {
+  if (!betsArray) return [];
+  const divisionChampions: ITeam[] = [];
+
+  betsArray.forEach((bet) => {
+    const betType = bet.type;
+    if (
+      betType === EXTRA_BETS_VALUES.AFC_NORTH ||
+      betType === EXTRA_BETS_VALUES.AFC_EAST ||
+      betType === EXTRA_BETS_VALUES.AFC_SOUTH ||
+      betType === EXTRA_BETS_VALUES.AFC_WEST ||
+      betType === EXTRA_BETS_VALUES.NFC_NORTH ||
+      betType === EXTRA_BETS_VALUES.NFC_EAST ||
+      betType === EXTRA_BETS_VALUES.NFC_SOUTH ||
+      betType === EXTRA_BETS_VALUES.NFC_WEST
+    ) {
+      divisionChampions.push(...bet.teams);
+    }
+  });
+
+  referenceVar.value = [...divisionChampions];
+}
+
+function findSuperBowlWinner(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {
+  if (!betsArray) return [];
+  const superbowlWinner: ITeam[] = [];
+
+  betsArray.forEach((bet) => {
+    const betType = bet.type;
+    if (betType === EXTRA_BETS_VALUES.SUPERBOWL) {
+      superbowlWinner.push(...bet.teams);
+    }
+  });
+
+  referenceVar.value = [...superbowlWinner];
+}
+
+function findWildcardBets(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {
+  if (!betsArray) return [];
+
+  if (props.conference === 'AFC') {
+    const wildcardTeams = betsArray.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_WILDCARD)?.teams;
+    referenceVar.value = wildcardTeams || [];
+  } else {
+    const wildcardTeams = betsArray.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_WILDCARD)?.teams;
+    referenceVar.value = wildcardTeams || [];
+  }
+}
+
+function isHighlighted(winnersList: ITeam[], teamId: number) {
   return winnersList.find((winner) => winner.id === teamId);
 }
+
+findWildcardBets(loggedUserBets.value?.bets ?? [], wildcardBets);
+findWildcardBets(extraBetsResults.value?.bets ?? [], wildcardResults);
+findDivisionChampions(loggedUserBets.value?.bets ?? [], divisionBets);
+findDivisionChampions(extraBetsResults.value?.bets ?? [], divisionResults);
+findConferenceChampions(loggedUserBets.value?.bets ?? [], conferenceBets);
+findConferenceChampions(extraBetsResults.value?.bets ?? [], conferenceResults);
+findSuperBowlWinner(loggedUserBets.value?.bets ?? [], superbowlBet);
+findSuperBowlWinner(extraBetsResults.value?.bets ?? [], superbowlResults);
 </script>
 <style lang="scss">
 .outer-extras-result-table {
@@ -181,6 +256,7 @@ function isHighlighted(winnersList: ExtrasTeam[], teamId: number) {
     padding: var(--s-spacing);
     font-size: var(--l-font-size);
   }
+
   .golden-crown {
     color: var(--bolao-c-gold);
   }

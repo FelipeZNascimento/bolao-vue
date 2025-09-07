@@ -1,12 +1,8 @@
+<!-- <template>&nbsp;</template> -->
 <template>
   <div class="outer-extras">
     <h1>Extras</h1>
-    <PrimeSelectButton
-      :allowEmpty="false"
-      size="small"
-      v-model="selectedToggle"
-      :options="buttonOptions"
-    />
+    <PrimeSelectButton :allowEmpty="false" size="small" v-model="selectedToggle" :options="buttonOptions" />
     <div v-if="isLoading" class="extras-betting-table-skeleton-outer">
       <PrimeSkeleton class="skeleton" />
       <PrimeSkeleton class="skeleton" />
@@ -51,34 +47,32 @@
 import { useToast } from 'primevue';
 import { computed, ref, watchEffect } from 'vue';
 
+import type {
+  TConference,
+  TConferenceChampions,
+  TDivision,
+  TDivisionChampions,
+  TExtrasBeforeToggle,
+  TExtrasTeam,
+  TWildcards,
+} from '@/stores/extraBet.types';
+
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
-import {
-  type Conference,
-  type Division,
-  type ExtrasTeam,
-  useExtraBetStore,
-} from '@/stores/extraBet';
-
-import type {
-  ConferenceChampions,
-  DivisionChampions,
-  ExtrasBeforeToggle,
-  Wildcards,
-} from './types';
+import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBettingCounter from './Before/ExtrasBettingCounter.vue';
 import ExtrasBettingPerConference from './Before/ExtrasBettingPerConference.vue';
 import ExtrasBettingPlayoffs from './Before/ExtrasBettingPlayoffs.vue';
 
 // ------ Refs ------
-const selectedToggle = ref<ExtrasBeforeToggle>('AFC');
-const buttonOptions = ref<ExtrasBeforeToggle[]>(['AFC', 'NFC', 'Playoffs']);
-const selectedConferenceChampions = ref<ConferenceChampions>({
+const selectedToggle = ref<TExtrasBeforeToggle>('AFC');
+const buttonOptions = ref<TExtrasBeforeToggle[]>(['AFC', 'NFC', 'Playoffs']);
+const selectedConferenceChampions = ref<TConferenceChampions>({
   AFC: null,
   NFC: null,
 });
-const selectedDivisionChampions = ref<DivisionChampions>({
+const selectedDivisionChampions = ref<TDivisionChampions>({
   AFC: {
     East: null,
     North: null,
@@ -92,11 +86,11 @@ const selectedDivisionChampions = ref<DivisionChampions>({
     West: null,
   },
 });
-const selectedWildcards = ref<Wildcards>({
+const selectedWildcards = ref<TWildcards>({
   AFC: [],
   NFC: [],
 });
-const selectedSuperBowl = ref<ExtrasTeam | null>(null);
+const selectedSuperBowl = ref<null | TExtrasTeam>(null);
 
 // ------ Initialization ------
 const extraBetService = new ExtraBetService();
@@ -105,41 +99,87 @@ const toast = useToast();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => extraBetStore.isLoading);
-const loggedUserBets = computed(() => extraBetStore.normalizedLoggedUserBets);
+const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
 const afcTeams = computed(() => {
   return {
-    East: extraBetStore.afcTeams.east,
-    North: extraBetStore.afcTeams.north,
-    South: extraBetStore.afcTeams.south,
-    West: extraBetStore.afcTeams.west,
+    East: extraBetStore.afcTeams.East,
+    North: extraBetStore.afcTeams.North,
+    South: extraBetStore.afcTeams.South,
+    West: extraBetStore.afcTeams.West,
   };
 });
 
 const nfcTeams = computed(() => {
   return {
-    East: extraBetStore.nfcTeams.east,
-    North: extraBetStore.nfcTeams.north,
-    South: extraBetStore.nfcTeams.south,
-    West: extraBetStore.nfcTeams.west,
+    East: extraBetStore.nfcTeams.East,
+    North: extraBetStore.nfcTeams.North,
+    South: extraBetStore.nfcTeams.South,
+    West: extraBetStore.nfcTeams.West,
   };
 });
 
 // ------ Watch Effects ------
-watchEffect(() => (selectedConferenceChampions.value = loggedUserBets.value.conferenceChampions));
-watchEffect(() => (selectedDivisionChampions.value = loggedUserBets.value.divisionChampions));
-watchEffect(() => (selectedWildcards.value = loggedUserBets.value.wildcards));
-watchEffect(() => (selectedSuperBowl.value = loggedUserBets.value.superbowl));
+watchEffect(() => {
+  selectedConferenceChampions.value.AFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC)?.teams[0] || null;
+  selectedConferenceChampions.value.NFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.East =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_EAST)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.North =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_NORTH)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.South =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_SOUTH)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.West =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_WEST)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.East =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_EAST)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.North =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_NORTH)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.South =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_SOUTH)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.West =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_WEST)?.teams[0] || null;
+  selectedWildcards.value.AFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_WILDCARD)?.teams || [];
+  selectedWildcards.value.NFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_WILDCARD)?.teams || [];
+  selectedSuperBowl.value =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)?.teams[0] || null;
+});
 
 // ------ Functions ------
 
 function fillSelectedFromStore() {
-  selectedConferenceChampions.value = loggedUserBets.value.conferenceChampions;
-  selectedDivisionChampions.value = loggedUserBets.value.divisionChampions;
-  selectedWildcards.value = loggedUserBets.value.wildcards;
-  selectedSuperBowl.value = loggedUserBets.value.superbowl;
+  selectedConferenceChampions.value.AFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC)?.teams[0] || null;
+  selectedConferenceChampions.value.NFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.East =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_EAST)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.North =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_NORTH)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.South =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_SOUTH)?.teams[0] || null;
+  selectedDivisionChampions.value.AFC.West =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_WEST)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.East =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_EAST)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.North =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_NORTH)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.South =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_SOUTH)?.teams[0] || null;
+  selectedDivisionChampions.value.NFC.West =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_WEST)?.teams[0] || null;
+  selectedWildcards.value.AFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.AFC_WILDCARD)?.teams || [];
+  selectedWildcards.value.NFC =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.NFC_WILDCARD)?.teams || [];
+  selectedSuperBowl.value =
+    loggedUserBets.value?.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)?.teams[0] || null;
 }
 
-function handleSelectChampion(conference: Conference, division: Division, team: ExtrasTeam) {
+function handleSelectChampion(conference: TConference, division: TDivision, team: TExtrasTeam) {
   if (selectedToggle.value === 'Playoffs') {
     // If the clicked conference champion is the currently selected, remove it
     if (selectedConferenceChampions.value[conference]?.id === team.id) {
@@ -177,7 +217,7 @@ function handleSelectChampion(conference: Conference, division: Division, team: 
   triggerUpdate();
 }
 
-function handleSelectSuperBowl(team: ExtrasTeam) {
+function handleSelectSuperBowl(team: TExtrasTeam) {
   if (selectedSuperBowl.value?.id === team.id) {
     selectedSuperBowl.value = null;
   } else {
@@ -187,7 +227,7 @@ function handleSelectSuperBowl(team: ExtrasTeam) {
   triggerUpdate();
 }
 
-function handleSelectWildcard(conference: Conference, team: ExtrasTeam) {
+function handleSelectWildcard(conference: TConference, team: TExtrasTeam) {
   const currentWildcards = selectedWildcards.value[conference];
   if (currentWildcards.find((t) => t.id === team.id)) {
     // If the clicked wild card is in the current selected wild cards, remove it
@@ -280,6 +320,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
   flex-wrap: wrap;
   gap: var(--l-spacing);
 }
+
 .extras-betting-table-skeleton-outer {
   display: flex;
   gap: var(--l-spacing);
@@ -288,6 +329,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
   @media (max-width: 767px) {
     flex-direction: column;
   }
+
   .skeleton {
     min-width: 400px;
     width: 400px;

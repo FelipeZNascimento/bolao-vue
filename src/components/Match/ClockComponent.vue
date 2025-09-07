@@ -1,5 +1,5 @@
 <template>
-  <div class="outer-clock">
+  <div :class="isGridMode ? 'outer-clock-grid' : 'outer-clock'">
     <div
       v-if="activeProfile && ribbon"
       class="ribbon"
@@ -17,9 +17,15 @@
     </div>
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <span v-if="isMatchStarted && !isClockStopped">{{ clock }}</span>
-    <span v-if="!isMatchStarted">
-      <p class="clock-date">{{ clockStore.formattedDate(timestamp) }}</p>
-      <p class="clock-time">{{ clockStore.formattedTime(timestamp) }}</p>
+    <span
+      v-if="!isMatchStarted"
+      :style="isGridMode ? { flexDirection: 'row' } : { flexDirection: 'column' }"
+      style="display: flex; align-items: flex-end; flex-wrap: wrap"
+      class="clock-time"
+    >
+      <p style="font-weight: bold">{{ clockStore.formattedDate(timestamp) }}</p>
+      <span v-if="isGridMode" style="padding: 0 var(--xs-spacing)"></span>
+      <p>{{ clockStore.formattedTime(timestamp) }}</p>
     </span>
   </div>
 </template>
@@ -28,14 +34,15 @@ import { computed } from 'vue';
 
 import type { Ribbon } from '@/constants/bets';
 
-import { MATCH_STATUS, MATCH_STATUS_LABELS, type MatchStatus } from '@/constants/match_status';
+import { MATCH_STATUS, MATCH_STATUS_LABELS, type TMatchStatus } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
   clock: string;
+  isGridMode?: boolean;
   ribbon?: Ribbon;
-  status: MatchStatus;
+  status: TMatchStatus;
   timestamp: number;
 }>();
 
@@ -73,7 +80,7 @@ const isClockStopped = computed(
   position: relative;
   background-color: var(--bolao-c-navy-t2);
   color: var(--bolao-c-grey1);
-  padding: 0 var(--xxl-spacing);
+  min-height: 40px;
 
   span {
     display: -webkit-box;
@@ -85,31 +92,53 @@ const isClockStopped = computed(
   }
 
   @media (max-width: 1023px) {
-    min-width: 100px;
+    width: 80px;
     font-size: var(--s-font-size);
+    padding: 0 var(--m-spacing);
   }
 
   @media (min-width: 1024px) {
-    min-width: 100px;
+    width: 120px;
     font-size: var(--s-font-size);
+    padding: 0 var(--m-spacing);
   }
 
   @media (min-width: 1440px) {
     width: 200px;
-    max-width: 200px;
     font-size: var(--m-font-size);
+    padding: 0 var(--xxl-spacing);
   }
+}
+
+.outer-clock-grid {
+  background-color: var(--bolao-c-navy-t2);
+  color: var(--bolao-c-grey1);
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  padding: 0 var(--m-spacing);
+  font-size: var(--m-font-size);
 }
 
 .clock-date {
   font-size: var(--m2-font-size);
 }
+
 .clock-time {
-  font-size: var(--s-font-size);
+  font-size: var(--m-font-size);
+
+  @media (max-width: 1024px) {
+    font-size: var(--s-font-size);
+  }
 }
+
 .ribbon {
-  --f: 0.2em; /* control the folded part */
-  --r: 0.2em; /* control the cutout */
+  --f: 0.2em;
+  /* control the folded part */
+  --r: 0.2em;
+  /* control the cutout */
 
   font-size: var(--m-font-size);
   font-weight: bold;
@@ -120,8 +149,8 @@ const isClockStopped = computed(
   padding: 0.2em;
   border: solid #0000;
   border-width: 0 0 var(--r) calc(2 * var(--f));
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f))
-    var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: #bf4d28;
   border-radius: var(--f) var(--f) 0 0;
   clip-path: polygon(
@@ -138,6 +167,7 @@ const isClockStopped = computed(
     height: 30px;
     left: 0px;
     padding: 0 0.2em;
+
     i {
       font-size: var(--xs-font-size);
     }
@@ -147,30 +177,32 @@ const isClockStopped = computed(
 .green-bg {
   --c: var(--bolao-c-green);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f))
-    var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
+
 .blue-bg {
   --c: var(--bolao-c-blue);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f))
-    var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
+
 .red-bg {
   --c: var(--bolao-c-red);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f))
-    var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
 .grey-bg {
   --c: var(--bolao-c-grey4);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f))
-    var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 </style>
