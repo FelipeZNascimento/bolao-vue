@@ -4,6 +4,7 @@ import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
 import ApiService from './api_request';
+import WebsocketService from './websocket';
 
 interface fetchMatch {
   matches: IMatch[];
@@ -15,11 +16,13 @@ export default class MatchService {
   private apiRequest;
   private configurationStore;
   private matchesStore;
+  private websocketInstance;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
+    this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
   public async fetch(week?: null | number, season?: null | number) {
@@ -39,6 +42,12 @@ export default class MatchService {
       this.matchesStore.setMatches(response.matches);
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
+
+      if (this.websocketInstance) {
+        this.websocketInstance.close();
+      }
+
+      this.websocketInstance.connect(`match/${season}/${week}`);
     } catch (error: any) {
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(new Error(error));
@@ -64,5 +73,9 @@ export default class MatchService {
         callback(false, error as Error);
       }
     }
+  }
+
+  private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
+    console.log(JSON.parse(ev.data));
   }
 }

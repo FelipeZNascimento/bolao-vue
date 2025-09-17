@@ -1,5 +1,5 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TRankingPosition, TResultsView } from '@/stores/configuration.types';
+import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
 import type { IConferenceTeams } from '@/stores/extraBet.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -86,8 +86,8 @@ export default class StartupService {
 
   initializeLocalStoragePreferences() {
     const themePreference = localStorage.getItem('theme-preference');
-    const resultsViewPreference = localStorage.getItem('results-view') as TResultsView;
-    const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPosition;
+    const resultsViewPreference = localStorage.getItem('results-view') as TResultsViewValue;
+    const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
 
     if (rankingPositionPreference) {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
