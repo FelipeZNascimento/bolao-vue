@@ -248,7 +248,7 @@ function handleSelectWildcard(conference: TConference, team: TExtrasTeam) {
   } else {
     // If the user is trying to add a 4th wild card, trigger toast
     toast.add({
-      detail: `Para escolher uma nova equipa, remova a aposta numa das equipes já selecionadas`,
+      detail: `Para escolher uma nova equipe, remova a aposta numa das equipes já selecionadas`,
       life: 5000,
       severity: 'info',
       summary: 'Máximo de 3 wild cards por Conferência',

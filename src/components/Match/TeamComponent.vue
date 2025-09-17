@@ -16,7 +16,10 @@
         :src="`/team_logos/${props.team.id}.gif`"
       />
     </span>
-    <span v-if="!isNameless" class="team-alias">{{ isGridMode || isAlias ? team.code : team.alias }}</span>
+    <div v-if="!isNameless" class="team-alias">
+      {{ isGridMode || isAlias ? team.code : team.alias }}
+      <p style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">0-1</p>
+    </div>
     <span v-if="!isScoreless" class="team-score">{{ team.score }}</span>
   </div>
 </template>
@@ -88,10 +91,12 @@ const props = defineProps<{
 }
 
 .team-alias {
+  position: relative;
   padding-right: var(--s-spacing);
   font-weight: bold;
   z-index: 99;
   font-size: var(--l-font-size);
+  line-height: var(--xl-spacing);
 
   @media (max-width: 1024px) {
     font-size: var(--s-font-size);

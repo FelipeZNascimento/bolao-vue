@@ -37,6 +37,7 @@ function initializationCallback(isSuccess: boolean) {
 // ------ Initialization ------
 startupService.initialize(initializationCallback).then(() => {
   clockStore.startClock();
+  rankingService.fetch();
 });
 
 // ------ Computed ------
@@ -59,13 +60,13 @@ watch(activeProfile, async () => {
   matchService.fetch();
 
   if (!activeProfile.value) {
-    extraBetStore.setLoggedUserBets([]);
+    extraBetStore.setLoggedUserBets(null);
   }
 
   if (!selectedWeek.value) {
     return;
   }
-  // rankingService.fetchWeek(selectedWeek.value);
+  rankingService.fetch();
 });
 </script>
 

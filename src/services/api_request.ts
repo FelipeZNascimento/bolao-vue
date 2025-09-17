@@ -41,4 +41,9 @@ export default class ApiService {
     const jsonResponse: { data: T } = await response.json();
     return jsonResponse.data;
   }
+
+  public async websocket(endpoint: string) {
+    const url = `ws://localhost:63768/bolaonfl/${endpoint}`;
+    return new WebSocket(url);
+  }
 }
