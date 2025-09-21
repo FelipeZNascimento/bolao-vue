@@ -50,7 +50,7 @@
   </PrimePanel>
 </template>
 <script setup lang="ts">
-import type { Match } from '@/stores/matches';
+import type { IMatch } from '@/stores/matches.types';
 
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 
@@ -77,7 +77,7 @@ const tableScores = [
   },
 ];
 
-const easyMatch: Match = {
+const easyMatch: IMatch = {
   away: {
     alias: 'Bears',
     background: '#00123f',
@@ -114,7 +114,7 @@ const easyMatch: Match = {
   timestamp: 1757276700,
 };
 
-const hardMatch: Match = {
+const hardMatch: IMatch = {
   away: {
     alias: 'Bears',
     background: '#00123f',

@@ -1,7 +1,9 @@
 import { sha1 } from 'js-sha1';
 
+import type { IUser } from '@/stores/activeProfile.types';
+
 import { faIconsList } from '@/constants/font-awesome';
-import { useActiveProfileStore, type User } from '@/stores/activeProfile';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
@@ -33,7 +35,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/login', loginObject);
+      const response = await this.apiRequest.post<IUser>('user/login', loginObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -50,7 +52,7 @@ export default class UserService {
   public async logout() {
     this.activeProfileStore.setLoading(true);
     try {
-      await this.apiRequest.get<User>('user/logout');
+      await this.apiRequest.get<IUser>('user/logout');
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
@@ -85,7 +87,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/register', registerObject);
+      const response = await this.apiRequest.post<IUser>('user/register', registerObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -108,7 +110,7 @@ export default class UserService {
     };
 
     try {
-      await this.apiRequest.post<User>('user/password', updatedProfile);
+      await this.apiRequest.post<IUser>('user/password', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(null);
 
@@ -129,7 +131,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/preferences/', updatedProfile);
+      const response = await this.apiRequest.post<IUser>('user/preferences/', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -154,7 +156,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/profile', updatedProfile);
+      const response = await this.apiRequest.post<IUser>('user/profile', updatedProfile);
       this.activeProfileStore.setLoading(false);
       console.log('Updated profile response:', response);
       this.activeProfileStore.setActiveProfile(response);
