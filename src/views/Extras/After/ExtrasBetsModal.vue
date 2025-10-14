@@ -10,7 +10,7 @@
     contentClass="content-class"
   >
     <div class="teams-outer">
-      <TeamComponent isScoreless :isGridMode="false" :team="team" />
+      <TeamComponent isScoreless :isGridMode="false" :team="team" :matchStatus="MATCH_STATUS.FINAL" />
     </div>
     <div class="bets-outer" v-if="teamWithExtras && team">
       <ExtrasBetsModalColumn
@@ -43,6 +43,7 @@ import type { ITeamWithExtrasBet, TConference, TExtrasTeam } from '@/stores/extr
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModalColumn from './ExtrasBetsModalColumn.vue';

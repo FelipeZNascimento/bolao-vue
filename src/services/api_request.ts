@@ -43,7 +43,7 @@ export default class ApiService {
   }
 
   public async websocket(endpoint: string) {
-    const url = `ws://localhost:63768/bolaonfl/${endpoint}`;
+    const url = `${this.baseUrl}${endpoint}`;
     return new WebSocket(url);
   }
 }

@@ -1,7 +1,9 @@
 import type { IMatch } from '@/stores/matches.types';
+import type { IRankingLine, IWeeklyRanking } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
 import WebsocketService from './websocket';
@@ -47,7 +49,7 @@ export default class MatchService {
         this.websocketInstance.close();
       }
 
-      this.websocketInstance.connect(`match/${season}/${week}`);
+      this.websocketInstance.connect();
     } catch (error: any) {
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(new Error(error));
@@ -76,6 +78,24 @@ export default class MatchService {
   }
 
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
-    console.log(JSON.parse(ev.data));
+    const configurationStore = useConfigurationStore();
+    const selectedWeek = configurationStore.selectedWeek;
+
+    const { matches, ranking, week } = JSON.parse(ev.data) as {
+      matches: IMatch[];
+      ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IWeeklyRanking[] };
+      week: number;
+    };
+    console.log('WebSocket message received: ', matches, ranking, week);
+
+    // Update matches if the update is for the current week being viewed
+    if (selectedWeek === week) {
+      const matchesStore = useMatchesStore();
+      matchesStore.updateMatches(matches);
+    }
+
+    const rankingStore = useRankingStore();
+    rankingStore.setSeason(ranking.seasonRanking);
+    rankingStore.setWeeks(ranking.weeklyRanking);
   }
 }

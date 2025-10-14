@@ -8,28 +8,40 @@
     <p class="counter-line">
       <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> North </span>
       <span v-if="selectedDivisionChampions.North" class="logo">
-        <img :src="`/team_logos/${selectedDivisionChampions.North.id}.gif`" />
+        <img
+          :src="`/team_logos/${selectedDivisionChampions.North.id}.gif`"
+          :alt="`${selectedDivisionChampions.North.name} Shield`"
+        />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
     <p class="counter-line">
       <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> East </span>
       <span v-if="selectedDivisionChampions.East" class="logo">
-        <img :src="`/team_logos/${selectedDivisionChampions.East.id}.gif`" />
+        <img
+          :src="`/team_logos/${selectedDivisionChampions.East.id}.gif`"
+          :alt="`${selectedDivisionChampions.East.name} Shield`"
+        />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
     <p class="counter-line">
       <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> South </span>
       <span v-if="selectedDivisionChampions.South" class="logo">
-        <img :src="`/team_logos/${selectedDivisionChampions.South.id}.gif`" />
+        <img
+          :src="`/team_logos/${selectedDivisionChampions.South.id}.gif`"
+          :alt="`${selectedDivisionChampions.South.name} Shield`"
+        />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
     <p class="counter-line">
       <span><i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> West </span>
       <span v-if="selectedDivisionChampions.West" class="logo">
-        <img :src="`/team_logos/${selectedDivisionChampions.West.id}.gif`" />
+        <img
+          :src="`/team_logos/${selectedDivisionChampions.West.id}.gif`"
+          :alt="`${selectedDivisionChampions.West.name} Shield`"
+        />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
@@ -37,7 +49,7 @@
     <h3>Wild Cards</h3>
     <p class="counter-line">
       <span v-for="team in selectedWildcards" :key="team.id" class="logo">
-        <img :src="`/team_logos/${team.id}.gif`" />
+        <img :src="`/team_logos/${team.id}.gif`" :alt="`${team.name} Shield`" />
       </span>
       <span v-for="(_, index) in 3 - selectedWildcards.length" :key="index" class="icon">
         <i class="pi pi-times"></i>
@@ -48,7 +60,10 @@
     <p class="counter-line">
       <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i>
       <span v-if="selectedConferenceChampion" class="logo">
-        <img :src="`/team_logos/${selectedConferenceChampion.id}.gif`" />
+        <img
+          :src="`/team_logos/${selectedConferenceChampion.id}.gif`"
+          :alt="`${selectedConferenceChampion.name} Shield`"
+        />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>
@@ -57,7 +72,7 @@
     <p class="counter-line">
       <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i>
       <span v-if="selectedSuperBowlWinner" class="logo">
-        <img :src="`/team_logos/${selectedSuperBowlWinner.id}.gif`" />
+        <img :src="`/team_logos/${selectedSuperBowlWinner.id}.gif`" :alt="`${selectedSuperBowlWinner.name} Shield`" />
       </span>
       <span v-else class="icon"><i class="pi pi-times"></i></span>
     </p>

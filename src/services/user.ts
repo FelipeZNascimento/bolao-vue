@@ -5,6 +5,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 import { faIconsList } from '@/constants/font-awesome';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
 import { randomHexColorGenerator } from '@/util/colorGenerator';
@@ -15,6 +16,7 @@ export default class UserService {
   private activeProfileStore;
   private apiRequest;
   private configurationStore;
+  private extraBetStore;
   private matchesStore;
   private rankingStore;
 
@@ -22,6 +24,7 @@ export default class UserService {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.rankingStore = useRankingStore();
+    this.extraBetStore = useExtraBetStore();
     this.matchesStore = useMatchesStore();
     this.configurationStore = useConfigurationStore();
   }
@@ -59,6 +62,7 @@ export default class UserService {
       this.rankingStore.setInitialState();
       this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
+      this.extraBetStore.resetLoggedUserBets();
     } catch (error: any) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(new Error(error));

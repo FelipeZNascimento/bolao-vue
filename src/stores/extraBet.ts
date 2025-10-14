@@ -3,9 +3,10 @@ import { ref } from 'vue';
 
 import type { IConferenceTeams, IExtraBet, ITeamWithExtras } from './extraBet.types';
 
+const emptyConferenceObj = { East: [], North: [], South: [], West: [] };
 export const useExtraBetStore = defineStore('extras', () => {
-  const afcTeams = ref<IConferenceTeams>({ East: [], North: [], South: [], West: [] });
-  const nfcTeams = ref<IConferenceTeams>({ East: [], North: [], South: [], West: [] });
+  const afcTeams = ref<IConferenceTeams>(emptyConferenceObj);
+  const nfcTeams = ref<IConferenceTeams>(emptyConferenceObj);
 
   const allUsersBets = ref<IExtraBet[]>([]);
   const extraBetsResults = ref<IExtraBet | null>(null);

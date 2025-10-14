@@ -17,7 +17,13 @@
       <PrimeColumn field="name">
         <template #body="slotProps">
           <div class="team-line-outer">
-            <TeamComponent isScoreless :isAlias="true" :isGridMode="false" :team="slotProps.data.team" />
+            <TeamComponent
+              isScoreless
+              :isAlias="true"
+              :isGridMode="false"
+              :team="slotProps.data.team"
+              :matchStatus="MATCH_STATUS.FINAL"
+            />
           </div>
         </template>
       </PrimeColumn>
@@ -124,6 +130,7 @@ import type {
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModal from './ExtrasBetsModal.vue';
