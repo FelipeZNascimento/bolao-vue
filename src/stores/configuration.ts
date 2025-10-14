@@ -1,14 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type {
-  TRankingPosition,
-  TRankingPositionValue,
-  TResultsView,
-  TResultsViewValue,
-  TTheme,
-  TThemeValue,
-} from './configuration.types';
+import type { TRankingPositionValue, TResultsViewValue, TThemeValue } from './configuration.types';
 
 const initialState = {
   rankingPosition: 'active' as TRankingPositionValue,

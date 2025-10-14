@@ -128,7 +128,6 @@ export default class UserService {
 
   public async updatePreferences(newColor: string, newIcon: string, callback: (isSuccess: boolean) => void) {
     this.activeProfileStore.setLoading(true);
-    const formattedColor = newColor.includes('#') ? newColor : `#${newColor}`;
     const updatedProfile = {
       color: this.activeProfileStore.activeProfile?.color,
       icon: newIcon || this.activeProfileStore.activeProfile?.icon,
