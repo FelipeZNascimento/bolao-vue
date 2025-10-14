@@ -11,6 +11,7 @@ import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
+import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';
 import RankingService from './services/ranking';
 import StartupService from './services/startup';
@@ -22,6 +23,7 @@ import { useExtraBetStore } from './stores/extraBet';
 const startupService = new StartupService();
 const matchService = new MatchService();
 const rankingService = new RankingService();
+const extraBetService = new ExtraBetService();
 const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
@@ -54,15 +56,19 @@ watch(selectedWeek, async (newValue, oldValue) => {
 
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
-watch(activeProfile, async () => {
+watch(activeProfile, async (newValue) => {
   console.log('Fetching matches for active profile change...');
   rankingService.fetch();
   matchService.fetch();
 
-  if (!activeProfile.value) {
+  // Fetches extra bets if user logged in, clears bets if user logged out
+  if (newValue) {
+    extraBetService.fetch();
+  } else {
     extraBetStore.setLoggedUserBets(null);
   }
 
+  // Week is possibly zero (preseason)
   if (!selectedWeek.value) {
     return;
   }

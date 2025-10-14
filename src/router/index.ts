@@ -6,7 +6,7 @@ import ResultsView from '@/views/ResultsView.vue';
 import BetsView from '../views/BetsView.vue';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_BOLAO_BASE_URL),
+  history: createWebHistory(),
   routes: [
     // {
     //   path: '/',

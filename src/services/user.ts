@@ -1,8 +1,11 @@
 import { sha1 } from 'js-sha1';
 
+import type { IUser } from '@/stores/activeProfile.types';
+
 import { faIconsList } from '@/constants/font-awesome';
-import { useActiveProfileStore, type User } from '@/stores/activeProfile';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
 import { randomHexColorGenerator } from '@/util/colorGenerator';
@@ -13,6 +16,7 @@ export default class UserService {
   private activeProfileStore;
   private apiRequest;
   private configurationStore;
+  private extraBetStore;
   private matchesStore;
   private rankingStore;
 
@@ -20,6 +24,7 @@ export default class UserService {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.rankingStore = useRankingStore();
+    this.extraBetStore = useExtraBetStore();
     this.matchesStore = useMatchesStore();
     this.configurationStore = useConfigurationStore();
   }
@@ -33,14 +38,12 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/login', loginObject);
+      const response = await this.apiRequest.post<IUser>('user/login', loginObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
-      console.log(response);
       return callback(true);
     } catch (error: unknown) {
-      console.log(error);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
       return callback(false);
@@ -50,13 +53,14 @@ export default class UserService {
   public async logout() {
     this.activeProfileStore.setLoading(true);
     try {
-      await this.apiRequest.get<User>('user/logout');
+      await this.apiRequest.get<IUser>('user/logout');
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
       this.rankingStore.setInitialState();
       this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
+      this.extraBetStore.resetLoggedUserBets();
     } catch (error: any) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(new Error(error));
@@ -85,7 +89,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/register', registerObject);
+      const response = await this.apiRequest.post<IUser>('user/register', registerObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -108,7 +112,7 @@ export default class UserService {
     };
 
     try {
-      await this.apiRequest.post<User>('user/password', updatedProfile);
+      await this.apiRequest.post<IUser>('user/password', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(null);
 
@@ -122,14 +126,13 @@ export default class UserService {
 
   public async updatePreferences(newColor: string, newIcon: string, callback: (isSuccess: boolean) => void) {
     this.activeProfileStore.setLoading(true);
-    const formattedColor = newColor.includes('#') ? newColor : `#${newColor}`;
     const updatedProfile = {
       color: this.activeProfileStore.activeProfile?.color,
       icon: newIcon || this.activeProfileStore.activeProfile?.icon,
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/preferences/', updatedProfile);
+      const response = await this.apiRequest.post<IUser>('user/preferences/', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -154,9 +157,8 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<User>('user/profile', updatedProfile);
+      const response = await this.apiRequest.post<IUser>('user/profile', updatedProfile);
       this.activeProfileStore.setLoading(false);
-      console.log('Updated profile response:', response);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
 

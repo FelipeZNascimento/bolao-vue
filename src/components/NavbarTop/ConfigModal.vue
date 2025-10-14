@@ -102,6 +102,7 @@ import type {
   TResultsView,
   TResultsViewValue,
   TRowSpacing,
+  TRowSpacingValue,
   TTheme,
   TThemeValue,
 } from '@/stores/configuration.types';
@@ -166,7 +167,7 @@ function handleResultsViewConfig(newOption: TResultsViewValue) {
   configurationStore.setResultsView(newOption);
 }
 
-function handleRowSpacingConfig(newOption: TRowSpacing) {
+function handleRowSpacingConfig(newOption: TRowSpacingValue) {
   rankingStore.setRowSpacing(newOption);
 }
 

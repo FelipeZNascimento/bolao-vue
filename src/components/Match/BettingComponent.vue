@@ -17,16 +17,16 @@
 </template>
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast';
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 
 import type { IBet, IMatch } from '@/stores/matches.types';
 
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
-import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
   activeUserBet: IBet | null;
+  isMatchStarted: boolean;
   match: IMatch;
 }>();
 
@@ -38,12 +38,6 @@ const isLoading = ref<boolean>(false);
 // ------ Initializations ------
 const matchService = new MatchService();
 const toast = useToast();
-const clockStore = useClockStore();
-
-// ------ Computed Properties ------
-const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= props.match.timestamp;
-});
 
 // ------ Watch Effect Properties ------
 watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));

@@ -1,5 +1,12 @@
 <template>
-  <div :class="isGridMode ? 'outer-clock-grid' : 'outer-clock'">
+  <div
+    :class="{
+      'outer-clock': !isGridMode,
+      'outer-clock-grid': isGridMode,
+      'right-aligned': isMatchStarted,
+      'left-aligned': !isMatchStarted,
+    }"
+  >
     <div
       v-if="activeProfile && ribbon"
       class="ribbon"
@@ -34,13 +41,14 @@ import { computed } from 'vue';
 
 import type { Ribbon } from '@/constants/bets';
 
-import { MATCH_STATUS, MATCH_STATUS_LABELS, type TMatchStatus } from '@/constants/match_status';
+import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
   clock: string;
   isGridMode?: boolean;
+  isMatchStarted: boolean;
   ribbon?: Ribbon;
   status: TMatchStatus;
   timestamp: number;
@@ -54,28 +62,21 @@ const activeProfileStore = useActiveProfileStore();
 const activeProfile = computed(() => {
   return activeProfileStore.activeProfile;
 });
-const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= props.timestamp;
-});
 
-const isClockStopped = computed(
-  () =>
-    props.status === MATCH_STATUS.FINAL ||
-    props.status === MATCH_STATUS.FINAL_OVERTIME ||
-    props.status === MATCH_STATUS.CANCELLED ||
-    props.status === MATCH_STATUS.END_FIRST ||
-    props.status === MATCH_STATUS.END_THIRD ||
-    props.status === MATCH_STATUS.HALFTIME ||
-    props.status === MATCH_STATUS.DELAYED ||
-    props.status === MATCH_STATUS.NOT_STARTED ||
-    props.status === MATCH_STATUS.CANCELLED,
-);
+const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 </script>
 <style lang="scss" scoped>
+.left-aligned {
+  justify-content: flex-start;
+}
+
+.right-aligned {
+  justify-content: flex-end;
+}
+
 .outer-clock {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   font-size: var(--m-font-size);
   position: relative;
   background-color: var(--bolao-c-navy-t2);
@@ -116,7 +117,6 @@ const isClockStopped = computed(
   min-height: 40px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   position: relative;
   padding: 0 var(--m-spacing);
   font-size: var(--m-font-size);

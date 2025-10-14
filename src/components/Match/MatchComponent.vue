@@ -11,17 +11,19 @@
       :status="match.status"
       :clock="match.clock"
       :isGridMode="isGridMode"
+      :isMatchStarted="isMatchStarted"
     />
     <ScoreComponent
       :isBetting="isBetting"
       :isGridMode="isGridMode"
       :match="match"
-      :activeUserBet="match.loggedUserBets"
+      :activeUserBet="match.loggedUserBets ?? null"
+      :isMatchStarted="isMatchStarted"
     />
   </div>
   <BetsModal
     :match="match"
-    :activeUserBet="match.loggedUserBets"
+    :activeUserBet="match.loggedUserBets ?? null"
     :correctBets="correctBets"
     :isOpen="isBetsModalOpen"
     :ribbon="ribbon"

@@ -13,8 +13,8 @@ export default class WebsocketService {
     this.websocketInstance?.close();
   }
 
-  public async connect(endpoint: string) {
-    const url = `ws://localhost:63768/bolaonfl/${endpoint}`;
+  public async connect() {
+    const url = `${this.baseUrl}`;
     this.websocketInstance = new WebSocket(url);
     this.websocketInstance.onopen = () => console.log('WS opened');
     this.websocketInstance.onmessage = this.onMessage;

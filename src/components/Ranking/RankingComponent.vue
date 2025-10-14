@@ -23,8 +23,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import type { IWeeklyRanking } from '@/stores/ranking.types';
-
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
@@ -54,15 +52,12 @@ const rowSpacing = computed(() => rankingStore.rowSpacing);
 const errorWeek = computed(() => rankingStore.errorWeek);
 const errorSeason = computed(() => rankingStore.errorSeason);
 const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStore.isLoadingWeek);
-const currentWeek = computed(() => configurationStore.currentWeek);
+const selectedWeek = computed(() => configurationStore.selectedWeek);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
-const selectedWeekRanking = computed(() => {
-  return (
-    rankingStore.weeksRanking.find((weekRanking: IWeeklyRanking) => weekRanking.week === currentWeek.value)?.ranking ||
-    []
-  );
-});
+const selectedWeekRanking = computed(
+  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || [],
+);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
 <style scoped>

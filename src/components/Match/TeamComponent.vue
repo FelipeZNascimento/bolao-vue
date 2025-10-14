@@ -14,17 +14,31 @@
       <img
         :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
         :src="`/team_logos/${props.team.id}.gif`"
+        :alt="`${props.team.name} Shield`"
       />
     </span>
     <div v-if="!isNameless" class="team-alias">
       {{ isGridMode || isAlias ? team.code : team.alias }}
       <p style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">0-1</p>
     </div>
-    <span v-if="!isScoreless" class="team-score">{{ team.score }}</span>
+    <div v-if="!isScoreless && odds" class="team-odds">{{ odds }}</div>
+    <div v-if="!isScoreless && !odds" class="team-score" :style="{ fontWeight: isWinning ? 'bold' : 'normal' }">
+      {{ team.score }}
+      <img
+        v-if="team.possession && !isClockStopped"
+        src="/src/img/football.png"
+        style="position: absolute; top: 5%; left: 5%; height: 15px; width: 15px"
+        :alt="`Ball possession for ${team.name}`"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { computed } from 'vue';
+
 import type { ITeam } from '@/stores/matches.types';
+
+import { STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
 
 const props = defineProps<{
   isAlias?: boolean;
@@ -32,8 +46,13 @@ const props = defineProps<{
   isHomeTeam?: boolean;
   isNameless?: boolean;
   isScoreless?: boolean;
+  isWinning?: boolean;
+  matchStatus: TMatchStatus;
+  odds?: null | string;
   team: Partial<ITeam>;
 }>();
+
+const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 </script>
 <style lang="scss" scoped>
 .outer-team {
@@ -107,6 +126,17 @@ const props = defineProps<{
   }
 }
 
+.team-odds {
+  width: 55px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--s-font-size);
+  background-color: #0003;
+  padding: 0 var(--s-spacing);
+}
+
 .team-score {
   min-width: 55px;
   height: 100%;
@@ -116,5 +146,6 @@ const props = defineProps<{
   font-size: var(--l-font-size);
   background-color: #0003;
   padding: 0 var(--m-spacing);
+  position: relative;
 }
 </style>

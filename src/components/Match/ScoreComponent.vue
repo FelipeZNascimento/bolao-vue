@@ -6,15 +6,55 @@
         'outer-mobile-teams-grid': isGridMode,
       }"
     >
-      <TeamComponent isAlias :isGridMode="isGridMode" :isHomeTeam="false" :team="match.away" />
-      <TeamComponent isAlias :isGridMode="isGridMode" :isHomeTeam="true" :team="match.home" />
+      <TeamComponent
+        isAlias
+        :isGridMode="isGridMode"
+        :isHomeTeam="false"
+        :isWinning="match.away.score > match.home.score"
+        :team="match.away"
+        :matchStatus="match.status"
+      />
+      <TeamComponent
+        isAlias
+        :isGridMode="isGridMode"
+        :isHomeTeam="true"
+        :isWinning="match.away.score < match.home.score"
+        :team="match.home"
+        :matchStatus="match.status"
+      />
     </span>
-    <BettingComponent v-if="isBetting && !isGridMode" :match="match" :activeUserBet="activeUserBet" />
+    <BettingComponent
+      v-if="isBetting && !isGridMode"
+      :match="match"
+      :activeUserBet="activeUserBet"
+      :isMatchStarted="isMatchStarted"
+    />
   </div>
   <div v-else :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }">
-    <TeamComponent :isAlias="isBetting" :isGridMode="isGridMode" :isHomeTeam="false" :team="match.away" />
-    <BettingComponent v-if="isBetting && !isGridMode" :match="match" :activeUserBet="activeUserBet" />
-    <TeamComponent :isAlias="isBetting" :isGridMode="isGridMode" :isHomeTeam="true" :team="match.home" />
+    <TeamComponent
+      :isAlias="isBetting"
+      :isGridMode="isGridMode"
+      :isHomeTeam="false"
+      :isWinning="match.away.score > match.home.score"
+      :team="match.away"
+      :odds="!isMatchStarted ? match.overUnder : ''"
+      :matchStatus="match.status"
+    />
+    <BettingComponent
+      v-if="isBetting && !isGridMode"
+      :match="match"
+      :activeUserBet="activeUserBet"
+      :isMatchStarted="isMatchStarted"
+    />
+    <TeamComponent
+      :isAlias="isBetting"
+      :isGridMode="isGridMode"
+      :isHomeTeam="true"
+      :isWinning="match.away.score < match.home.score"
+      :team="match.home"
+      :odds="!isMatchStarted ? match.homeTeamOdds : ''"
+      :matchStatus="match.status"
+    />
   </div>
 </template>
 <script lang="ts" setup>
@@ -29,6 +69,7 @@ withDefaults(
     activeUserBet: IBet | null;
     isBetting?: boolean;
     isGridMode?: boolean;
+    isMatchStarted: boolean;
     match: IMatch;
   }>(),
   {

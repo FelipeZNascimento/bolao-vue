@@ -18,11 +18,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-
-import ExtraBetService from '@/services/extra_bet';
-// import { useClockStore } from '@/stores/clock';
-import { useConfigurationStore } from '@/stores/configuration';
+import { ref } from 'vue';
 
 import RulesBetting from './Rules/RulesBetting.vue';
 import RulesExtras from './Rules/RulesExtras.vue';
@@ -34,26 +30,6 @@ type RulesToggle = 'Apostas' | 'Extras' | 'Inscrição' | 'Pontuação' | 'Premi
 // ------ Refs ------
 const selectedButton = ref<RulesToggle>('Inscrição');
 const buttonOptions = ref<RulesToggle[]>(['Inscrição', 'Pontuação', 'Apostas', 'Extras', 'Premiação']);
-
-// ------ Initialization ------
-const extraBetService = new ExtraBetService();
-// const clockStore = useClockStore();
-const configurationStore = useConfigurationStore();
-
-if (!configurationStore.isLoading) {
-  extraBetService.fetch();
-}
-
-// ------ Computed Properties ------
-const isLoadingConfig = computed(() => configurationStore.isLoading);
-
-// ------ Watches ------
-// Fetches extra bets only after configuration store is loaded
-watch(isLoadingConfig, async (newValue, oldValue) => {
-  if (newValue === false && oldValue !== newValue) {
-    extraBetService.fetch();
-  }
-});
 </script>
 <style lang="scss" scoped>
 .outer-rules {

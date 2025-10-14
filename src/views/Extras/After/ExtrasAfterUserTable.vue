@@ -18,7 +18,13 @@
         </template>
         <template #body="slotProps">
           <div class="team-line-outer">
-            <TeamComponent isScoreless :isAlias="true" :isGridMode="false" :team="slotProps.data" />
+            <TeamComponent
+              isScoreless
+              :isAlias="true"
+              :isGridMode="false"
+              :team="slotProps.data"
+              :matchStatus="MATCH_STATUS.FINAL"
+            />
             <div
               class="spacer"
               :class="{
@@ -74,13 +80,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, type Ref } from 'vue';
+import { computed, ref, type Ref, watch } from 'vue';
 
 import type { IExtraBetBet, TExtrasTeam } from '@/stores/extraBet.types';
 import type { ITeam, TConference } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { MATCH_STATUS } from '@/constants/match_status';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 const props = defineProps<{
@@ -101,16 +109,15 @@ const conferenceResults = ref<ITeam[]>([]);
 const superbowlResults = ref<ITeam[]>([]);
 
 // ------ Initialization ------
-
 const extraBetStore = useExtraBetStore();
+const activeProfileStore = useActiveProfileStore();
 
 // ------ Computed Properties ------
-
 const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
 const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Functions ------
-
 function findConferenceChampions(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {
   if (!betsArray) return [];
   const conferenceChampions: ITeam[] = [];
@@ -186,6 +193,15 @@ findConferenceChampions(loggedUserBets.value?.bets ?? [], conferenceBets);
 findConferenceChampions(extraBetsResults.value?.bets ?? [], conferenceResults);
 findSuperBowlWinner(loggedUserBets.value?.bets ?? [], superbowlBet);
 findSuperBowlWinner(extraBetsResults.value?.bets ?? [], superbowlResults);
+
+watch(activeProfile, () => {
+  if (!activeProfile.value) {
+    wildcardBets.value = [];
+    divisionBets.value = [];
+    conferenceBets.value = [];
+    superbowlBet.value = [];
+  }
+});
 </script>
 <style lang="scss">
 .outer-extras-result-table {

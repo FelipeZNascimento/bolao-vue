@@ -14,6 +14,7 @@
             :isAlias="true"
             :isGridMode="false"
             :team="slotProps.data"
+            :matchStatus="MATCH_STATUS.FINAL"
           />
         </template>
       </PrimeColumn>
@@ -104,6 +105,7 @@ import type { TExtrasTeam } from '@/stores/extraBet.types';
 import type { TConference, TDivision } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
+import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 defineProps<{

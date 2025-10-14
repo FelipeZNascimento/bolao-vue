@@ -4,7 +4,7 @@
     <nav>
       <PrimeMenubar :model="filteredRoutes">
         <template #start>
-          <img class="logo-image" src="/src/img/logo.png" />
+          <img class="logo-image" src="/src/img/logo.png" :alt="`Bolao NFL logo`" />
         </template>
         <template #item="{ item }">
           <RouterLink

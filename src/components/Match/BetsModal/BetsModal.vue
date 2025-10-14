@@ -9,11 +9,17 @@
     contentClass="content-class"
   >
     <template #header>
-      <ClockComponent :timestamp="match.timestamp" :status="match.status" :clock="match.clock" :ribbon="ribbon" />
+      <ClockComponent
+        :timestamp="match.timestamp"
+        :status="match.status"
+        :clock="match.clock"
+        :ribbon="ribbon"
+        :isMatchStarted="isMatchStarted"
+      />
     </template>
 
     <div class="teams-outer">
-      <ScoreComponent :match="match" :activeUserBet="match.loggedUserBets" />
+      <ScoreComponent :match="match" :activeUserBet="match.loggedUserBets" :isMatchStarted="isMatchStarted" />
     </div>
     <div class="bets-outer">
       <BetsColumn
@@ -45,11 +51,12 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
 import { BETS_VALUES, type Ribbon } from '@/constants/bets';
+import { useClockStore } from '@/stores/clock';
 import { type CorrectBets } from '@/util/betsCalculator';
 
 import ClockComponent from '../ClockComponent.vue';
@@ -64,7 +71,13 @@ const props = defineProps<{
   ribbon: null | Ribbon;
 }>();
 
+// ------ Initialization ------
+const clockStore = useClockStore();
 const isVisible = ref(false);
+
+const isMatchStarted = computed(() => {
+  return clockStore.currentTimestamp >= props.match.timestamp;
+});
 
 watch(
   () => props.isOpen,

@@ -1,20 +1,17 @@
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
 import type { IRankingResponse } from '@/stores/ranking.types';
 
-import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
 
 export default class RankingService {
   private apiRequest;
-  private configurationStore;
   private rankingStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.rankingStore = useRankingStore();
-    this.configurationStore = useConfigurationStore();
   }
 
   public async fetch() {
