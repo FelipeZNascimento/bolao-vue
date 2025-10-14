@@ -87,7 +87,6 @@ export default class ExtraBetService {
       });
     });
 
-    console.log(teamsWithExtras);
     return teamsWithExtras;
   }
 

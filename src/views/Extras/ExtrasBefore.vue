@@ -278,7 +278,6 @@ function triggerUpdate() {
 
 function updateCallback(isSuccess: boolean, error?: Error) {
   if (isSuccess) {
-    console.log('Bet updated successfully');
     toast.add({
       life: 3000,
       severity: 'success',

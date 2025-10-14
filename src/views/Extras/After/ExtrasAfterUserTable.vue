@@ -195,7 +195,6 @@ findSuperBowlWinner(loggedUserBets.value?.bets ?? [], superbowlBet);
 findSuperBowlWinner(extraBetsResults.value?.bets ?? [], superbowlResults);
 
 watch(activeProfile, () => {
-  console.log('Ué');
   if (!activeProfile.value) {
     wildcardBets.value = [];
     divisionBets.value = [];

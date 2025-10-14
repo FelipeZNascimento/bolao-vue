@@ -42,10 +42,8 @@ export default class UserService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
-      console.log(response);
       return callback(true);
     } catch (error: unknown) {
-      console.log(error);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
       return callback(false);
@@ -161,7 +159,6 @@ export default class UserService {
     try {
       const response = await this.apiRequest.post<IUser>('user/profile', updatedProfile);
       this.activeProfileStore.setLoading(false);
-      console.log('Updated profile response:', response);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
 
