@@ -19,6 +19,7 @@
       :match="match"
       :activeUserBet="match.loggedUserBets ?? null"
       :isMatchStarted="isMatchStarted"
+      :ribbon="ribbon"
     />
   </div>
   <BetsModal

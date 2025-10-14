@@ -10,12 +10,13 @@ import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 import { createPinia } from 'pinia';
 import PrimeAutocomplete from 'primevue/autocomplete';
-import PrimeAvatar from 'primevue/avatar';
 // Componentss
+/* ---- PrimeVue ---- */
+import PrimeAvatar from 'primevue/avatar';
 import PrimeButton from 'primevue/button';
+import PrimeChart from 'primevue/chart';
 import PrimeColorPicker from 'primevue/colorpicker';
 import PrimeColumn from 'primevue/column';
-/* ---- PrimeVue ---- */
 import PrimeVue from 'primevue/config';
 import PrimeDataTable from 'primevue/datatable';
 import PrimeDialog from 'primevue/dialog';
@@ -35,11 +36,11 @@ import PrimeRadioButtonGroup from 'primevue/radiobuttongroup';
 import PrimeSelectButton from 'primevue/selectbutton';
 import PrimeSkeleton from 'primevue/skeleton';
 import PrimeTag from 'primevue/tag';
-/* ---- PrimeVue ---- */
 import PrimeToast from 'primevue/toast';
 import PrimeToastService from 'primevue/toastservice';
 import PrimeToggleSwitch from 'primevue/toggleswitch';
 import PrimeTooltip from 'primevue/tooltip';
+/* ---- PrimeVue ---- */
 import { createApp } from 'vue';
 
 import App from './App.vue';
@@ -108,6 +109,7 @@ app.component('PrimeAvatar', PrimeAvatar);
 app.component('PrimeKnob', PrimeKnob);
 app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 app.component('PrimePanel', PrimePanel);
+app.component('PrimeChart', PrimeChart);
 
 app.directive('tooltip', PrimeTooltip);
 

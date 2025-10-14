@@ -57,7 +57,6 @@ function handlePageChangeFromDropdown(e: Event) {
   align-items: center;
   width: 100%;
   padding: var(--m-spacing);
-  gap: var(--l-spacing);
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -65,6 +64,7 @@ function handlePageChangeFromDropdown(e: Event) {
 
   @media (min-width: 1025px) {
     flex-direction: row;
+    gap: var(--l-spacing);
   }
 }
 

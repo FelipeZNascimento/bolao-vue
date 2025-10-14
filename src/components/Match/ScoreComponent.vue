@@ -6,6 +6,7 @@
         'outer-mobile-teams-grid': isGridMode,
       }"
     >
+      <RibbonComponent v-if="ribbon" :ribbon="ribbon" />
       <TeamComponent
         isAlias
         :isGridMode="isGridMode"
@@ -60,9 +61,11 @@
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 
+import type { Ribbon } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
 import BettingComponent from './BettingComponent.vue';
+import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
 withDefaults(
   defineProps<{
@@ -71,6 +74,7 @@ withDefaults(
     isGridMode?: boolean;
     isMatchStarted: boolean;
     match: IMatch;
+    ribbon?: Ribbon;
   }>(),
   {
     isBetting: false,
@@ -85,6 +89,7 @@ withDefaults(
   flex-direction: column;
   align-items: center;
   gap: var(--m-spacing);
+  position: relative;
 }
 
 .outer-mobile-teams-grid {

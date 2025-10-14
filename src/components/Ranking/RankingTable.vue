@@ -6,12 +6,13 @@
           <div class="outer-position">
             {{ slotProps.data.user.position < 10 ? `0${slotProps.data.user.position}` : slotProps.data.user.position }}
             <IconAndName
+              class="clickable"
               :isShort="columnConfig === 'complete'"
               :color="slotProps.data.user.color"
               :name="slotProps.data.user.name"
               :icon="slotProps.data.user.icon"
               :isActive="activeProfile?.id === slotProps.data.user.id"
-              :isOnline="slotProps.data.user.isOnline"
+              @click="() => handleUserClick(slotProps.data.user)"
             />
             <div class="badge" :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"></div>
           </div>
@@ -46,13 +47,23 @@
     </p>
     <p>{{ error }}</p>
   </PrimeMessage>
+  <UserTrackingModal
+    :isOpen="isUserTrackingModalOpen"
+    :isUserActive="activeProfile?.id === selectedUser?.id"
+    :selectedUser="selectedUser"
+    :handleCloseModal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
+  />
 </template>
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 import IconAndName from '@/components/IconAndName.vue';
+
+import UserTrackingModal from './UserTrackingModal.vue';
 
 defineProps<{
   activeProfile: IUser | null;
@@ -63,6 +74,16 @@ defineProps<{
   rankingData: IRankingLine[];
   rowSpacingConfig: TRowSpacingValue;
 }>();
+
+// ------ Refs ------
+const isUserTrackingModalOpen = ref<boolean>(false);
+const selectedUser = ref<IUser | null>(null);
+
+// ------ Functions ------
+function handleUserClick(user: IUser) {
+  isUserTrackingModalOpen.value = true;
+  selectedUser.value = user;
+}
 </script>
 <style lang="scss" scoped>
 .outer-position {
@@ -101,6 +122,16 @@ defineProps<{
     background-color: var(--bolao-c-grey3);
     color: var(--bolao-c-red);
     opacity: 0.2;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
   }
 }
 </style>
