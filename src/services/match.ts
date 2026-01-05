@@ -15,10 +15,10 @@ interface fetchMatch {
 }
 
 export default class MatchService {
+  public websocketInstance;
   private apiRequest;
   private configurationStore;
   private matchesStore;
-  private websocketInstance;
 
   constructor() {
     this.apiRequest = new ApiService();
@@ -86,7 +86,6 @@ export default class MatchService {
       ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IWeeklyRanking[] };
       week: number;
     };
-    console.log('WebSocket message received: ', matches, ranking, week);
 
     // Update matches if the update is for the current week being viewed
     if (selectedWeek === week) {

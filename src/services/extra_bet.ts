@@ -1,4 +1,4 @@
-import type { IExtraBet, IExtrasFetch, ITeamWithExtras } from '@/stores/extraBet.types';
+import type { IExtraBet, IExtraBetBet, IExtrasFetch, ITeamWithExtras } from '@/stores/extraBet.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -27,7 +27,7 @@ export default class ExtraBetService {
     try {
       const [extraResponse, extraResultsResponse] = await Promise.allSettled([
         this.apiRequest.get<IExtraBet[]>(`bet/extra/`),
-        this.apiRequest.get<IExtraBet[]>(`bet/extra/results`),
+        this.apiRequest.get<IExtraBetBet[]>(`bet/extra/results`),
       ]);
 
       if (isRejected(extraResponse) || isRejected(extraResultsResponse)) {
@@ -48,7 +48,7 @@ export default class ExtraBetService {
       });
 
       this.extraBetStore.setLoggedUserBets(loggedUserBets);
-      this.extraBetStore.setExtraBetsResults(extraBetsResults.length ? extraBetsResults[0] : null);
+      this.extraBetStore.setExtraBetsResults(extraBetsResults.length ? extraBetsResults : null);
 
       const splittedBetsByTeam = this.splitBetsByTeams(extraBets);
       this.extraBetStore.setAllUsersBetsByTeam(splittedBetsByTeam);

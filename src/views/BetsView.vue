@@ -56,7 +56,7 @@ const errorMatches = computed(() => matchesStore.error);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--m-spacing);
   flex: 1;
 }

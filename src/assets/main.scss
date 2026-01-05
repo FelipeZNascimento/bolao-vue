@@ -16,3 +16,15 @@ a {
 .p-menubar-item-content {
   background-color: transparent !important;
 }
+
+.p-radiobutton-checked .p-radiobutton-icon {
+  background-color: var(--p-radiobutton-checked-background) !important;
+}
+
+.p-radiobutton-checked .p-radiobutton-box {
+  background: transparent !important;
+}
+
+.p-radiobutton-checked.p-disabled .p-radiobutton-box .p-radiobutton-icon {
+  background: var(--p-radiobutton-icon-disabled-color) !important;
+}

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { IConferenceTeams, IExtraBet, ITeamWithExtras } from './extraBet.types';
+import type { IConferenceTeams, IExtraBet, IExtraBetBet, ITeamWithExtras } from './extraBet.types';
 
 const emptyConferenceObj = { East: [], North: [], South: [], West: [] };
 export const useExtraBetStore = defineStore('extras', () => {
@@ -9,7 +9,7 @@ export const useExtraBetStore = defineStore('extras', () => {
   const nfcTeams = ref<IConferenceTeams>(emptyConferenceObj);
 
   const allUsersBets = ref<IExtraBet[]>([]);
-  const extraBetsResults = ref<IExtraBet | null>(null);
+  const extraBetsResults = ref<IExtraBetBet[] | null>(null);
   const loggedUserBets = ref<IExtraBet | null>(null);
 
   const allUsersBetsByTeam = ref<ITeamWithExtras[]>([]);
@@ -26,7 +26,7 @@ export const useExtraBetStore = defineStore('extras', () => {
     loggedUserBets.value = newExtras;
   }
 
-  function setExtraBetsResults(newExtras: IExtraBet | null) {
+  function setExtraBetsResults(newExtras: IExtraBetBet[] | null) {
     extraBetsResults.value = newExtras;
   }
 

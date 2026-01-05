@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <span v-for="(BET_VALUE, index) in BETS_VALUES" :key="index" style="position: relative">
+  <div style="display: flex">
+    <span
+      v-for="(BET_VALUE, index) in BETS_VALUES"
+      :key="index"
+      style="position: relative"
+      class="betting-radio-button-container"
+    >
       <PrimeRadioButton
         :name="BETS_LABELS[BET_VALUE]"
         :disabled="isLoading || isMatchStarted"
@@ -81,11 +86,18 @@ function renderTootlip(value: BetsValues) {
   if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
     return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
   } else {
-    return `${BETS_LABELS[value]} para ${props.match.home.alias}`;
+    return `${BETS_LABELS[value]} pros ${props.match.home.alias}`;
   }
 }
 </script>
 <style lang="scss" scoped>
+.betting-radio-button-container {
+  &:nth-child(2) {
+    box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
+    -webkit-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
+    -moz-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
+  }
+}
 .betting-radio-button {
   margin: var(--m-spacing);
 
@@ -96,7 +108,7 @@ function renderTootlip(value: BetsValues) {
 
 .betting-label {
   position: absolute;
-  top: -100%;
+  top: 15%;
   left: 50%;
   transform: translateY(-100%) translateX(-50%);
   font-size: var(--xs-font-size);

@@ -1,6 +1,5 @@
 <template>
   <div class="outer" :class="{ 'outer-short': isShort }">
-    <!-- <div class="badge" :class="isOnline ? 'badgeOnline' : 'badgeOffline'"></div> -->
     <span class="usericon">
       <FontAwesomeIcon :style="{ color: color }" :icon="icon" />
     </span>
@@ -15,12 +14,12 @@ withDefaults(
     color: string;
     icon: string;
     isActive?: boolean;
-    isOnline?: boolean;
     isShort?: boolean;
     name: string;
   }>(),
   {
-    isOnline: false,
+    isActive: false,
+    isShort: false,
   },
 );
 </script>
