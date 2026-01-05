@@ -60,6 +60,7 @@ function handlePageChangeFromDropdown(e: Event) {
 
   @media (max-width: 1024px) {
     flex-direction: column;
+    gap: var(--xs-spacing);
   }
 
   @media (min-width: 1025px) {

@@ -9,7 +9,7 @@
   >
     <RibbonComponent v-if="activeProfile && ribbon" :ribbon="ribbon" />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-    <span v-if="isMatchStarted && !isClockStopped">{{ clock }}</span>
+    <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span>
     <span
       v-if="!isMatchStarted"
       :style="isGridMode ? { flexDirection: 'row' } : { flexDirection: 'column' }"

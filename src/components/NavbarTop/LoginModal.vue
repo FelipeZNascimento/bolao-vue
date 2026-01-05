@@ -62,7 +62,7 @@
           type="submit"
           label="Confirmar"
           variant="primary"
-          severity="secondary"
+          severity="primary"
           icon="pi pi-check"
           :loading="isLoading"
         />
@@ -79,7 +79,7 @@
         type="submit"
         label="Faça aqui o seu cadastro"
         variant="primary"
-        severity="primary"
+        severity="secondary"
         icon="pi pi-check"
         :disabled="isLoading"
       />

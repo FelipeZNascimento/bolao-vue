@@ -21,14 +21,6 @@ export interface IExtraBet {
   bets: IExtraBetBet[];
   user: Pick<IUser, 'color' | 'icon' | 'id' | 'name'>;
 }
-export interface IExtraBet {
-  teams: Pick<
-    ITeam,
-    'alias' | 'background' | 'code' | 'conference' | 'division' | 'foreground' | 'id' | 'name' | 'winLosses'
-  >[];
-  type: ExtraBetsValues;
-}
-
 export interface IExtraBetBet {
   teams: ITeam[];
   type: ExtraBetsValues;

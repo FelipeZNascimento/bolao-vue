@@ -1,6 +1,6 @@
 <template>
   <PrimeDataTable :value="rankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows>
-    <PrimeColumn field="user" header="" sortable>
+    <PrimeColumn field="user.position" header="" sortable>
       <template #body="slotProps">
         <div style="display: flex; flex-direction: row">
           <div class="outer-position">
@@ -25,7 +25,7 @@
         <i v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="isWeekly && columnConfig === 'complete'" field="totalWinners" sortable>
+    <PrimeColumn v-if="isWeekly && columnConfig === 'complete'" field="score.winner" sortable>
       <template #header>
         <i v-tooltip.top="'Vencedor correto'" class="pi pi-check"></i>
       </template>

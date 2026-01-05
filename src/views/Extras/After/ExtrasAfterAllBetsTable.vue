@@ -4,21 +4,26 @@
       showGridlines
       rowHover
       tableClass="extras-table"
-      :value="teamsWithBets"
+      :value="sortedTeams"
       dataKey="id"
       size="small"
       @rowClick="onRowClick"
+      v-model:sort-field="sortField"
+      v-model:sort-order="sortOrder"
+      lazy
     >
       <template v-if="title" #header>
         <div>
           <h2>{{ title }}</h2>
         </div>
       </template>
-      <PrimeColumn field="name">
+      <PrimeColumn field="name" sortable>
+        <template #header>&nbsp;</template>
         <template #body="slotProps">
           <div class="team-line-outer">
             <TeamComponent
               isScoreless
+              :isNameless="isMobileOnly ? true : false"
               :isAlias="true"
               :isGridMode="false"
               :team="slotProps.data.team"
@@ -27,9 +32,9 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="wc">
+      <PrimeColumn field="wildcard" sortable>
         <template #header>
-          <div class="team-line-outer" style="width: 100%">
+          <div class="team-line-outer">
             <div class="spacer" v-tooltip.top="'Wild Card'">WC</div>
           </div>
         </template>
@@ -38,7 +43,7 @@
             <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'wildcard')">
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'wildcard'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'wildcard'),
                 }"
                 class="pi pi-star-fill star-icon orange-star"
                 v-tooltip.top="'Wild Card'"
@@ -47,9 +52,9 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="division">
+      <PrimeColumn field="division" sortable>
         <template #header>
-          <div class="team-line-outer" style="width: 100%">
+          <div class="team-line-outer">
             <div class="spacer" v-tooltip.top="'Campeão Divisão'">Div</div>
           </div>
         </template>
@@ -58,7 +63,7 @@
             <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'division')">
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'division'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'division'),
                 }"
                 class="pi pi-crown crown-icon golden-crown"
                 v-tooltip.top="'Divisão'"
@@ -67,9 +72,9 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="conference">
+      <PrimeColumn field="conference" sortable>
         <template #header>
-          <div class="team-line-outer" style="width: 100%">
+          <div class="team-line-outer">
             <div class="spacer" v-tooltip.top="'Campeão Conferência'">Conf</div>
           </div>
         </template>
@@ -79,7 +84,7 @@
             <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'conference')">
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'conference'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference'),
                 }"
                 class="pi pi-sparkles sparkles-icon blue-sparkles"
                 v-tooltip.top="'Conferência'"
@@ -88,9 +93,9 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="superbowl">
+      <PrimeColumn field="superbowl" sortable>
         <template #header>
-          <div class="team-line-outer" style="width: 100%">
+          <div class="team-line-outer">
             <div class="spacer" v-tooltip.top="'Vencedor Super Bowl'">SB</div>
           </div>
         </template>
@@ -100,7 +105,7 @@
             <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'superbowl')">
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults?.bets ?? [], slotProps.data.team.id, 'conference'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference'),
                 }"
                 class="pi pi-trophy trophy-icon mint-trophy"
                 v-tooltip.top="'Superbowl'"
@@ -118,6 +123,7 @@
   />
 </template>
 <script setup lang="ts">
+import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref } from 'vue';
 
 import type {
@@ -142,26 +148,38 @@ const props = defineProps<{
 }>();
 
 // ------ Types ------
-
 type ModalInfo = {
   team: null | TExtrasTeam;
   teamsWithExtras: ITeamWithExtrasBet[];
 };
 
 // ------ Refs ------
-
 const modalInfo = ref<ModalInfo>({ team: null, teamsWithExtras: [] });
+const sortField = ref<'conference' | 'division' | 'name' | 'superbowl' | 'wildcard'>('name');
+const sortOrder = ref<number | undefined>(1);
 
 // ------ Initialization ------
-
 const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties ------
-
 const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
+const sortedTeams = computed(() => {
+  return props.teamsWithBets.slice().sort((a: ITeamWithExtras, b: ITeamWithExtras) => {
+    if (sortField.value === 'name') {
+      if (sortOrder.value === 1) {
+        return a.team.name > b.team.name ? 1 : -1;
+      } else {
+        return a.team.name < b.team.name ? 1 : -1;
+      }
+    } else {
+      if (sortOrder.value === 1) {
+        return countByType(a.bets ?? [], sortField.value) > countByType(b.bets ?? [], sortField.value) ? 1 : -1;
+      } else return countByType(a.bets ?? [], sortField.value) < countByType(b.bets ?? [], sortField.value) ? 1 : -1;
+    }
+  });
+});
 
 // ------ Functions ------
-
 function countByType(betsArray: ITeamWithExtrasBet[], type: 'conference' | 'division' | 'superbowl' | 'wildcard') {
   if (type === 'conference') {
     return betsArray.filter((bet) => bet.type === EXTRA_BETS_VALUES[props.conference]).length;
@@ -178,6 +196,8 @@ function countByType(betsArray: ITeamWithExtrasBet[], type: 'conference' | 'divi
   } else if (type === 'wildcard') {
     return betsArray.filter((bet) => bet.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`]).length;
   }
+
+  return 0;
 }
 
 function handleCloseModal() {
@@ -192,7 +212,8 @@ function isHighlighted(
 ) {
   if (type === 'conference') {
     return winnersList.find(
-      (winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[props.conference],
+      (winner) =>
+        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[props.conference],
     );
   } else if (type === 'division') {
     const divisions = [
@@ -201,12 +222,20 @@ function isHighlighted(
       EXTRA_BETS_VALUES[`${props.conference}_SOUTH`],
       EXTRA_BETS_VALUES[`${props.conference}_WEST`],
     ];
-    return winnersList.find((winner) => winner.teams[0].id === teamId && divisions.includes(winner.type));
+    return winnersList.find(
+      (winner) => winner.teams.length > 0 && winner.teams[0].id === teamId && divisions.includes(winner.type),
+    );
   } else if (type === 'superbowl') {
-    return winnersList.find((winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES.SUPERBOWL);
+    return winnersList.find(
+      (winner) =>
+        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES.SUPERBOWL,
+    );
   } else if (type === 'wildcard') {
     return winnersList.find(
-      (winner) => winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`],
+      (winner) =>
+        winner.teams.length > 0 &&
+        winner.teams.find((winnerTeam) => winnerTeam.id === teamId) &&
+        winner.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`],
     );
   }
 }
@@ -221,8 +250,8 @@ function onRowClick(event: any) {
 </script>
 <style lang="scss">
 .outer-extras-result-table {
-  min-width: 400px;
-  width: 400px;
+  min-width: 500px;
+  width: 500px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -239,7 +268,7 @@ function onRowClick(event: any) {
     }
 
     @media (min-width: 768px) {
-      min-width: 400px;
+      min-width: 500px;
     }
   }
 
@@ -250,6 +279,10 @@ function onRowClick(event: any) {
     justify-content: center;
     gap: var(--xs-spacing);
     cursor: pointer;
+  }
+
+  .p-datatable-column-header-content {
+    justify-content: center;
   }
 
   // .p-datatable {

@@ -19,7 +19,9 @@
     </span>
     <div v-if="!isNameless" class="team-alias">
       {{ isGridMode || isAlias ? team.code : team.alias }}
-      <p style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">0-1</p>
+      <p v-if="props.team.winLosses" style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">
+        {{ props.team.winLosses }}
+      </p>
     </div>
     <div v-if="!isScoreless && odds" class="team-odds">{{ odds }}</div>
     <div v-if="!isScoreless && !odds" class="team-score" :style="{ fontWeight: isWinning ? 'bold' : 'normal' }">

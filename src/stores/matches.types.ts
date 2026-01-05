@@ -33,7 +33,7 @@ export interface ITeam {
   name: string;
   possession: boolean;
   score: number;
-  winLosses: string;
+  winLosses: null | string;
 }
 
 export type TConference = 'AFC' | 'NFC';

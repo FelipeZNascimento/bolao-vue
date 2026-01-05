@@ -57,6 +57,7 @@ function chartData() {
     const winner = parseFloat(userLine.score.percentage) - bullseye;
 
     return {
+      accumulatedPoints: userLine.score.accumulatedPoints,
       bullseye: bullseye.toFixed(1),
       position: userLine.user.position,
       winner: winner.toFixed(1),
@@ -75,7 +76,6 @@ function chartData() {
         type: 'line',
         yAxisID: 'y1',
       },
-
       {
         backgroundColor: '#29c84e50',
         data: userWeeklyRankings.map((week) => week.bullseye),
@@ -135,7 +135,6 @@ const chartOptions = {
 watch(
   () => props.isOpen,
   async (newValue) => {
-    console.log('passou aqui ', newValue);
     if (newValue) {
       isVisible.value = true;
     }

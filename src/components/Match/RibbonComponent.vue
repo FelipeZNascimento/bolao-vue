@@ -63,6 +63,8 @@ const activeProfile = computed(() => {
     calc(2 * var(--f)) var(--f),
     0 var(--f)
   );
+  z-index: 1;
+  box-shadow: 0 0 15px 1px #0006;
 
   @media (max-width: 1023px) {
     height: 30px;

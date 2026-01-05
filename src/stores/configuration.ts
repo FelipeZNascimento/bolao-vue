@@ -38,9 +38,14 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setTheme(newTheme: TThemeValue) {
+    console.log('Setting theme to', newTheme);
     theme.value = newTheme;
     document.documentElement.setAttribute('data-theme', newTheme);
-    document.documentElement.classList.toggle('dark-mode');
+    if (newTheme === 'light') {
+      document.documentElement.classList.remove('dark-mode');
+    } else {
+      document.documentElement.classList.add('dark-mode');
+    }
     localStorage.setItem('theme-preference', newTheme);
   }
 
@@ -54,10 +59,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
     localStorage.setItem('results-view', view);
   }
 
-  function toggleTheme() {
-    setTheme(isDarkMode() ? 'light' : 'dark');
-  }
-
   function setCurrentSeason(season: number) {
     currentSeason.value = season;
   }
@@ -67,7 +68,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setSelectedWeek(week: number) {
-    console.log('Setting selected week to:', week);
     selectedWeek.value = week;
   }
 
@@ -100,6 +100,5 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setSelectedWeek,
     setTheme,
     theme,
-    toggleTheme,
   };
 });

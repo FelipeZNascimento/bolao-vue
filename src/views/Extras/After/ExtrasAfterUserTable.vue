@@ -186,13 +186,13 @@ function isHighlighted(winnersList: ITeam[], teamId: number) {
 }
 
 findWildcardBets(loggedUserBets.value?.bets ?? [], wildcardBets);
-findWildcardBets(extraBetsResults.value?.bets ?? [], wildcardResults);
+findWildcardBets(extraBetsResults.value ?? [], wildcardResults);
 findDivisionChampions(loggedUserBets.value?.bets ?? [], divisionBets);
-findDivisionChampions(extraBetsResults.value?.bets ?? [], divisionResults);
+findDivisionChampions(extraBetsResults.value ?? [], divisionResults);
 findConferenceChampions(loggedUserBets.value?.bets ?? [], conferenceBets);
-findConferenceChampions(extraBetsResults.value?.bets ?? [], conferenceResults);
+findConferenceChampions(extraBetsResults.value ?? [], conferenceResults);
 findSuperBowlWinner(loggedUserBets.value?.bets ?? [], superbowlBet);
-findSuperBowlWinner(extraBetsResults.value?.bets ?? [], superbowlResults);
+findSuperBowlWinner(extraBetsResults.value ?? [], superbowlResults);
 
 watch(activeProfile, () => {
   if (!activeProfile.value) {
@@ -205,8 +205,8 @@ watch(activeProfile, () => {
 </script>
 <style lang="scss">
 .outer-extras-result-table {
-  min-width: 400px;
-  width: 400px;
+  min-width: 500px;
+  width: 500px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -223,7 +223,7 @@ watch(activeProfile, () => {
     }
 
     @media (min-width: 768px) {
-      min-width: 400px;
+      min-width: 500px;
     }
   }
 

@@ -47,6 +47,13 @@ const selectedWeek = computed(() => configurationStore.selectedWeek);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Watches ------
+// If websocket died, restart it
+watch(matchService.websocketInstance, async (newValue) => {
+  if (newValue.websocketInstance?.CLOSED) {
+    matchService.fetch();
+  }
+});
+
 // Fetches week's matches and week's ranking when selectedWeek is changed
 watch(selectedWeek, async (newValue, oldValue) => {
   if (newValue && oldValue && newValue !== oldValue) {

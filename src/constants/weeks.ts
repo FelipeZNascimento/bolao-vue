@@ -119,25 +119,25 @@ const WEEKS = [
   {
     display: 'Wild Card',
     displayShort: 'WC',
-    hidden: true,
+    hidden: false,
     num: 19,
   },
   {
     display: 'Divisional',
     displayShort: 'Div',
-    hidden: true,
+    hidden: false,
     num: 20,
   },
   {
     display: 'Conferência',
     displayShort: 'Conf',
-    hidden: true,
+    hidden: false,
     num: 21,
   },
   {
     display: 'Super Bowl',
     displayShort: 'SB',
-    hidden: true,
+    hidden: false,
     num: 22,
   },
 ];

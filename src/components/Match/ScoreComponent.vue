@@ -14,6 +14,7 @@
         :isWinning="match.away.score > match.home.score"
         :team="match.away"
         :matchStatus="match.status"
+        :odds="!isMatchStarted ? match.overUnder : ''"
       />
       <TeamComponent
         isAlias
@@ -22,6 +23,7 @@
         :isWinning="match.away.score < match.home.score"
         :team="match.home"
         :matchStatus="match.status"
+        :odds="!isMatchStarted ? match.homeTeamOdds : ''"
       />
     </span>
     <BettingComponent

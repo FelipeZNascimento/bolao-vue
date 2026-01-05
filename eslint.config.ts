@@ -17,7 +17,7 @@ export default defineConfigWithVueTs(
     name: 'app/files-to-lint',
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  globalIgnores(['**/dist/**', '**/dev-dist/**', '**/dist-ssr/**', '**/coverage/**']),
 
   pluginVue.configs['flat/essential'],
   perfectionist.configs['recommended-natural'],

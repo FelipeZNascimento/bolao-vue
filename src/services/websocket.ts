@@ -1,7 +1,7 @@
 export default class WebsocketService {
+  public websocketInstance: null | WebSocket;
   private baseUrl: string;
   private onMessage: (this: WebSocket, ev: MessageEvent<unknown>) => void;
-  private websocketInstance: null | WebSocket;
 
   constructor(onWebsocketUpdate: (this: WebSocket, ev: MessageEvent<unknown>) => void) {
     this.baseUrl = import.meta.env.VITE_BOLAO_WS_BASE_URL;

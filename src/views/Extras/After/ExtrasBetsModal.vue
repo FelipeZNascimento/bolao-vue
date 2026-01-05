@@ -115,9 +115,7 @@ function isCorrect(teamId: number, type: 'conference' | 'division' | 'superbowl'
   const conference: TConference = props.team.conference;
 
   if (type === 'conference') {
-    const teams = extraBetsResults.value.bets.find(
-      (bet) => props.team && bet.type === EXTRA_BETS_VALUES[conference],
-    )?.teams;
+    const teams = extraBetsResults.value.find((bet) => props.team && bet.type === EXTRA_BETS_VALUES[conference])?.teams;
     return teams?.some((team) => team.id === teamId) ?? false;
   } else if (type === 'division') {
     const divisions = [
@@ -126,13 +124,13 @@ function isCorrect(teamId: number, type: 'conference' | 'division' | 'superbowl'
       EXTRA_BETS_VALUES[`${conference}_SOUTH`],
       EXTRA_BETS_VALUES[`${conference}_WEST`],
     ];
-    const teams = extraBetsResults.value.bets.filter((bet) => divisions.includes(bet.type)).flatMap((bet) => bet.teams);
+    const teams = extraBetsResults.value.filter((bet) => divisions.includes(bet.type)).flatMap((bet) => bet.teams);
     return teams?.some((team) => team.id === teamId) ?? false;
   } else if (type === 'superbowl') {
-    const teams = extraBetsResults.value.bets.find((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)?.teams;
+    const teams = extraBetsResults.value.find((bet) => bet.type === EXTRA_BETS_VALUES.SUPERBOWL)?.teams;
     return teams?.some((team) => team.id === teamId) ?? false;
   } else if (type === 'wildcard') {
-    const teams = extraBetsResults.value.bets
+    const teams = extraBetsResults.value
       .filter((bet) => props.team && bet.type === EXTRA_BETS_VALUES[`${conference}_WILDCARD`])
       .flatMap((bet) => bet.teams);
     return teams?.some((team) => team.id === teamId) ?? false;
