@@ -57,7 +57,9 @@ function chartData() {
     const winner = parseFloat(userLine.score.percentage) - bullseye;
 
     return {
+      accumulatedBullseye: userLine.score.accumulatedBullseye,
       accumulatedPoints: userLine.score.accumulatedPoints,
+      accumulatedPosition: userLine.score.accumulatedPosition,
       bullseye: bullseye.toFixed(1),
       position: userLine.user.position,
       winner: winner.toFixed(1),
@@ -72,6 +74,16 @@ function chartData() {
         borderWidth: 2,
         data: userWeeklyRankings.map((week) => week.position),
         label: 'Posição',
+        tension: 0.4,
+        type: 'line',
+        yAxisID: 'y1',
+      },
+      {
+        backgroundColor: '#de6135',
+        borderColor: '#de6135',
+        borderWidth: 2,
+        data: userWeeklyRankings.map((week) => week.accumulatedPosition),
+        label: 'Posição Geral',
         tension: 0.4,
         type: 'line',
         yAxisID: 'y1',
