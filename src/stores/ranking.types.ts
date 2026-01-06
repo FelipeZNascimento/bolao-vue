@@ -4,7 +4,9 @@ export interface IRankingLine {
   betsCount: number;
   matchesCount: number;
   score: {
-    accumulatedPoints?: number;
+    accumulatedBullseye: number;
+    accumulatedPoints: number;
+    accumulatedPosition: number;
     bullseye: number;
     extra: number;
     percentage: string;

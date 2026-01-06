@@ -18,8 +18,12 @@ export default class WebsocketService {
     this.websocketInstance = new WebSocket(url);
     this.websocketInstance.onopen = () => console.log('WS opened');
     this.websocketInstance.onmessage = this.onMessage;
-    this.websocketInstance.onclose = () => console.log('WS closed');
+    this.websocketInstance.onclose = this.onClose;
 
     return this.websocketInstance;
+  }
+
+  private onClose() {
+    console.log('WS closed, trying to reopen');
   }
 }
