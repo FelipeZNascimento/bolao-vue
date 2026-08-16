@@ -1,13 +1,10 @@
-// import { TWeek } from 'components_fa/commonTypes';
-
-// const WEEKS: TWeek[] = [
 const WEEKS = [
-  {
-    display: 'Pre',
-    displayShort: 'Pre',
-    hidden: false,
-    num: 0,
-  },
+  // {
+  //   display: 'Pre',
+  //   displayShort: 'Pre',
+  //   hidden: false,
+  //   num: 0,
+  // },
   {
     display: 'Semana 1',
     displayShort: 'S1',

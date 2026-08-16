@@ -1,5 +1,7 @@
 <template>
   <div class="outer-paginator">
+    <span style="cursor: pointer" @click="() => configurationStore.setSelectedWeek(0)">Pre</span>
+
     <select name="weekSelector" id="weekSelector" class="week-selector" @change="handlePageChangeFromDropdown">
       <option
         v-for="week in weeks.filter((week) => !week.hidden)"
@@ -47,6 +49,7 @@ function handlePageChange(e: PageState) {
 
 function handlePageChangeFromDropdown(e: Event) {
   const el = e.target as HTMLInputElement;
+  console.log('[Dropdown] Page changed to:', el.value);
   configurationStore.setSelectedWeek(parseInt(el.value));
 }
 </script>
