@@ -61,9 +61,9 @@ export default class UserService {
       this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
       this.extraBetStore.resetLoggedUserBets();
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(error));
+      this.activeProfileStore.setError(new Error(String(error)));
     }
   }
 

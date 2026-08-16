@@ -50,9 +50,9 @@ export default class MatchService {
       }
 
       this.websocketInstance.connect();
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.matchesStore.setLoading(false);
-      this.matchesStore.setError(new Error(error));
+      this.matchesStore.setError(new Error(String(error)));
     }
   }
 
@@ -77,11 +77,11 @@ export default class MatchService {
     }
   }
 
-  private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
+  private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<unknown>) {
     const configurationStore = useConfigurationStore();
     const selectedWeek = configurationStore.selectedWeek;
 
-    const { matches, ranking, week } = JSON.parse(ev.data) as {
+    const { matches, ranking, week } = JSON.parse(String(ev.data)) as {
       matches: IMatch[];
       ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IWeeklyRanking[] };
       week: number;

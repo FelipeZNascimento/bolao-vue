@@ -23,9 +23,9 @@ export default class RankingService {
       this.rankingStore.setSeason(rankingResponse.seasonRanking);
       this.rankingStore.setWeeks(rankingResponse.weeklyRanking);
       this.rankingStore.setErrorSeason(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setErrorSeason(new Error(error));
+      this.rankingStore.setErrorSeason(new Error(String(error)));
     }
   }
 

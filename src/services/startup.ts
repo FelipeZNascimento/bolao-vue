@@ -11,7 +11,7 @@ import ApiService from './api_request';
 
 export interface InitializeObj {
   currentSeason: number;
-  currentWeek: number;
+  currentWeek: null | number;
   seasonStart: string;
 }
 
@@ -59,10 +59,11 @@ export default class StartupService {
 
       // Set Configuration store properties
       this.configurationStore.setLoading(false);
+      const currentWeek = seasonData?.currentWeek ?? 1;
       if (seasonData) {
         this.configurationStore.setCurrentSeason(seasonData.currentSeason);
-        this.configurationStore.setCurrentWeek(seasonData.currentWeek);
-        this.configurationStore.setSelectedWeek(seasonData.currentWeek);
+        this.configurationStore.setCurrentWeek(currentWeek);
+        this.configurationStore.setSelectedWeek(currentWeek);
         this.configurationStore.setSeasonStart(parseInt(seasonData.seasonStart));
         this.configurationStore.setError(null);
       }
@@ -75,11 +76,11 @@ export default class StartupService {
       }
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.configurationStore.setLoading(false);
       this.extraBetStore.setLoading(false);
-      this.configurationStore.setError(new Error(error));
+      this.configurationStore.setError(new Error(String(error)));
       return callback(false);
     }
   }

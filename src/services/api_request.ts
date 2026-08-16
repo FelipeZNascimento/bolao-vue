@@ -24,7 +24,7 @@ export default class ApiService {
     return jsonResponse.data;
   }
 
-  public async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+  public async post<T>(endpoint: string, data?: unknown, headers?: Record<string, string>): Promise<T> {
     const requestOptions: RequestInit = {
       body: JSON.stringify(data),
       credentials: 'include',
