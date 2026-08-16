@@ -5,7 +5,7 @@ const WEEKS = [
   {
     display: 'Pre',
     displayShort: 'Pre',
-    hidden: true,
+    hidden: false,
     num: 0,
   },
   {
