@@ -49,7 +49,7 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 // ------ Watches ------
 // Fetches week's matches and week's ranking when selectedWeek is changed
 watch(selectedWeek, async (newValue, oldValue) => {
-  if (newValue && oldValue && newValue !== oldValue) {
+  if (newValue !== oldValue) {
     matchService.fetch();
   }
 });
