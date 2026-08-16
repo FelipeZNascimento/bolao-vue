@@ -240,7 +240,7 @@ function isHighlighted(
   }
 }
 
-function onRowClick(event: any) {
+function onRowClick(event: { data: ITeamWithExtras; index?: number; originalEvent?: Event }) {
   const eventDate = event.data as ITeamWithExtras;
   modalInfo.value = {
     team: eventDate.team,
