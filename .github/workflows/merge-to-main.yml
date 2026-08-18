@@ -62,6 +62,12 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: version bump & changelog [${{ steps.version.outputs.snapshot_tag }}] [skip ci]"
           git push
 
+      - name: 📤 Upload dist for deploy job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./dist/
+
       - name: 🗜️ Package dist as zip
         run: zip -r dist.zip dist/
 
@@ -74,3 +80,11 @@ jobs:
           generate_release_notes: false
           body_path: CHANGELOG.md
           files: dist.zip
+
+  deploy-preprod:
+    name: Deploy to Preprod
+    needs: snapshot
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      username: ${{ secrets.preprod_username }}
+      password: ${{ secrets.preprod_password }}

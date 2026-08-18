@@ -14,7 +14,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "oxlint . --fix -D correctness --ignore-path .gitignore",
-    "format": "oxfmt ."
+    "format": "oxfmt .",
+    "check": "run-s type-check \"lint\" \"format\""
   },
   "dependencies": {
     "@basitcodeenv/vue3-device-detect": "^1.0.3",
