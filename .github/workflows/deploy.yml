@@ -4,27 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       snapshot_tag:
-        description: 'Snapshot tag to deploy (leave blank to use latest Actions artifact)'
+        description: 'Snapshot tag to deploy (leave blank for latest snapshot)'
         required: false
         default: ''
-      username:
-        description: 'SFTP username'
-        required: false
-      password:
-        description: 'SFTP password'
-        required: false
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'preprod'
+        type: choice
+        options:
+          - preprod
+          - prod
 
   workflow_call:
     inputs:
       snapshot_tag:
-        description: 'Snapshot tag to deploy (leave blank to use latest Actions artifact)'
+        description: 'Snapshot tag to deploy (leave blank to use Actions artifact from calling job)'
         type: string
         required: false
         default: ''
     secrets:
-      username:
-        required: true
-      password:
+      server:
         required: true
 
 jobs:
@@ -34,31 +34,70 @@ jobs:
 
     steps:
       - name: 📥 Download dist from GitHub Release
-        if: ${{ inputs.snapshot_tag != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || inputs.snapshot_tag != '' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download ${{ inputs.snapshot_tag }} \
+          TAG="${{ inputs.snapshot_tag }}"
+
+          if [ -z "$TAG" ]; then
+            TAG=$(gh release list --repo ${{ github.repository }} --limit 50 --json tagName,isPrerelease \
+              | node -e "
+                const d = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+                const snap = d.find(r => r.isPrerelease && r.tagName.startsWith('snapshot-'));
+                if (!snap) { console.error('No snapshot pre-release found'); process.exit(1); }
+                process.stdout.write(snap.tagName);
+              ")
+            echo "Resolved latest snapshot: $TAG"
+          fi
+
+          gh release download "$TAG" \
             --repo ${{ github.repository }} \
             --pattern 'dist.zip' \
             --dir ./release
           unzip ./release/dist.zip -d ./release
 
       - name: 📥 Download dist from Actions artifact
-        if: ${{ inputs.snapshot_tag == '' }}
+        if: ${{ github.event_name != 'workflow_dispatch' && inputs.snapshot_tag == '' }}
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: ./release/dist/
+
+      - name: 🔐 Resolve credentials
+        id: creds
+        run: |
+          ENV="${{ inputs.environment }}"
+          if [ "$ENV" = "prod" ]; then
+            echo "username=${{ secrets.username }}" >> $GITHUB_OUTPUT
+            echo "password=${{ secrets.password }}" >> $GITHUB_OUTPUT
+          elif [ "$ENV" = "preprod" ]; then
+            echo "username=${{ secrets.preprod_username }}" >> $GITHUB_OUTPUT
+            echo "password=${{ secrets.preprod_password }}" >> $GITHUB_OUTPUT
+          else
+            # Called via workflow_call — secrets passed directly by the caller
+            echo "username=${{ secrets.username }}" >> $GITHUB_OUTPUT
+            echo "password=${{ secrets.password }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: 🐛 Debug inputs
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "inputs.environment: ${{ inputs.environment }}"
+          echo "inputs.snapshot_tag: ${{ inputs.snapshot_tag }}"
+          echo "creds.username is set: ${{ steps.creds.outputs.username != '' }}"
+          echo "creds.password is set: ${{ steps.creds.outputs.password != '' }}"
+          echo "secrets.server is set: ${{ secrets.server != '' }}"
+          echo "release/dist/ exists: $(ls ./release/dist/ 2>/dev/null && echo yes || echo no)"
 
       - id: deployTarget
         name: 📂 Sync files to target
         continue-on-error: true
         uses: wangyucode/sftp-upload-action@v3
         with:
-          host: ${{ secrets.host }}
-          username: ${{ inputs.username || secrets.username }}
-          password: ${{ inputs.password || secrets.password }}
+          host: ${{ secrets.server }}
+          username: ${{ steps.creds.outputs.username }}
+          password: ${{ steps.creds.outputs.password }}
           localDir: './release/dist/'
           remoteDir: './'
           port: 22
@@ -67,9 +106,9 @@ jobs:
         if: steps.deployTarget.outcome == 'failure'
         uses: wangyucode/sftp-upload-action@v3
         with:
-          host: ${{ secrets.host }}
-          username: ${{ inputs.username || secrets.username }}
-          password: ${{ inputs.password || secrets.password }}
+          host: ${{ secrets.server }}
+          username: ${{ steps.creds.outputs.username }}
+          password: ${{ steps.creds.outputs.password }}
           localDir: './release/dist/'
           remoteDir: './'
           port: 22

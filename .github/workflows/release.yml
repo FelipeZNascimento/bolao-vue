@@ -61,6 +61,7 @@ jobs:
     with:
       snapshot_tag: ${{ needs.prepare.outputs.tag }}
     secrets:
+      server: ${{ secrets.server }}
       username: ${{ secrets.username }}
       password: ${{ secrets.password }}
 
