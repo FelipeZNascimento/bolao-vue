@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 /* ------------------- */
 /* ---- VARIABLES ---- */
 /* ------------------- */
@@ -10,7 +12,7 @@ $spacings: (
   'l': 16px,
   'xl': 20px,
   'xxl': 32px,
-  'xxxl': 64px,
+  'xxxl': 64px
 );
 
 $font-sizes: (
@@ -21,7 +23,7 @@ $font-sizes: (
   'm2': 20px,
   'l': 24px,
   'xl': 36px,
-  'xxl': 48px,
+  'xxl': 48px
 );
 
 $colors: (
@@ -34,12 +36,13 @@ $colors: (
   'orange': #dc6d31,
   'navy': #1b2f42,
 
+  'white': #ffffff,
   'grey1': #eceff1,
   'grey2': #cfd8dc,
   'grey3': #9da4a7,
   'grey4': #757a7c,
   'grey5': #545859,
-  'black': #000000,
+  'black': #000000
 );
 /* ------------------- */
 /* ---- VARIABLES ---- */
@@ -54,6 +57,12 @@ $colors: (
   }
 
   @each $key_name, $color in $colors {
+    --bolao-c-#{$key_name}-l1: #{color.adjust($color, $lightness: 10%)};
+    --bolao-c-#{$key_name}-l2: #{color.adjust($color, $lightness: 20%)};
+    --bolao-c-#{$key_name}-l3: #{color.adjust($color, $lightness: 30%)};
+    --bolao-c-#{$key_name}-d1: #{color.adjust($color, $lightness: -10%)};
+    --bolao-c-#{$key_name}-d2: #{color.adjust($color, $lightness: -20%)};
+    --bolao-c-#{$key_name}-d3: #{color.adjust($color, $lightness: -30%)};
     --bolao-c-#{$key_name}: #{$color};
     --bolao-c-#{$key_name}-t1: #{$color}44;
     --bolao-c-#{$key_name}-t2: #{$color}88;
@@ -72,8 +81,15 @@ $colors: (
 :root {
   --p-knob-text-color: white !important;
   --p-knob-range-background: var(--bolao-c-grey2) !important;
+  --p-selectbutton-border-radius: 0 !important;
+  --p-togglebutton-content-border-radius: 0 !important;
+  --p-togglebutton-background: transparent !important;
+  --p-togglebutton-checked-background: var(--color-main) !important;
+  --p-togglebutton-content-checked-background: var(--color-main) !important;
+  --p-paginator-border-radius: 0 !important;
+  --p-paginator-background: var(--bolao-c-navbar) !important;
 
-  --bolao-c-navbar: #1b2b3a;
+  --bolao-c-navbar: #143b60;
   --nav-disabled: #545859;
   --nav-link: #9da4a7;
   --nav-link-hover: white;
@@ -108,6 +124,7 @@ $colors: (
 
 /* semantic color variables for this project */
 :root {
+  --color-main: var(--vt-c-white);
   --color-contrast: var(--vt-c-black);
 
   // --color-background: var(--vt-c-white);
@@ -125,9 +142,10 @@ $colors: (
 }
 
 [data-theme='dark'] {
+  --color-main: var(--vt-c-black);
   --color-contrast: var(--vt-c-white);
 
-  --color-background: var(--vt-c-black);
+  --color-background: var(--vt-c-black-mute);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
 

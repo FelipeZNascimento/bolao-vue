@@ -1,5 +1,8 @@
 <template>
-  <PrimePanel style="width: 100%" header="Apostas">
+  <PrimePanel
+    style="width: 100%"
+    header="Apostas"
+  >
     <p>As apostas poderão ser feitas até o kickoff de cada jogo. O bloqueio será automático.</p>
     <p>
       Para fazer suas apostas, selecione o menu "Apostar" (ou

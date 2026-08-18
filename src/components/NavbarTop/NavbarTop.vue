@@ -4,7 +4,11 @@
     <nav>
       <PrimeMenubar :model="filteredRoutes">
         <template #start>
-          <img class="logo-image" src="/src/img/logo.png" :alt="`Bolao NFL logo`" />
+          <img
+            class="logo-image"
+            src="/src/img/logo.png"
+            :alt="`Bolao NFL logo`"
+          />
         </template>
         <template #item="{ item }">
           <RouterLink
@@ -13,7 +17,7 @@
             :class="{
               disabled: item.needCredentials && !activeProfile,
               enabled: !item.needCredentials || activeProfile,
-              active: item.id === activeRoute,
+              active: item.id === activeRoute
             }"
             v-slot="{ navigate }"
             @click="activeRoute = item.id"
@@ -45,7 +49,11 @@
               variant="outlined"
               severity="secondary"
             >
-              <IconAndName :color="activeProfile.color" :icon="activeProfile.icon" :name="activeProfile.name" />
+              <IconAndName
+                :color="activeProfile.color"
+                :icon="activeProfile.icon"
+                :name="activeProfile.name"
+              />
             </PrimeButton>
             <PrimeButton
               v-else
@@ -79,30 +87,50 @@
                 label="Senha"
                 @click="isPasswordModalOpen = true"
               />
-              <PrimeButton size="small" label="Sair" @click="handleLogout" />
+              <PrimeButton
+                size="small"
+                label="Sair"
+                @click="handleLogout"
+              />
             </div>
           </PrimePopover>
         </template>
       </PrimeMenubar>
     </nav>
   </header>
-  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="() => (isLoginModalOpen = false)" />
-  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="() => (isProfileModalOpen = false)" />
-  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="() => (isPasswordModalOpen = false)" />
-  <PreferencesModal :isOpen="isPreferencesModalOpen" :handleCloseModal="() => (isPreferencesModalOpen = false)" />
-  <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="() => (isConfigModalOpen = false)" />
-  <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="() => (isRankingModalOpen = false)" />
+  <LoginModal
+    :isOpen="isLoginModalOpen"
+    :handleCloseModal="() => (isLoginModalOpen = false)"
+  />
+  <ProfileModal
+    :isOpen="isProfileModalOpen"
+    :handleCloseModal="() => (isProfileModalOpen = false)"
+  />
+  <PasswordModal
+    :isOpen="isPasswordModalOpen"
+    :handleCloseModal="() => (isPasswordModalOpen = false)"
+  />
+  <PreferencesModal
+    :isOpen="isPreferencesModalOpen"
+    :handleCloseModal="() => (isPreferencesModalOpen = false)"
+  />
+  <ConfigModal
+    :isOpen="isConfigModalOpen"
+    :handleCloseModal="() => (isConfigModalOpen = false)"
+  />
+  <RankingModal
+    :isOpen="isRankingModalOpen"
+    :handleCloseModal="() => (isRankingModalOpen = false)"
+  />
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, onMounted, ref } from 'vue';
-
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
-
 import IconAndName from '../IconAndName.vue';
 import RankingModal from '../Ranking/RankingModal.vue';
 import PasswordModal from './PasswordModal.vue';
@@ -123,7 +151,7 @@ const activeRoute = ref(ROUTES[0].id);
 const rankingRoute = {
   id: ROUTE_ID.RANKING,
   label: 'Ranking',
-  needCredentials: true,
+  needCredentials: true
 };
 
 // ------ Initializations ------
@@ -167,15 +195,20 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
+  background-color: var(--bolao-c-navbar);
+  box-shadow: 0 0 15px 1px #0006;
+  width: 100%;
 
   @media (min-width: 1024px) {
     display: flex;
     place-items: center;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 nav {
-  width: 100%;
   font-size: 24px;
   text-align: center;
   height: 80px;
@@ -185,12 +218,11 @@ nav {
   top: 0;
 
   .p-menubar {
-    width: 100%;
     border: none;
-    background-color: var(--bolao-c-navbar);
-    box-shadow: 0 0 15px 1px #0006;
     height: 100%;
     border-radius: 0;
+    background-color: var(--bolao-c-navbar);
+    width: var(--page-width);
   }
 
   i {

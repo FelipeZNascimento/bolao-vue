@@ -1,8 +1,17 @@
 <template>
   <div class="outer-paginator">
-    <span style="cursor: pointer" @click="() => configurationStore.setSelectedWeek(0)">Pre</span>
+    <span
+      style="cursor: pointer"
+      @click="() => configurationStore.setSelectedWeek(0)"
+      >Pre</span
+    >
 
-    <select name="weekSelector" id="weekSelector" class="week-selector" @change="handlePageChangeFromDropdown">
+    <select
+      name="weekSelector"
+      id="weekSelector"
+      class="week-selector"
+      @change="handlePageChangeFromDropdown"
+    >
       <option
         v-for="week in weeks.filter((week) => !week.hidden)"
         :key="week.num"
@@ -18,7 +27,7 @@
       :rows="1"
       :totalRecords="weeks.filter((week) => !week.hidden).length"
       :template="{
-        '1024px': 'FirstPageLink PrevPageLink NextPageLink LastPageLink',
+        '1024px': 'FirstPageLink PrevPageLink NextPageLink LastPageLink'
       }"
       @page="handlePageChange"
     />
@@ -26,9 +35,7 @@
 </template>
 <script setup lang="ts">
 import type { PageState } from 'primevue';
-
 import { computed, ref } from 'vue';
-
 import { WEEKS } from '@/constants/weeks';
 import { useConfigurationStore } from '@/stores/configuration';
 

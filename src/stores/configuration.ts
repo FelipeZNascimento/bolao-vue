@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
 import type { TRankingPositionValue, TResultsViewValue, TThemeValue } from './configuration.types';
 
 const initialState = {
   rankingPosition: 'active' as TRankingPositionValue,
   resultsView: 'grid' as TResultsViewValue,
-  theme: 'dark' as TThemeValue,
+  theme: 'dark' as TThemeValue
 };
 
 export const useConfigurationStore = defineStore('configuration', () => {
@@ -99,6 +98,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setSeasonStart,
     setSelectedWeek,
     setTheme,
-    theme,
+    theme
   };
 });

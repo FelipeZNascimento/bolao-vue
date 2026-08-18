@@ -18,25 +18,67 @@
       v-slot="$form"
       @submit="(formData) => onFormSubmit(formData)"
     >
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimePassword name="currentPassword" type="password" :feedback="false" toggleMask fluid />
-        <PrimeMessage v-if="$form.currentPassword?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimePassword
+          name="currentPassword"
+          type="password"
+          :feedback="false"
+          toggleMask
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.currentPassword?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.currentPassword.error?.message }}
         </PrimeMessage>
         <label for="currentPassword">Senha atual</label>
       </PrimeFloatLabel>
 
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimePassword name="newPassword" type="password" :feedback="false" toggleMask fluid />
-        <PrimeMessage v-if="$form.newPassword?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimePassword
+          name="newPassword"
+          type="password"
+          :feedback="false"
+          toggleMask
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.newPassword?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.newPassword.error?.message }}
         </PrimeMessage>
         <label for="currentPassword">Nova senha</label>
       </PrimeFloatLabel>
 
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimePassword name="newPasswordConfirmation" type="password" :feedback="false" toggleMask fluid />
-        <PrimeMessage v-if="$form.newPasswordConfirmation?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimePassword
+          name="newPasswordConfirmation"
+          type="password"
+          :feedback="false"
+          toggleMask
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.newPasswordConfirmation?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.newPasswordConfirmation.error?.message }}
         </PrimeMessage>
         <label for="currentPassword">Confirme a nova senha</label>
@@ -53,10 +95,21 @@
           :loading="isLoading"
         />
         <p v-show="isUpdateSuccess">
-          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
+          <PrimeTag
+            severity="success"
+            icon="pi pi-check"
+            value="Alterações salvas com sucesso"
+          ></PrimeTag>
         </p>
-        <p style="text-align: center; padding-top: var(--l-spacing)" v-show="error">
-          <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="error?.message" />
+        <p
+          style="text-align: center; padding-top: var(--l-spacing)"
+          v-show="error"
+        >
+          <PrimeTag
+            severity="contrast"
+            icon="pi pi-exclamation-triangle"
+            :value="error?.message"
+          />
         </p>
       </div>
     </Form>
@@ -65,7 +118,6 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { computed, ref, watch } from 'vue';
-
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { updatePasswordResolver } from '@/util/zodResolvers';
@@ -90,7 +142,7 @@ const initialValues = computed(() => {
   return {
     currentPassword: '',
     newPassword: '',
-    newPasswordConfirmation: '',
+    newPasswordConfirmation: ''
   };
 });
 
@@ -123,7 +175,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

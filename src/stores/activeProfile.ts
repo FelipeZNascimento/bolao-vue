@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
 import type { IUser } from './activeProfile.types';
 
 export const useActiveProfileStore = defineStore('activeProfile', () => {

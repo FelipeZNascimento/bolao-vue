@@ -18,20 +18,56 @@
       v-slot="$form"
       @submit="(formData) => onFormSubmit(formData)"
     >
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText disabled name="email" v-model="initialValues.email" type="email" fluid autofocus />
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          disabled
+          name="email"
+          v-model="initialValues.email"
+          type="email"
+          fluid
+          autofocus
+        />
         <label for="email">Email</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText :disabled="isLoading" name="name" type="text" fluid />
-        <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          :disabled="isLoading"
+          name="name"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.name?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.name.error?.message }}
         </PrimeMessage>
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText :disabled="isLoading" name="username" type="text" fluid />
-        <PrimeMessage v-if="$form.username?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          :disabled="isLoading"
+          name="username"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.username?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.username.error?.message }}
         </PrimeMessage>
         <label for="username">Usuário</label>
@@ -47,10 +83,21 @@
           :loading="isLoading"
         />
         <p v-show="isUpdateSuccess">
-          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
+          <PrimeTag
+            severity="success"
+            icon="pi pi-check"
+            value="Alterações salvas com sucesso"
+          ></PrimeTag>
         </p>
-        <p style="text-align: center; padding-top: var(--l-spacing)" v-show="error">
-          <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="error?.message" />
+        <p
+          style="text-align: center; padding-top: var(--l-spacing)"
+          v-show="error"
+        >
+          <PrimeTag
+            severity="contrast"
+            icon="pi pi-exclamation-triangle"
+            :value="error?.message"
+          />
         </p>
       </div>
     </Form>
@@ -59,7 +106,6 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { computed, ref, watch } from 'vue';
-
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { updateProfileResolver } from '@/util/zodResolvers';
@@ -85,7 +131,7 @@ const initialValues = computed(() => {
   return {
     email: activeProfile.value?.email,
     name: activeProfile.value?.fullName,
-    username: activeProfile.value?.name,
+    username: activeProfile.value?.name
   };
 });
 
@@ -118,7 +164,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

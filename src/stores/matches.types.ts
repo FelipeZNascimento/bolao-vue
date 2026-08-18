@@ -1,5 +1,4 @@
 import type { TMatchStatus } from '@/constants/match_status';
-
 import type { IUser } from './activeProfile.types';
 
 export interface IBet {

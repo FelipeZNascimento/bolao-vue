@@ -1,10 +1,8 @@
-import type { IExtraBet, IExtraBetBet, IExtrasFetch, ITeamWithExtras } from '@/stores/extraBet.types';
-
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
+import type { IExtraBet, IExtraBetBet, IExtrasFetch, ITeamWithExtras } from '@/stores/extraBet.types';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
-
 import ApiService from './api_request';
 
 export default class ExtraBetService {
@@ -27,7 +25,7 @@ export default class ExtraBetService {
     try {
       const [extraResponse, extraResultsResponse] = await Promise.allSettled([
         this.apiRequest.get<IExtraBet[]>(`bet/extra/`),
-        this.apiRequest.get<IExtraBetBet[]>(`bet/extra/results`),
+        this.apiRequest.get<IExtraBetBet[]>(`bet/extra/results`)
       ]);
 
       if (isRejected(extraResponse) || isRejected(extraResultsResponse)) {
@@ -70,17 +68,17 @@ export default class ExtraBetService {
           if (existingTeam) {
             existingTeam.bets.push({
               type: bet.type,
-              user: userBet.user,
+              user: userBet.user
             });
           } else {
             teamsWithExtras.push({
               bets: [
                 {
                   type: bet.type,
-                  user: userBet.user,
-                },
+                  user: userBet.user
+                }
               ],
-              team,
+              team
             });
           }
         });
@@ -92,7 +90,7 @@ export default class ExtraBetService {
 
   public async update(
     updateObj: { [n: string]: null | number | number[] },
-    callback?: (isSuccess: boolean, error?: Error) => void,
+    callback?: (isSuccess: boolean, error?: Error) => void
   ) {
     this.extraBetStore.setUpdating(true);
 

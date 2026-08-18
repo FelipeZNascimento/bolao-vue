@@ -18,30 +18,83 @@
       v-slot="$form"
       @submit="(formData) => onFormSubmit(formData)"
     >
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText name="email" type="email" fluid autofocus />
-        <PrimeMessage v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="email"
+          type="email"
+          fluid
+          autofocus
+        />
+        <PrimeMessage
+          v-if="$form.email?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.email.error?.message }}
         </PrimeMessage>
         <label for="email">Email</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimePassword name="password" type="password" :feedback="false" toggleMask fluid />
-        <PrimeMessage v-if="$form.password?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimePassword
+          name="password"
+          type="password"
+          :feedback="false"
+          toggleMask
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.password?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.password.error?.message }}
         </PrimeMessage>
         <label for="password">Senha</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="isSignupMode" variant="in" class="input">
-        <PrimeInputText name="name" type="text" fluid />
-        <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        v-if="isSignupMode"
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="name"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.name?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.name.error?.message }}
         </PrimeMessage>
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="isSignupMode" variant="in" class="input">
-        <PrimeInputText name="username" type="text" fluid />
-        <PrimeMessage v-if="$form.username?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        v-if="isSignupMode"
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="username"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.username?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.username.error?.message }}
         </PrimeMessage>
         <label for="username">Usuário</label>
@@ -67,11 +120,21 @@
           :loading="isLoading"
         />
       </div>
-      <p style="text-align: center; padding-top: var(--l-spacing)" v-show="loginError">
-        <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="loginError?.message" />
+      <p
+        style="text-align: center; padding-top: var(--l-spacing)"
+        v-show="loginError"
+      >
+        <PrimeTag
+          severity="contrast"
+          icon="pi pi-exclamation-triangle"
+          :value="loginError?.message"
+        />
       </p>
     </Form>
-    <template v-if="!isSignupMode" #footer>
+    <template
+      v-if="!isSignupMode"
+      #footer
+    >
       <PrimeButton
         rounded
         @click="toggleMode"
@@ -91,7 +154,6 @@ import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
-
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
@@ -107,15 +169,15 @@ const initialValues = ref({
   email: '',
   name: '',
   password: '',
-  username: '',
+  username: ''
 });
 const loginResolver = ref(
   zodResolver(
     z.object({
       email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
-    }),
-  ),
+      password: z.string().min(1, { message: 'Senha está vazia' })
+    })
+  )
 );
 
 const signupResolver = ref(
@@ -127,9 +189,9 @@ const signupResolver = ref(
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
-    }),
-  ),
+        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
+    })
+  )
 );
 
 // ------ Initializations ------
@@ -192,7 +254,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

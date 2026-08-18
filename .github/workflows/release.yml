@@ -1,0 +1,85 @@
+name: 🚀 Deploy to PROD
+
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot_tag:
+        description: 'Snapshot tag to deploy (leave blank for latest)'
+        required: false
+        default: ''
+
+jobs:
+  deploy:
+    name: Promote snapshot & deploy to PROD
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔍 Resolve snapshot tag
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          INPUT_TAG="${{ github.event.inputs.snapshot_tag }}"
+
+          if [ -n "$INPUT_TAG" ]; then
+            TAG="$INPUT_TAG"
+          else
+            TAG=$(gh release list --repo ${{ github.repository }} --limit 50 --json tagName,isPrerelease \
+              | node -e "
+                const d = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+                const snap = d.find(r => r.isPrerelease && r.tagName.startsWith('snapshot-'));
+                if (!snap) { console.error('No snapshot pre-release found'); process.exit(1); }
+                process.stdout.write(snap.tagName);
+              ")
+          fi
+
+          echo "Deploying tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: 📥 Download dist artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ steps.resolve.outputs.tag }} \
+            --repo ${{ github.repository }} \
+            --pattern 'dist.zip' \
+            --dir ./release
+
+          unzip ./release/dist.zip -d ./release
+
+      - id: deployProd
+        name: 📂 Sync files to PROD
+        continue-on-error: true
+        uses: wangyucode/sftp-upload-action@v3
+        with:
+          host: ${{ secrets.server }}
+          username: ${{ secrets.username }}
+          password: ${{ secrets.password }}
+          localDir: './release/dist/'
+          remoteDir: './'
+          port: 22
+
+      - name: 🔁 Retry PROD upload if handshake failed
+        if: steps.deployProd.outcome == 'failure'
+        uses: wangyucode/sftp-upload-action@v3
+        with:
+          host: ${{ secrets.server }}
+          username: ${{ secrets.username }}
+          password: ${{ secrets.password }}
+          localDir: './release/dist/'
+          remoteDir: './'
+          port: 22
+
+      - name: 🏷️ Promote GitHub release to full release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release edit ${{ steps.resolve.outputs.tag }} \
+            --repo ${{ github.repository }} \
+            --prerelease=false \
+            --latest

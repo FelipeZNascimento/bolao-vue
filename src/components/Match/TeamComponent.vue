@@ -7,7 +7,7 @@
     <span
       :class="{
         'team-shield-line': !isGridMode,
-        'team-shield-grid': isGridMode,
+        'team-shield-grid': isGridMode
       }"
       class="team-shield"
     >
@@ -17,14 +17,30 @@
         :alt="`${props.team.name} Shield`"
       />
     </span>
-    <div v-if="!isNameless" class="team-alias">
+    <div
+      v-if="!isNameless"
+      class="team-alias"
+      :style="{ textShadow: `1px 1px 2px ${team.foreground}` }"
+    >
       {{ isGridMode || isAlias ? team.code : team.alias }}
-      <p v-if="props.team.winLosses" style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">
+      <p
+        v-if="props.team.winLosses"
+        style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right"
+      >
         {{ props.team.winLosses }}
       </p>
     </div>
-    <div v-if="!isScoreless && odds" class="team-odds">{{ odds }}</div>
-    <div v-if="!isScoreless && !odds" class="team-score" :style="{ fontWeight: isWinning ? 'bold' : 'normal' }">
+    <div
+      v-if="!isScoreless && odds"
+      class="team-odds"
+    >
+      {{ odds }}
+    </div>
+    <div
+      v-if="!isScoreless && !odds"
+      class="team-score"
+      :style="{ fontWeight: isWinning ? 'bold' : 'normal' }"
+    >
       {{ team.score }}
       <img
         v-if="team.possession && !isClockStopped"
@@ -37,10 +53,8 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
-
-import type { ITeam } from '@/stores/matches.types';
-
 import { STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
+import type { ITeam } from '@/stores/matches.types';
 
 const props = defineProps<{
   isAlias?: boolean;
@@ -62,11 +76,15 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   flex: 1;
   align-items: center;
   justify-content: flex-end;
-  height: 60px;
-  max-height: 60px;
+  height: 50px;
+  max-height: 50px;
   background-image: url('/match_layer.png');
   position: relative;
   overflow: hidden;
+
+  &:hover .team-shield-image {
+    transform: scale(1.4);
+  }
 }
 
 .outer-team-nameless {
@@ -100,6 +118,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 .team-shield-image {
   height: 100px;
   z-index: -1;
+  transition: all 0.2s;
 
   @media (max-width: 1024px) {
     height: 60px;
@@ -116,7 +135,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   padding-right: var(--s-spacing);
   font-weight: bold;
   z-index: 99;
-  font-size: var(--l-font-size);
+  font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
 
   @media (max-width: 1024px) {

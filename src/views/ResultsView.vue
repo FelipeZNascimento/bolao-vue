@@ -1,7 +1,12 @@
 <template>
   <div class="outer-results">
     <div class="outer-matches">
-      <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
+      <PrimeMessage
+        v-show="errorConfiguration"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
         Ops, houve um problema de comunicação com o servidor.
         <p>
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -10,7 +15,12 @@
         <p>{{ errorConfiguration }}</p>
       </PrimeMessage>
       <PaginatorComponent />
-      <PrimeMessage v-show="errorMatches" class="error-message" severity="error" variant="outlined">
+      <PrimeMessage
+        v-show="errorMatches"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
         Ops, houve um problema de comunicação com o servidor para buscar as partidas.
         <p>
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -22,7 +32,7 @@
         <span
           :class="{
             'outer-skeleton-line': view === 'lines',
-            'outer-skeleton-grid': view === 'grid',
+            'outer-skeleton-grid': view === 'grid'
           }"
           v-if="isLoading"
         >
@@ -31,11 +41,17 @@
             :key="index"
             :class="{
               'skeleton-match-line': view === 'lines',
-              'skeleton-match-grid': view === 'grid',
+              'skeleton-match-grid': view === 'grid'
             }"
           />
         </span>
-        <MatchComponent v-else v-for="match in matches" :isGridMode="view === 'grid'" :match="match" :key="match.id" />
+        <MatchComponent
+          v-else
+          v-for="match in matches"
+          :isGridMode="view === 'grid'"
+          :match="match"
+          :key="match.id"
+        />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
@@ -44,7 +60,6 @@
 <script setup lang="ts">
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
@@ -76,6 +91,10 @@ const view = computed(() => configurationStore.resultsView);
   align-items: flex-start;
   gap: var(--m-spacing);
   flex: 1;
+
+  @media (min-width: 1024px) {
+    padding-right: var(--m-spacing);
+  }
 }
 
 .outer-line-mode {
@@ -83,7 +102,7 @@ const view = computed(() => configurationStore.resultsView);
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--m-spacing);
+  gap: var(--s-spacing);
   width: 100%;
 }
 

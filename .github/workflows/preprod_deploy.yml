@@ -1,0 +1,76 @@
+name: 📦 Snapshot & Pre-release
+
+on:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  snapshot:
+    name: Version, changelog & GitHub pre-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: 🔨 Build Project
+        run: pnpm run build
+
+      - name: 📝 Apply changesets & update CHANGELOG
+        id: version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Apply any pending changesets (bumps version + updates CHANGELOG.md)
+          pnpm changeset version || true
+
+          # Read the new version from package.json
+          VERSION=$(node -e "process.stdout.write(require('./package.json').version)")
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          SNAPSHOT_TAG="snapshot-${VERSION}-${SHORT_SHA}"
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "snapshot_tag=$SNAPSHOT_TAG" >> $GITHUB_OUTPUT
+
+      - name: 💾 Commit CHANGELOG and version bump
+        run: |
+          git add package.json CHANGELOG.md .changeset/
+          git diff --staged --quiet || git commit -m "chore: version bump & changelog [${{ steps.version.outputs.snapshot_tag }}] [skip ci]"
+          git push
+
+      - name: 🗜️ Package dist as zip
+        run: zip -r dist.zip dist/
+
+      - name: 🚀 Create GitHub pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.snapshot_tag }}
+          name: 'Snapshot ${{ steps.version.outputs.snapshot_tag }}'
+          prerelease: true
+          generate_release_notes: false
+          body_path: CHANGELOG.md
+          files: dist.zip

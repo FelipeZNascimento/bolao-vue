@@ -5,7 +5,7 @@ export enum ROUTE_ID {
   EXTRAS,
   RECORDS,
   RANKING,
-  RULES,
+  RULES
 }
 
 export interface TROUTE {
@@ -26,15 +26,15 @@ export const ROUTES = [
     id: ROUTE_ID.RESULTS,
     label: 'Resultados',
     needCredentials: false,
-    url: '/resultados',
+    url: '/resultados'
   },
   {
     id: ROUTE_ID.BET,
     label: 'Apostar',
     needCredentials: true,
-    url: '/apostar',
+    url: '/apostar'
   },
   { id: ROUTE_ID.EXTRAS, label: 'Extras', needCredentials: true, url: '/extras' },
   // { id: ROUTE_ID.RECORDS, label: 'Records', url: '/records', needCredentials: false },
-  { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' },
+  { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' }
 ];

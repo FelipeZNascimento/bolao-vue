@@ -3,15 +3,19 @@
 #app {
   margin: 0 auto;
   font-weight: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 a {
   text-decoration: none;
   cursor: pointer;
 }
 
-#app {
-  width: var(--page-width);
-}
+// #app {
+//   width: var(--page-width);
+// }
 
 .p-menubar-item-content {
   background-color: transparent !important;

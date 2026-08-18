@@ -1,18 +1,28 @@
 <template>
-  <div class="bets-column" :class="{ 'green-bg': isCorrect }">
+  <div
+    class="bets-column"
+    :class="{ 'green-bg': isCorrect }"
+  >
     <p class="bets-column-header">{{ title }} ({{ users.length }})</p>
-    <div class="bets-line" v-for="(user, index) in users" :key="index">
-      <IconAndName v-if="!isMobile" :color="user.color" :name="user.name" :icon="user.icon" />
+    <div
+      class="bets-line"
+      v-for="(user, index) in users"
+      :key="index"
+    >
+      <IconAndName
+        v-if="!isMobile"
+        :color="user.color"
+        :name="user.name"
+        :icon="user.icon"
+      />
       <span v-else>{{ user.name }}</span>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
-
-import type { IUser } from '@/stores/activeProfile.types';
-
 import IconAndName from '@/components/IconAndName.vue';
+import type { IUser } from '@/stores/activeProfile.types';
 
 defineProps<{
   isCorrect: boolean;

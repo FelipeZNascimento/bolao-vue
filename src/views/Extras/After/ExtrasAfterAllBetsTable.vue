@@ -12,12 +12,18 @@
       v-model:sort-order="sortOrder"
       lazy
     >
-      <template v-if="title" #header>
+      <template
+        v-if="title"
+        #header
+      >
         <div>
           <h2>{{ title }}</h2>
         </div>
       </template>
-      <PrimeColumn field="name" sortable>
+      <PrimeColumn
+        field="name"
+        sortable
+      >
         <template #header>&nbsp;</template>
         <template #body="slotProps">
           <div class="team-line-outer">
@@ -32,18 +38,29 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="wildcard" sortable>
+      <PrimeColumn
+        field="wildcard"
+        sortable
+      >
         <template #header>
           <div class="team-line-outer">
-            <div class="spacer" v-tooltip.top="'Wild Card'">WC</div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Wild Card'"
+            >
+              WC
+            </div>
           </div>
         </template>
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'wildcard')">
+            <PrimeOverlayBadge
+              severity="secondary"
+              :value="countByType(slotProps.data.bets, 'wildcard')"
+            >
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'wildcard'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'wildcard')
                 }"
                 class="pi pi-star-fill star-icon orange-star"
                 v-tooltip.top="'Wild Card'"
@@ -52,18 +69,29 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="division" sortable>
+      <PrimeColumn
+        field="division"
+        sortable
+      >
         <template #header>
           <div class="team-line-outer">
-            <div class="spacer" v-tooltip.top="'Campeão Divisão'">Div</div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Campeão Divisão'"
+            >
+              Div
+            </div>
           </div>
         </template>
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'division')">
+            <PrimeOverlayBadge
+              severity="secondary"
+              :value="countByType(slotProps.data.bets, 'division')"
+            >
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'division'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'division')
                 }"
                 class="pi pi-crown crown-icon golden-crown"
                 v-tooltip.top="'Divisão'"
@@ -72,19 +100,30 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="conference" sortable>
+      <PrimeColumn
+        field="conference"
+        sortable
+      >
         <template #header>
           <div class="team-line-outer">
-            <div class="spacer" v-tooltip.top="'Campeão Conferência'">Conf</div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Campeão Conferência'"
+            >
+              Conf
+            </div>
           </div>
         </template>
 
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'conference')">
+            <PrimeOverlayBadge
+              severity="secondary"
+              :value="countByType(slotProps.data.bets, 'conference')"
+            >
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference')
                 }"
                 class="pi pi-sparkles sparkles-icon blue-sparkles"
                 v-tooltip.top="'Conferência'"
@@ -93,19 +132,30 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn field="superbowl" sortable>
+      <PrimeColumn
+        field="superbowl"
+        sortable
+      >
         <template #header>
           <div class="team-line-outer">
-            <div class="spacer" v-tooltip.top="'Vencedor Super Bowl'">SB</div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Vencedor Super Bowl'"
+            >
+              SB
+            </div>
           </div>
         </template>
 
         <template #body="slotProps">
           <div class="team-line-outer">
-            <PrimeOverlayBadge severity="secondary" :value="countByType(slotProps.data.bets, 'superbowl')">
+            <PrimeOverlayBadge
+              severity="secondary"
+              :value="countByType(slotProps.data.bets, 'superbowl')"
+            >
               <i
                 :class="{
-                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference'),
+                  highlight: isHighlighted(extraBetsResults ?? [], slotProps.data.team.id, 'conference')
                 }"
                 class="pi pi-trophy trophy-icon mint-trophy"
                 v-tooltip.top="'Superbowl'"
@@ -125,20 +175,17 @@
 <script setup lang="ts">
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref } from 'vue';
-
+import TeamComponent from '@/components/Match/TeamComponent.vue';
+import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import { MATCH_STATUS } from '@/constants/match_status';
+import { useExtraBetStore } from '@/stores/extraBet';
 import type {
   IExtraBetBet,
   ITeamWithExtras,
   ITeamWithExtrasBet,
   TConference,
-  TExtrasTeam,
+  TExtrasTeam
 } from '@/stores/extraBet.types';
-
-import TeamComponent from '@/components/Match/TeamComponent.vue';
-import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import { MATCH_STATUS } from '@/constants/match_status';
-import { useExtraBetStore } from '@/stores/extraBet';
-
 import ExtrasBetsModal from './ExtrasBetsModal.vue';
 
 const props = defineProps<{
@@ -188,7 +235,7 @@ function countByType(betsArray: ITeamWithExtrasBet[], type: 'conference' | 'divi
       EXTRA_BETS_VALUES[`${props.conference}_EAST`],
       EXTRA_BETS_VALUES[`${props.conference}_NORTH`],
       EXTRA_BETS_VALUES[`${props.conference}_SOUTH`],
-      EXTRA_BETS_VALUES[`${props.conference}_WEST`],
+      EXTRA_BETS_VALUES[`${props.conference}_WEST`]
     ];
     return betsArray.filter((bet) => divisions.includes(bet.type)).length;
   } else if (type === 'superbowl') {
@@ -208,34 +255,34 @@ function handleCloseModal() {
 function isHighlighted(
   winnersList: IExtraBetBet[],
   teamId: number,
-  type: 'conference' | 'division' | 'superbowl' | 'wildcard',
+  type: 'conference' | 'division' | 'superbowl' | 'wildcard'
 ) {
   if (type === 'conference') {
     return winnersList.find(
       (winner) =>
-        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[props.conference],
+        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES[props.conference]
     );
   } else if (type === 'division') {
     const divisions = [
       EXTRA_BETS_VALUES[`${props.conference}_EAST`],
       EXTRA_BETS_VALUES[`${props.conference}_NORTH`],
       EXTRA_BETS_VALUES[`${props.conference}_SOUTH`],
-      EXTRA_BETS_VALUES[`${props.conference}_WEST`],
+      EXTRA_BETS_VALUES[`${props.conference}_WEST`]
     ];
     return winnersList.find(
-      (winner) => winner.teams.length > 0 && winner.teams[0].id === teamId && divisions.includes(winner.type),
+      (winner) => winner.teams.length > 0 && winner.teams[0].id === teamId && divisions.includes(winner.type)
     );
   } else if (type === 'superbowl') {
     return winnersList.find(
       (winner) =>
-        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES.SUPERBOWL,
+        winner.teams.length > 0 && winner.teams[0].id === teamId && winner.type === EXTRA_BETS_VALUES.SUPERBOWL
     );
   } else if (type === 'wildcard') {
     return winnersList.find(
       (winner) =>
         winner.teams.length > 0 &&
         winner.teams.find((winnerTeam) => winnerTeam.id === teamId) &&
-        winner.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`],
+        winner.type === EXTRA_BETS_VALUES[`${props.conference}_WILDCARD`]
     );
   }
 }
@@ -244,7 +291,7 @@ function onRowClick(event: { data: ITeamWithExtras; index?: number; originalEven
   const eventDate = event.data as ITeamWithExtras;
   modalInfo.value = {
     team: eventDate.team,
-    teamsWithExtras: eventDate.bets,
+    teamsWithExtras: eventDate.bets
   };
 }
 </script>

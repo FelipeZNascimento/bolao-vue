@@ -1,19 +1,51 @@
 <template>
   <div class="outer-extras-result-table">
-    <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
-      <template v-if="title" #header>
+    <PrimeDataTable
+      tableClass="extras-table"
+      :value="teams"
+      dataKey="id"
+      size="small"
+      showGridlines
+    >
+      <template
+        v-if="title"
+        #header
+      >
         <div>
           <h2>{{ title }}</h2>
         </div>
       </template>
       <PrimeColumn field="name">
         <template #header>
-          <div class="team-line-outer" style="width: 100%">
+          <div
+            class="team-line-outer"
+            style="width: 100%"
+          >
             <div style="flex: 1">&nbsp;</div>
-            <div class="spacer" v-tooltip.top="'Wild Card'">WC</div>
-            <div class="spacer" v-tooltip.top="'Campeão Divisão'">Div</div>
-            <div class="spacer" v-tooltip.top="'Campeão Conferência'">Conf</div>
-            <div class="spacer" v-tooltip.top="'Vencedor Super Bowl'">SB</div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Wild Card'"
+            >
+              WC
+            </div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Campeão Divisão'"
+            >
+              Div
+            </div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Campeão Conferência'"
+            >
+              Conf
+            </div>
+            <div
+              class="spacer"
+              v-tooltip.top="'Vencedor Super Bowl'"
+            >
+              SB
+            </div>
           </div>
         </template>
         <template #body="slotProps">
@@ -28,7 +60,7 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(wildcardResults, slotProps.data.id),
+                highlight: isHighlighted(wildcardResults, slotProps.data.id)
               }"
             >
               <i
@@ -40,7 +72,7 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(divisionResults, slotProps.data.id),
+                highlight: isHighlighted(divisionResults, slotProps.data.id)
               }"
             >
               <i
@@ -52,7 +84,7 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(conferenceResults, slotProps.data.id),
+                highlight: isHighlighted(conferenceResults, slotProps.data.id)
               }"
             >
               <i
@@ -64,7 +96,7 @@
             <div
               class="spacer"
               :class="{
-                highlight: isHighlighted(superbowlResults, slotProps.data.id),
+                highlight: isHighlighted(superbowlResults, slotProps.data.id)
               }"
             >
               <i
@@ -81,15 +113,13 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, type Ref, watch } from 'vue';
-
-import type { IExtraBetBet, TExtrasTeam } from '@/stores/extraBet.types';
-import type { ITeam, TConference } from '@/stores/matches.types';
-
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
+import type { IExtraBetBet, TExtrasTeam } from '@/stores/extraBet.types';
+import type { ITeam, TConference } from '@/stores/matches.types';
 
 const props = defineProps<{
   conference: TConference;

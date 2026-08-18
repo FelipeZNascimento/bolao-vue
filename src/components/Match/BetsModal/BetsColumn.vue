@@ -4,12 +4,16 @@
     :class="{
       'green-bg': isBullseyeColumn,
       'blue-bg': isHalfBetColumn,
-      'red-bg': isMissColumn,
+      'red-bg': isMissColumn
     }"
   >
     <p class="bets-column-header">{{ BETS_LABELS[columnValue] }}</p>
     <!-- Render active user bet first -->
-    <div class="bets-line" v-if="activeUserBet && activeUserBet?.value === columnValue" :key="activeUserBet.id">
+    <div
+      class="bets-line"
+      v-if="activeUserBet && activeUserBet?.value === columnValue"
+      :key="activeUserBet.id"
+    >
       <IconAndName
         v-if="!isMobile"
         isActive
@@ -20,8 +24,17 @@
       <span v-else>{{ activeUserBet.user.name }}</span>
     </div>
     <!-- Render remaining bets -->
-    <div class="bets-line" v-for="bet in bets.filter((bet) => bet.value === columnValue)" :key="bet.id">
-      <IconAndName v-if="!isMobile" :color="bet.user.color" :name="bet.user.name" :icon="bet.user.icon" />
+    <div
+      class="bets-line"
+      v-for="bet in bets.filter((bet) => bet.value === columnValue)"
+      :key="bet.id"
+    >
+      <IconAndName
+        v-if="!isMobile"
+        :color="bet.user.color"
+        :name="bet.user.name"
+        :icon="bet.user.icon"
+      />
       <span v-else>{{ bet.user.name }}</span>
     </div>
   </div>
@@ -29,11 +42,9 @@
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-
-import type { IBet } from '@/stores/matches.types';
-
 import IconAndName from '@/components/IconAndName.vue';
 import { BETS_LABELS, type BetsValues } from '@/constants/bets';
+import type { IBet } from '@/stores/matches.types';
 import { type CorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
 const props = defineProps<{

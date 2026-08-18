@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-
 // import HomeView from '../views/HomeView.vue';
 import ResultsView from '@/views/ResultsView.vue';
-
 import BetsView from '../views/BetsView.vue';
 
 const router = createRouter({
@@ -18,12 +16,12 @@ const router = createRouter({
       alias: '/resultados',
       component: ResultsView,
       name: 'results',
-      path: '/',
+      path: '/'
     },
     {
       component: BetsView,
       name: 'apostar',
-      path: '/apostar',
+      path: '/apostar'
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -35,7 +33,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/ExtrasView.vue'),
       name: 'extras',
-      path: '/extras',
+      path: '/extras'
     },
     {
       // route level code-splitting
@@ -43,9 +41,9 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/RulesView.vue'),
       name: 'regras',
-      path: '/regras',
-    },
-  ],
+      path: '/regras'
+    }
+  ]
 });
 
 export default router;

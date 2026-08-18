@@ -1,5 +1,5 @@
-import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'node:url';
+import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import vueDevTools from 'vite-plugin-vue-devtools';
@@ -11,7 +11,7 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       devOptions: {
-        enabled: true,
+        enabled: true
       },
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
@@ -22,18 +22,18 @@ export default defineConfig({
           {
             sizes: '192x192',
             src: '192x192.png',
-            type: 'image/png',
+            type: 'image/png'
           },
           {
             sizes: '512x512',
             src: '512x512.png',
-            type: 'image/png',
-          },
+            type: 'image/png'
+          }
         ],
         name: 'BolaoNFL',
         short_name: 'BolaoNFL',
         start_url: '/',
-        theme_color: '#1b2f42',
+        theme_color: '#1b2f42'
       },
       registerType: 'autoUpdate',
       workbox: {
@@ -45,11 +45,11 @@ export default defineConfig({
               cacheName: 'static-resources',
               expiration: {
                 maxAgeSeconds: 10 * 24 * 60 * 60, // 10 days
-                maxEntries: 50,
-              },
+                maxEntries: 50
+              }
             },
             urlPattern: ({ request }) =>
-              request.destination === 'style' || request.destination === 'script' || request.destination === 'worker',
+              request.destination === 'style' || request.destination === 'script' || request.destination === 'worker'
           },
           {
             handler: 'CacheFirst',
@@ -57,23 +57,23 @@ export default defineConfig({
               cacheName: 'images',
               expiration: {
                 maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
-                maxEntries: 100,
-              },
+                maxEntries: 100
+              }
             },
-            urlPattern: ({ request }) => request.destination === 'image',
-          },
-        ],
-      },
-    }),
+            urlPattern: ({ request }) => request.destination === 'image'
+          }
+        ]
+      }
+    })
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
   },
   server: {
     // host: '127.0.0.1',
     // host: 'localhost',
-    port: 3000,
-  },
+    port: 3000
+  }
 });

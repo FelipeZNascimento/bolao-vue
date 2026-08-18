@@ -1,11 +1,21 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
-      <span class="toggle" :class="{ activeToggle: !isWeeklyRanking }" @click="isWeeklyRanking = false">
+      <span
+        class="toggle"
+        :class="{ activeToggle: !isWeeklyRanking }"
+        @click="isWeeklyRanking = false"
+      >
         Temporada</span
       >
       <PrimeToggleSwitch v-model="isWeeklyRanking" />
-      <span class="toggle" :class="{ activeToggle: isWeeklyRanking }" @click="isWeeklyRanking = true"> Semana </span>
+      <span
+        class="toggle"
+        :class="{ activeToggle: isWeeklyRanking }"
+        @click="isWeeklyRanking = true"
+      >
+        Semana
+      </span>
     </div>
     <div class="ranking-container">
       <RankingTable
@@ -22,11 +32,9 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
-
 import RankingTable from './RankingTable.vue';
 
 withDefaults(
@@ -34,8 +42,8 @@ withDefaults(
     isModal?: boolean;
   }>(),
   {
-    isModal: false,
-  },
+    isModal: false
+  }
 );
 
 // ------ Refs ------
@@ -56,7 +64,7 @@ const selectedWeek = computed(() => configurationStore.selectedWeek);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
 const selectedWeekRanking = computed(
-  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || [],
+  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || []
 );
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
@@ -66,7 +74,6 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   right: 0;
 
   position: sticky;
-  border-left: 1px solid var(--color-background-mute);
   min-width: 310px;
   max-height: calc(100vh - 80px);
 }
