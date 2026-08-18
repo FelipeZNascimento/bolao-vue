@@ -85,4 +85,7 @@ jobs:
     name: Deploy to Preprod
     needs: snapshot
     uses: ./.github/workflows/deploy.yml
-    secrets: inherit
+    secrets:
+      server: ${{ secrets.server }}
+      username: ${{ secrets.preprod_username }}
+      password: ${{ secrets.preprod_password }}

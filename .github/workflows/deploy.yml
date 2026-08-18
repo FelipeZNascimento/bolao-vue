@@ -23,6 +23,9 @@ on:
         type: string
         required: false
         default: ''
+    secrets:
+      server:
+        required: true
 
 jobs:
   deploy:
@@ -84,7 +87,7 @@ jobs:
           echo "inputs.snapshot_tag: ${{ inputs.snapshot_tag }}"
           echo "creds.username is set: ${{ steps.creds.outputs.username != '' }}"
           echo "creds.password is set: ${{ steps.creds.outputs.password != '' }}"
-          echo "secrets.host is set: ${{ secrets.host != '' }}"
+          echo "secrets.server is set: ${{ secrets.server != '' }}"
           echo "release/dist/ exists: $(ls ./release/dist/ 2>/dev/null && echo yes || echo no)"
 
       - id: deployTarget
@@ -92,7 +95,7 @@ jobs:
         continue-on-error: true
         uses: wangyucode/sftp-upload-action@v3
         with:
-          host: ${{ secrets.host }}
+          host: ${{ secrets.server }}
           username: ${{ steps.creds.outputs.username }}
           password: ${{ steps.creds.outputs.password }}
           localDir: './release/dist/'
@@ -103,7 +106,7 @@ jobs:
         if: steps.deployTarget.outcome == 'failure'
         uses: wangyucode/sftp-upload-action@v3
         with:
-          host: ${{ secrets.host }}
+          host: ${{ secrets.server }}
           username: ${{ steps.creds.outputs.username }}
           password: ${{ steps.creds.outputs.password }}
           localDir: './release/dist/'
