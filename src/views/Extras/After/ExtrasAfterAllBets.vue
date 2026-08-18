@@ -7,11 +7,8 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-
-import type { TConference } from '@/stores/matches.types';
-
 import { useExtraBetStore } from '@/stores/extraBet';
-
+import type { TConference } from '@/stores/matches.types';
 import ExtrasAfterAllBetsTable from './ExtrasAfterAllBetsTable.vue';
 
 defineProps<{

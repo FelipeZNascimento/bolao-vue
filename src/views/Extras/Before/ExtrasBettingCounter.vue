@@ -6,89 +6,190 @@
   >
     <h3>{{ conference }}</h3>
     <p class="counter-line">
-      <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> North </span>
-      <span v-if="selectedDivisionChampions.North" class="logo">
+      <span>
+        <i
+          class="pi pi-crown icon"
+          style="color: var(--bolao-c-gold)"
+        ></i>
+        North
+      </span>
+      <span
+        v-if="selectedDivisionChampions.North"
+        class="logo"
+      >
         <img
           :src="`/team_logos/${selectedDivisionChampions.North.id}.gif`"
           :alt="`${selectedDivisionChampions.North.name} Shield`"
         />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <p class="counter-line">
-      <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> East </span>
-      <span v-if="selectedDivisionChampions.East" class="logo">
+      <span>
+        <i
+          class="pi pi-crown icon"
+          style="color: var(--bolao-c-gold)"
+        ></i>
+        East
+      </span>
+      <span
+        v-if="selectedDivisionChampions.East"
+        class="logo"
+      >
         <img
           :src="`/team_logos/${selectedDivisionChampions.East.id}.gif`"
           :alt="`${selectedDivisionChampions.East.name} Shield`"
         />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <p class="counter-line">
-      <span> <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> South </span>
-      <span v-if="selectedDivisionChampions.South" class="logo">
+      <span>
+        <i
+          class="pi pi-crown icon"
+          style="color: var(--bolao-c-gold)"
+        ></i>
+        South
+      </span>
+      <span
+        v-if="selectedDivisionChampions.South"
+        class="logo"
+      >
         <img
           :src="`/team_logos/${selectedDivisionChampions.South.id}.gif`"
           :alt="`${selectedDivisionChampions.South.name} Shield`"
         />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <p class="counter-line">
-      <span><i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i> West </span>
-      <span v-if="selectedDivisionChampions.West" class="logo">
+      <span
+        ><i
+          class="pi pi-crown icon"
+          style="color: var(--bolao-c-gold)"
+        ></i>
+        West
+      </span>
+      <span
+        v-if="selectedDivisionChampions.West"
+        class="logo"
+      >
         <img
           :src="`/team_logos/${selectedDivisionChampions.West.id}.gif`"
           :alt="`${selectedDivisionChampions.West.name} Shield`"
         />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <PrimeDivider />
     <h3>Wild Cards</h3>
     <p class="counter-line">
-      <span v-for="team in selectedWildcards" :key="team.id" class="logo">
-        <img :src="`/team_logos/${team.id}.gif`" :alt="`${team.name} Shield`" />
+      <span
+        v-for="team in selectedWildcards"
+        :key="team.id"
+        class="logo"
+      >
+        <img
+          :src="`/team_logos/${team.id}.gif`"
+          :alt="`${team.name} Shield`"
+        />
       </span>
-      <span v-for="(_, index) in 3 - selectedWildcards.length" :key="index" class="icon">
+      <span
+        v-for="(_, index) in 3 - selectedWildcards.length"
+        :key="index"
+        class="icon"
+      >
         <i class="pi pi-times"></i>
       </span>
     </p>
     <PrimeDivider />
     <h3>{{ conference }} Champion</h3>
     <p class="counter-line">
-      <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i>
-      <span v-if="selectedConferenceChampion" class="logo">
+      <i
+        class="pi pi-crown icon"
+        style="color: var(--bolao-c-gold)"
+      ></i>
+      <span
+        v-if="selectedConferenceChampion"
+        class="logo"
+      >
         <img
           :src="`/team_logos/${selectedConferenceChampion.id}.gif`"
           :alt="`${selectedConferenceChampion.name} Shield`"
         />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <PrimeDivider />
     <h3>Super Bowl</h3>
     <p class="counter-line">
-      <i class="pi pi-crown icon" style="color: var(--bolao-c-gold)"></i>
-      <span v-if="selectedSuperBowlWinner" class="logo">
-        <img :src="`/team_logos/${selectedSuperBowlWinner.id}.gif`" :alt="`${selectedSuperBowlWinner.name} Shield`" />
+      <i
+        class="pi pi-crown icon"
+        style="color: var(--bolao-c-gold)"
+      ></i>
+      <span
+        v-if="selectedSuperBowlWinner"
+        class="logo"
+      >
+        <img
+          :src="`/team_logos/${selectedSuperBowlWinner.id}.gif`"
+          :alt="`${selectedSuperBowlWinner.name} Shield`"
+        />
       </span>
-      <span v-else class="icon"><i class="pi pi-times"></i></span>
+      <span
+        v-else
+        class="icon"
+        ><i class="pi pi-times"></i
+      ></span>
     </p>
     <PrimeDivider />
-    <PrimeKnob v-model="progressPercentage" :size="50" valueTemplate="{value}%" :valueColor="knobColor" readonly />
+    <PrimeKnob
+      v-model="progressPercentage"
+      :size="50"
+      valueTemplate="{value}%"
+      :valueColor="knobColor"
+      readonly
+    />
   </div>
-  <div v-else class="mobile-knobs-outer" :class="alignment === 'left' ? 'left-aligned' : 'right-aligned'">
+  <div
+    v-else
+    class="mobile-knobs-outer"
+    :class="alignment === 'left' ? 'left-aligned' : 'right-aligned'"
+  >
     <h3 style="text-align: center">{{ conference }}</h3>
-    <PrimeKnob v-model="progressPercentage" :size="40" valueTemplate="{value}%" :valueColor="knobColor" readonly />
+    <PrimeKnob
+      v-model="progressPercentage"
+      :size="40"
+      valueTemplate="{value}%"
+      :valueColor="knobColor"
+      readonly
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-
 import type { TExtrasTeam, TSelectedDivisionChampions } from '@/stores/extraBet.types';
 import type { TConference } from '@/stores/matches.types';
 
@@ -146,7 +247,7 @@ const progressPercentage = computed(() => {
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .outer-extras-counter {
   position: fixed;
   top: 50%;

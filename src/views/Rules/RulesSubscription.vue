@@ -1,5 +1,8 @@
 <template>
-  <PrimePanel style="width: 100%" header="Inscrição">
+  <PrimePanel
+    style="width: 100%"
+    header="Inscrição"
+  >
     <p>Estão abertas as inscrições para a temporada 2026/2027 do Bolão NFL!</p>
     <p>Após fazer o cadastro, sua participação estará condicionada ao pagamento da inscrição.</p>
     <p style="padding-top: var(--xl-spacing); font-weight: bold">Valor: R$75</p>

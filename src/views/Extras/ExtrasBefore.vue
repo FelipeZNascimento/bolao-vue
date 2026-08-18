@@ -2,12 +2,23 @@
 <template>
   <div class="outer-extras">
     <h1>Extras</h1>
-    <PrimeSelectButton :allowEmpty="false" size="small" v-model="selectedToggle" :options="buttonOptions" />
-    <div v-if="isLoading" class="extras-betting-table-skeleton-outer">
+    <PrimeSelectButton
+      :allowEmpty="false"
+      size="small"
+      v-model="selectedToggle"
+      :options="buttonOptions"
+    />
+    <div
+      v-if="isLoading"
+      class="extras-betting-table-skeleton-outer"
+    >
       <PrimeSkeleton class="skeleton" />
       <PrimeSkeleton class="skeleton" />
     </div>
-    <div v-else-if="selectedToggle === 'Playoffs'" class="outer-extras-tables">
+    <div
+      v-else-if="selectedToggle === 'Playoffs'"
+      class="outer-extras-tables"
+    >
       <ExtrasBettingPlayoffs
         :selectedConferenceChampions="selectedConferenceChampions"
         :selectedSuperBowl="selectedSuperBowl"
@@ -15,7 +26,10 @@
         :handleSelectSuperBowl="handleSelectSuperBowl"
       />
     </div>
-    <div v-else class="outer-extras-tables">
+    <div
+      v-else
+      class="outer-extras-tables"
+    >
       <ExtrasBettingPerConference
         :conference="selectedToggle"
         :conferenceTeams="selectedToggle === 'AFC' ? afcTeams : nfcTeams"
@@ -46,7 +60,9 @@
 <script setup lang="ts">
 import { useToast } from 'primevue';
 import { computed, ref, watchEffect } from 'vue';
-
+import { EXTRA_BETS_VALUES } from '@/constants/bets';
+import ExtraBetService from '@/services/extra_bet';
+import { useExtraBetStore } from '@/stores/extraBet';
 import type {
   TConference,
   TConferenceChampions,
@@ -54,13 +70,8 @@ import type {
   TDivisionChampions,
   TExtrasBeforeToggle,
   TExtrasTeam,
-  TWildcards,
+  TWildcards
 } from '@/stores/extraBet.types';
-
-import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import ExtraBetService from '@/services/extra_bet';
-import { useExtraBetStore } from '@/stores/extraBet';
-
 import ExtrasBettingCounter from './Before/ExtrasBettingCounter.vue';
 import ExtrasBettingPerConference from './Before/ExtrasBettingPerConference.vue';
 import ExtrasBettingPlayoffs from './Before/ExtrasBettingPlayoffs.vue';
@@ -70,25 +81,25 @@ const selectedToggle = ref<TExtrasBeforeToggle>('AFC');
 const buttonOptions = ref<TExtrasBeforeToggle[]>(['AFC', 'NFC', 'Playoffs']);
 const selectedConferenceChampions = ref<TConferenceChampions>({
   AFC: null,
-  NFC: null,
+  NFC: null
 });
 const selectedDivisionChampions = ref<TDivisionChampions>({
   AFC: {
     East: null,
     North: null,
     South: null,
-    West: null,
+    West: null
   },
   NFC: {
     East: null,
     North: null,
     South: null,
-    West: null,
-  },
+    West: null
+  }
 });
 const selectedWildcards = ref<TWildcards>({
   AFC: [],
-  NFC: [],
+  NFC: []
 });
 const selectedSuperBowl = ref<null | TExtrasTeam>(null);
 
@@ -105,7 +116,7 @@ const afcTeams = computed(() => {
     East: extraBetStore.afcTeams.East,
     North: extraBetStore.afcTeams.North,
     South: extraBetStore.afcTeams.South,
-    West: extraBetStore.afcTeams.West,
+    West: extraBetStore.afcTeams.West
   };
 });
 
@@ -114,7 +125,7 @@ const nfcTeams = computed(() => {
     East: extraBetStore.nfcTeams.East,
     North: extraBetStore.nfcTeams.North,
     South: extraBetStore.nfcTeams.South,
-    West: extraBetStore.nfcTeams.West,
+    West: extraBetStore.nfcTeams.West
   };
 });
 
@@ -185,12 +196,12 @@ function handleSelectChampion(conference: TConference, division: TDivision, team
     if (selectedConferenceChampions.value[conference]?.id === team.id) {
       selectedConferenceChampions.value = {
         ...selectedConferenceChampions.value,
-        [conference]: null,
+        [conference]: null
       };
     } else {
       selectedConferenceChampions.value = {
         ...selectedConferenceChampions.value,
-        [conference]: team,
+        [conference]: team
       };
     }
   } else {
@@ -200,16 +211,16 @@ function handleSelectChampion(conference: TConference, division: TDivision, team
         ...selectedDivisionChampions.value,
         [conference]: {
           ...selectedDivisionChampions.value?.[conference],
-          [division]: null,
-        },
+          [division]: null
+        }
       };
     } else {
       selectedDivisionChampions.value = {
         ...selectedDivisionChampions.value,
         [conference]: {
           ...selectedDivisionChampions.value?.[conference],
-          [division]: team,
-        },
+          [division]: team
+        }
       };
     }
   }
@@ -233,7 +244,7 @@ function handleSelectWildcard(conference: TConference, team: TExtrasTeam) {
     // If the clicked wild card is in the current selected wild cards, remove it
     selectedWildcards.value = {
       ...selectedWildcards.value,
-      [conference]: currentWildcards.filter((t) => t.id !== team.id),
+      [conference]: currentWildcards.filter((t) => t.id !== team.id)
     };
 
     triggerUpdate();
@@ -241,7 +252,7 @@ function handleSelectWildcard(conference: TConference, team: TExtrasTeam) {
     // If there's still space for wild cards, add it
     selectedWildcards.value = {
       ...selectedWildcards.value,
-      [conference]: [...currentWildcards, team],
+      [conference]: [...currentWildcards, team]
     };
 
     triggerUpdate();
@@ -251,7 +262,7 @@ function handleSelectWildcard(conference: TConference, team: TExtrasTeam) {
       detail: `Para escolher uma nova equipe, remova a aposta numa das equipes já selecionadas`,
       life: 5000,
       severity: 'info',
-      summary: 'Máximo de 3 wild cards por Conferência',
+      summary: 'Máximo de 3 wild cards por Conferência'
     });
   }
 }
@@ -270,7 +281,7 @@ function triggerUpdate() {
     [EXTRA_BETS_VALUES.NFC_SOUTH]: selectedDivisionChampions.value.NFC.South?.id || null,
     [EXTRA_BETS_VALUES.NFC_WEST]: selectedDivisionChampions.value.NFC.West?.id || null,
     [EXTRA_BETS_VALUES.NFC_WILDCARD]: selectedWildcards.value.NFC.map((team) => team.id),
-    [EXTRA_BETS_VALUES.SUPERBOWL]: selectedSuperBowl.value?.id || null,
+    [EXTRA_BETS_VALUES.SUPERBOWL]: selectedSuperBowl.value?.id || null
   };
 
   extraBetService.update(updateObject, updateCallback);
@@ -281,7 +292,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
     toast.add({
       life: 3000,
       severity: 'success',
-      summary: 'Aposta extra atualizada',
+      summary: 'Aposta extra atualizada'
     });
   } else {
     // Revert to previous values
@@ -292,7 +303,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
       detail: `${error?.message}`,
       life: 5000,
       severity: 'error',
-      summary: 'Erro ao atualizar aposta',
+      summary: 'Erro ao atualizar aposta'
     });
   }
 }

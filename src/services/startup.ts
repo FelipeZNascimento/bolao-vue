@@ -1,12 +1,10 @@
-import type { IUser } from '@/stores/activeProfile.types';
-import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
-import type { IConferenceTeams } from '@/stores/extraBet.types';
-
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import type { IUser } from '@/stores/activeProfile.types';
 import { useConfigurationStore } from '@/stores/configuration';
+import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
 import { useExtraBetStore } from '@/stores/extraBet';
+import type { IConferenceTeams } from '@/stores/extraBet.types';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
-
 import ApiService from './api_request';
 
 export interface InitializeObj {
@@ -42,7 +40,7 @@ export default class StartupService {
       const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile'),
         this.apiRequest.get<InitializeObj>('season/current'),
-        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
+        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision')
       ]);
 
       if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {

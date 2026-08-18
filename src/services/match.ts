@@ -1,10 +1,8 @@
-import type { IMatch } from '@/stores/matches.types';
-import type { IRankingLine, IWeeklyRanking } from '@/stores/ranking.types';
-
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import type { IMatch } from '@/stores/matches.types';
 import { useRankingStore } from '@/stores/ranking';
-
+import type { IRankingLine, IWeeklyRanking } from '@/stores/ranking.types';
 import ApiService from './api_request';
 import WebsocketService from './websocket';
 
@@ -59,7 +57,7 @@ export default class MatchService {
   public async updateBet(matchId: number, betValue: number, callback?: (isSuccess: boolean, error?: Error) => void) {
     const betObject = {
       betValue,
-      matchId,
+      matchId
     };
 
     try {

@@ -20,15 +20,18 @@
         />
       </p>
     </template>
-    <PrimeChart type="bar" :data="chartData()" :style="{ height: '300px' }" :options="chartOptions"></PrimeChart>
+    <PrimeChart
+      type="bar"
+      :data="chartData()"
+      :style="{ height: '300px' }"
+      :options="chartOptions"
+    ></PrimeChart>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-
-import type { IUser } from '@/stores/activeProfile.types';
-
 import IconAndName from '@/components/IconAndName.vue';
+import type { IUser } from '@/stores/activeProfile.types';
 import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
@@ -62,7 +65,7 @@ function chartData() {
       accumulatedPosition: userLine.score.accumulatedPosition,
       bullseye: bullseye.toFixed(1),
       position: userLine.user.position,
-      winner: winner.toFixed(1),
+      winner: winner.toFixed(1)
     };
   });
 
@@ -76,7 +79,7 @@ function chartData() {
         label: 'Posição',
         tension: 0.4,
         type: 'line',
-        yAxisID: 'y1',
+        yAxisID: 'y1'
       },
       {
         backgroundColor: '#de6135',
@@ -86,24 +89,24 @@ function chartData() {
         label: 'Posição Geral',
         tension: 0.4,
         type: 'line',
-        yAxisID: 'y1',
+        yAxisID: 'y1'
       },
       {
         backgroundColor: '#29c84e50',
         data: userWeeklyRankings.map((week) => week.bullseye),
         label: '% Pontos na Mosca',
         type: 'bar',
-        yAxisID: 'y',
+        yAxisID: 'y'
       },
       {
         backgroundColor: '#03a9f450',
         data: userWeeklyRankings.map((week) => week.winner),
         label: '% Pontos Vencedores',
         type: 'bar',
-        yAxisID: 'y',
-      },
+        yAxisID: 'y'
+      }
     ],
-    labels: ranking.value.map((week) => `Semana ${week.week}`),
+    labels: ranking.value.map((week) => `Semana ${week.week}`)
   };
 }
 
@@ -117,14 +120,14 @@ const chartOptions = {
       stacked: true,
       title: {
         display: true,
-        text: 'Porcentagem de Pontos',
-      },
+        text: 'Porcentagem de Pontos'
+      }
     },
     y1: {
       display: true,
       grid: {
         color: '#f4b303',
-        drawOnChartArea: false,
+        drawOnChartArea: false
       },
       max: 35,
       min: 1,
@@ -133,15 +136,15 @@ const chartOptions = {
       stacked: false,
       ticks: {
         min: 1,
-        stepSize: 1,
+        stepSize: 1
       },
       title: {
         display: true,
-        text: 'Posição',
+        text: 'Posição'
       },
-      type: 'linear',
-    },
-  },
+      type: 'linear'
+    }
+  }
 };
 // ------ Watches ------
 watch(
@@ -150,7 +153,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

@@ -1,33 +1,29 @@
 <template>
-  <div style="display: flex">
-    <span
-      v-for="(BET_VALUE, index) in BETS_VALUES"
-      :key="index"
-      style="position: relative"
-      class="betting-radio-button-container"
+  <div style="display: flex; flex: 1; width: 100%">
+    <PrimeSelectButton
+      :disabled="isLoading || isMatchStarted"
+      v-model="radioButton"
+      :options="Object.values(BETS_VALUES)"
+      aria-labelledby="custom"
+      size="small"
+      style="flex: 1; width: 100%"
+      @value-change="handleNewBet"
+      fluid
     >
-      <PrimeRadioButton
-        :name="BETS_LABELS[BET_VALUE]"
-        :disabled="isLoading || isMatchStarted"
-        :value="BET_VALUE"
-        v-model="radioButton"
-        class="betting-radio-button"
-        size="large"
-        @change="(e: any) => handleNewBet(e, BET_VALUE)"
-        v-tooltip.top="renderTootlip(BET_VALUE)"
-      />
-      <span class="betting-label">{{ BETS_LABELS[BET_VALUE] }}</span>
-    </span>
+      <template #option="slotProps">
+        <span v-tooltip.top="renderTooltip(slotProps.option)">{{ BETS_LABELS[slotProps.option] }}</span>
+      </template>
+    </PrimeSelectButton>
   </div>
 </template>
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast';
-import { ref, watchEffect } from 'vue';
-
-import type { IBet, IMatch } from '@/stores/matches.types';
-
+import { computed, ref, watchEffect } from 'vue';
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useMatchesStore } from '@/stores/matches';
+import type { IBet, IMatch } from '@/stores/matches.types';
 
 const props = defineProps<{
   activeUserBet: IBet | null;
@@ -42,7 +38,12 @@ const isLoading = ref<boolean>(false);
 
 // ------ Initializations ------
 const matchService = new MatchService();
+const matchesStore = useMatchesStore();
+const activeProfileStore = useActiveProfileStore();
 const toast = useToast();
+
+// ------ Computed Properties ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Watch Effect Properties ------
 watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));
@@ -52,11 +53,14 @@ function callback(isSuccess: boolean, error?: Error) {
   isLoading.value = false;
   if (isSuccess) {
     radioButtonPrevValue.value = radioButton.value; // Update previous value to current
+    if (radioButton.value !== null && activeProfile.value) {
+      matchesStore.updateLoggedUserBet(props.match.id, radioButton.value, activeProfile.value);
+    }
     toast.add({
       detail: `Aposta ${props.match.away.code} @ ${props.match.home.code} atualizada com sucesso`,
       life: 3000,
       severity: 'success',
-      summary: 'Aposta atualizada',
+      summary: 'Aposta atualizada'
     });
   } else {
     radioButton.value = radioButtonPrevValue.value; // Revert to previous value
@@ -65,24 +69,25 @@ function callback(isSuccess: boolean, error?: Error) {
       detail: `Erro ao atualizar aposta: ${error?.message}`,
       life: 5000,
       severity: 'error',
-      summary: 'Erro ao atualizar aposta',
+      summary: 'Erro ao atualizar aposta'
     });
   }
 }
 
-function handleNewBet(e: Event, newBet: BetsValues) {
+function handleNewBet() {
   isLoading.value = true;
 
   // If nothing changed, do not update the bet
-  if (radioButtonPrevValue.value === radioButton.value) {
-    callback(true);
+  if (radioButtonPrevValue.value === radioButton.value || radioButton.value === null) {
+    return callback(true);
   }
 
-  matchService.updateBet(props.match.id, newBet, callback);
+  matchService.updateBet(props.match.id, radioButton.value, callback);
 }
 
 // ------ Functions ------
-function renderTootlip(value: BetsValues) {
+function renderTooltip(value: BetsValues) {
+  console.log(value);
   if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
     return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
   } else {
@@ -91,13 +96,6 @@ function renderTootlip(value: BetsValues) {
 }
 </script>
 <style lang="scss" scoped>
-.betting-radio-button-container {
-  &:nth-child(2) {
-    box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
-    -webkit-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
-    -moz-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
-  }
-}
 .betting-radio-button {
   margin: var(--m-spacing);
 
@@ -108,11 +106,24 @@ function renderTootlip(value: BetsValues) {
 
 .betting-label {
   position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateY(-100%) translateX(-50%);
+  // bottom: -50%;
+  // left: 50%;
+  transform: translateY(100%) translateX(-100%);
   font-size: var(--xs-font-size);
   color: var(--text-color);
   z-index: 1;
+}
+</style>
+
+<style lang="scss">
+.p-selectbutton {
+  gap: var(--xs-spacing);
+  @media (min-width: 1024px) {
+    gap: var(--s-spacing);
+  }
+}
+
+.p-selectbutton .p-togglebutton {
+  border-width: 1px !important;
 }
 </style>

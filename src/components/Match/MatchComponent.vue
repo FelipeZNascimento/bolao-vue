@@ -34,12 +34,9 @@
 <script lang="ts" setup>
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref } from 'vue';
-
-import type { IMatch } from '@/stores/matches.types';
-
 import { useClockStore } from '@/stores/clock';
+import type { IMatch } from '@/stores/matches.types';
 import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
-
 import BetsModal from './BetsModal/BetsModal.vue';
 import ClockComponent from './ClockComponent.vue';
 import ScoreComponent from './ScoreComponent.vue';
@@ -54,8 +51,8 @@ const props = withDefaults(
   {
     isBetting: false,
     isDemo: false,
-    isGridMode: false,
-  },
+    isGridMode: false
+  }
 );
 
 // ------ Refs ------
@@ -90,7 +87,7 @@ function handleCloseModal() {
 
 // ------ Functions ------
 function handleMatchClick() {
-  if (props.isBetting || props.isDemo) {
+  if (props.isBetting || props.isDemo || !isMatchStarted.value) {
     return;
   }
   isBetsModalOpen.value = true;
@@ -100,6 +97,7 @@ function handleMatchClick() {
 .outer-match {
   display: flex;
   opacity: 1;
+  gap: var(--xs-spacing);
 }
 
 .clickable {
@@ -112,7 +110,7 @@ function handleMatchClick() {
 }
 
 .line {
-  min-height: 60px;
+  min-height: 50px;
   width: 100%;
 }
 

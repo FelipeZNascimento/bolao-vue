@@ -3,14 +3,14 @@ export const BETS_VALUES = {
   AWAY_EASY: 0,
   AWAY_HARD: 1,
   HOME_HARD: 2,
-  HOME_EASY: 3,
+  HOME_EASY: 3
 };
 
 export const BETS_LABELS = {
   [BETS_VALUES.AWAY_EASY]: 'Fácil',
   [BETS_VALUES.AWAY_HARD]: 'Difícil',
   [BETS_VALUES.HOME_EASY]: 'Fácil',
-  [BETS_VALUES.HOME_HARD]: 'Difícil',
+  [BETS_VALUES.HOME_HARD]: 'Difícil'
 };
 
 export const EXTRA_BETS_VALUES = {
@@ -26,7 +26,7 @@ export const EXTRA_BETS_VALUES = {
   NFC_EAST: 10,
   NFC_WEST: 11,
   AFC_WILDCARD: 12,
-  NFC_WILDCARD: 13,
+  NFC_WILDCARD: 13
 };
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];

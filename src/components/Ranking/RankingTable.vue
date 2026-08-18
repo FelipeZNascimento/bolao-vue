@@ -1,6 +1,15 @@
 <template>
-  <PrimeDataTable :value="rankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows>
-    <PrimeColumn field="user.position" header="" sortable>
+  <PrimeDataTable
+    :value="rankingData"
+    :size="rowSpacingConfig"
+    :loading="isLoading"
+    stripedRows
+  >
+    <PrimeColumn
+      field="user.position"
+      header=""
+      sortable
+    >
       <template #body="slotProps">
         <div style="display: flex; flex-direction: row">
           <div class="outer-position">
@@ -14,32 +23,73 @@
               :isActive="activeProfile?.id === slotProps.data.user.id"
               @click="() => handleUserClick(slotProps.data.user)"
             />
-            <div class="badge" :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"></div>
+            <div
+              class="badge"
+              :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"
+            ></div>
           </div>
         </div>
       </template>
     </PrimeColumn>
-    <PrimeColumn field="score.total" header="Pts" sortable></PrimeColumn>
-    <PrimeColumn field="score.bullseye" sortable>
+    <PrimeColumn
+      field="score.total"
+      header="Pts"
+      sortable
+    ></PrimeColumn>
+    <PrimeColumn
+      field="score.bullseye"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
+        <i
+          v-tooltip.top="'Na mosca'"
+          class="pi pi-bullseye"
+        ></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="isWeekly && columnConfig === 'complete'" field="score.winner" sortable>
+    <PrimeColumn
+      v-if="isWeekly && columnConfig === 'complete'"
+      field="score.winner"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Vencedor correto'" class="pi pi-check"></i>
+        <i
+          v-tooltip.top="'Vencedor correto'"
+          class="pi pi-check"
+        ></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.percentage" sortable>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.percentage"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Aproveitamento'" class="pi pi-percentage"></i>
+        <i
+          v-tooltip.top="'Aproveitamento'"
+          class="pi pi-percentage"
+        ></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="!isWeekly && columnConfig === 'complete'" field="score.extras" sortable>
-      <template #header> <i v-tooltip.top="'Extras'" class="pi pi-plus"></i> </template>
+    <PrimeColumn
+      v-if="!isWeekly && columnConfig === 'complete'"
+      field="score.extras"
+      sortable
+    >
+      <template #header>
+        <i
+          v-tooltip.top="'Extras'"
+          class="pi pi-plus"
+        ></i>
+      </template>
     </PrimeColumn>
   </PrimeDataTable>
-  <PrimeMessage v-if="error" class="error-message" severity="error" variant="outlined">
+  <PrimeMessage
+    v-if="error"
+    class="error-message"
+    severity="error"
+    variant="outlined"
+  >
     Ops, houve um problema de comunicação com o servidor para buscar o ranking.
     <p>
       Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -56,13 +106,10 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-
+import IconAndName from '@/components/IconAndName.vue';
 import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
 import type { IRankingLine } from '@/stores/ranking.types';
-
-import IconAndName from '@/components/IconAndName.vue';
-
 import UserTrackingModal from './UserTrackingModal.vue';
 
 defineProps<{

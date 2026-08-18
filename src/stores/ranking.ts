@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
 import type { TColumnsValue, TRowSpacingValue } from './configuration.types';
 import type { IRankingLine, IWeeklyRanking } from './ranking.types';
 
 const initialState = {
   columnsOption: 'complete' as TColumnsValue,
-  rowSpacing: 'small' as TRowSpacingValue,
+  rowSpacing: 'small' as TRowSpacingValue
 };
 
 export const useRankingStore = defineStore('ranking', () => {
@@ -78,6 +77,6 @@ export const useRankingStore = defineStore('ranking', () => {
     setRowSpacing,
     setSeason,
     setWeeks,
-    weeksRanking,
+    weeksRanking
   };
 });

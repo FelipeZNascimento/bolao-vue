@@ -16,7 +16,6 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-
 import RankingComponent from './RankingComponent.vue';
 
 const props = defineProps<{
@@ -34,7 +33,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

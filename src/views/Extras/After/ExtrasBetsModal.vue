@@ -10,9 +10,17 @@
     contentClass="content-class"
   >
     <div class="teams-outer">
-      <TeamComponent isScoreless :isGridMode="false" :team="team" :matchStatus="MATCH_STATUS.FINAL" />
+      <TeamComponent
+        isScoreless
+        :isGridMode="false"
+        :team="team"
+        :matchStatus="MATCH_STATUS.FINAL"
+      />
     </div>
-    <div class="bets-outer" v-if="teamWithExtras && team">
+    <div
+      class="bets-outer"
+      v-if="teamWithExtras && team"
+    >
       <ExtrasBetsModalColumn
         :isCorrect="isCorrect(team.id, 'wildcard')"
         title="Wild Card"
@@ -38,14 +46,11 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-
-import type { ITeamWithExtrasBet, TConference, TExtrasTeam } from '@/stores/extraBet.types';
-
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
-
+import type { ITeamWithExtrasBet, TConference, TExtrasTeam } from '@/stores/extraBet.types';
 import ExtrasBetsModalColumn from './ExtrasBetsModalColumn.vue';
 
 const props = defineProps<{
@@ -85,7 +90,7 @@ function getUsersFromTeamWithExtras(type: 'conference' | 'division' | 'superbowl
       EXTRA_BETS_VALUES[`${conference}_EAST`],
       EXTRA_BETS_VALUES[`${conference}_NORTH`],
       EXTRA_BETS_VALUES[`${conference}_SOUTH`],
-      EXTRA_BETS_VALUES[`${conference}_WEST`],
+      EXTRA_BETS_VALUES[`${conference}_WEST`]
     ];
     const filtered = props.teamWithExtras
       .filter((bet) => divisions.includes(bet.type))
@@ -122,7 +127,7 @@ function isCorrect(teamId: number, type: 'conference' | 'division' | 'superbowl'
       EXTRA_BETS_VALUES[`${conference}_EAST`],
       EXTRA_BETS_VALUES[`${conference}_NORTH`],
       EXTRA_BETS_VALUES[`${conference}_SOUTH`],
-      EXTRA_BETS_VALUES[`${conference}_WEST`],
+      EXTRA_BETS_VALUES[`${conference}_WEST`]
     ];
     const teams = extraBetsResults.value.filter((bet) => divisions.includes(bet.type)).flatMap((bet) => bet.teams);
     return teams?.some((team) => team.id === teamId) ?? false;
@@ -147,7 +152,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

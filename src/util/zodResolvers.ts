@@ -6,9 +6,9 @@ export const loginResolver = ref(
   zodResolver(
     z.object({
       email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
-    }),
-  ),
+      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' })
+    })
+  )
 );
 
 export const signupResolver = ref(
@@ -20,9 +20,9 @@ export const signupResolver = ref(
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
-    }),
-  ),
+        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
+    })
+  )
 );
 
 export const updateProfileResolver = ref(
@@ -32,9 +32,9 @@ export const updateProfileResolver = ref(
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
-    }),
-  ),
+        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
+    })
+  )
 );
 
 export const updatePasswordResolver = ref(
@@ -43,11 +43,11 @@ export const updatePasswordResolver = ref(
       .object({
         currentPassword: z.string().min(6, { message: 'A sua senha tem pelo menos 6 caracteres' }),
         newPassword: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
-        newPasswordConfirmation: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
+        newPasswordConfirmation: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' })
       })
       .refine((data) => data.newPassword === data.newPasswordConfirmation, {
         message: 'A senha digitada no campo de confirmação deve ser idêntica à nova senha',
-        path: ['newPasswordConfirmation'], // path of error
-      }),
-  ),
+        path: ['newPasswordConfirmation'] // path of error
+      })
+  )
 );

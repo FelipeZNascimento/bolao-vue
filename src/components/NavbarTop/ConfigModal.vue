@@ -45,7 +45,10 @@
     <PrimeDivider />
 
     <h2>Ranking</h2>
-    <div class="button-group" v-if="!isMobile">
+    <div
+      class="button-group"
+      v-if="!isMobile"
+    >
       <div class="label">Posição</div>
       <PrimeSelectButton
         fluid
@@ -93,7 +96,7 @@
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, ref, watch, watchEffect } from 'vue';
-
+import { useConfigurationStore } from '@/stores/configuration';
 import type {
   TColumn,
   TColumnsValue,
@@ -104,10 +107,8 @@ import type {
   TRowSpacing,
   TRowSpacingValue,
   TTheme,
-  TThemeValue,
+  TThemeValue
 } from '@/stores/configuration.types';
-
-import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
@@ -124,23 +125,23 @@ const rowSpacingLocalObj = ref();
 const columnLocalObj = ref();
 const themeOptions = ref<TTheme[]>([
   { label: 'Claro', value: 'light' },
-  { label: 'Escuro', value: 'dark' },
+  { label: 'Escuro', value: 'dark' }
 ]);
 const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
-  { label: 'Modal (menu)', value: 'modal' },
+  { label: 'Modal (menu)', value: 'modal' }
 ]);
 const resultsViewOptions = ref<TResultsView[]>([
   { label: 'Grid', value: 'grid' },
-  { label: 'Linhas', value: 'lines' },
+  { label: 'Linhas', value: 'lines' }
 ]);
 const rowSpacingOptions = ref<TRowSpacing[]>([
   { label: 'Pequeno', value: 'small' },
-  { label: 'Grande', value: 'normal' },
+  { label: 'Grande', value: 'normal' }
 ]);
 const columnOptions = ref<TColumn[]>([
   { label: 'Compacto', value: 'compact' },
-  { label: 'Completo', value: 'complete' },
+  { label: 'Completo', value: 'complete' }
 ]);
 
 // ------ Initialization ------
@@ -177,7 +178,7 @@ function handleThemeConfig(newOption: TThemeValue) {
 
 // ------ Watch Effect Properties ------
 watchEffect(
-  () => (resultsViewLocalObj.value = resultsViewOptions.value.find((option) => option.value === resultsView.value)),
+  () => (resultsViewLocalObj.value = resultsViewOptions.value.find((option) => option.value === resultsView.value))
 );
 
 watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)));
@@ -185,12 +186,12 @@ watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => opt
 watchEffect(
   () =>
     (rankingPositionLocalObj.value = rankingPositionOptions.value.find(
-      (option) => option.value === rankingPosition.value,
-    )),
+      (option) => option.value === rankingPosition.value
+    ))
 );
 
 watchEffect(
-  () => (rowSpacingLocalObj.value = rowSpacingOptions.value.find((option) => option.value === rowSpacingConfig.value)),
+  () => (rowSpacingLocalObj.value = rowSpacingOptions.value.find((option) => option.value === rowSpacingConfig.value))
 );
 
 watchEffect(() => (columnLocalObj.value = columnOptions.value.find((option) => option.value === columnConfig.value)));
@@ -202,7 +203,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
+import type { IUser } from './activeProfile.types';
 import type { IMatch } from './matches.types';
 
 export const useMatchesStore = defineStore('matches', () => {
@@ -42,5 +42,25 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
-  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches, updateMatches };
+  function updateLoggedUserBet(matchId: number, betValue: number, activeUser: IUser) {
+    const match = matches.value.find((m) => m.id === matchId);
+    if (!match) return;
+    if (match.loggedUserBets) {
+      match.loggedUserBets.value = betValue;
+    } else {
+      match.loggedUserBets = { id: -1, matchId, user: activeUser, value: betValue };
+    }
+  }
+
+  return {
+    error,
+    isLoading,
+    matches,
+    resetLoggedUserBets,
+    setError,
+    setLoading,
+    setMatches,
+    updateLoggedUserBet,
+    updateMatches
+  };
 });

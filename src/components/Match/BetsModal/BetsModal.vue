@@ -19,7 +19,11 @@
     </template>
 
     <div class="teams-outer">
-      <ScoreComponent :match="match" :activeUserBet="match.loggedUserBets" :isMatchStarted="isMatchStarted" />
+      <ScoreComponent
+        :match="match"
+        :activeUserBet="match.loggedUserBets"
+        :isMatchStarted="isMatchStarted"
+      />
     </div>
     <div class="bets-outer">
       <BetsColumn
@@ -52,13 +56,10 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-
-import type { IMatch } from '@/stores/matches.types';
-
 import { BETS_VALUES, type Ribbon } from '@/constants/bets';
 import { useClockStore } from '@/stores/clock';
+import type { IMatch } from '@/stores/matches.types';
 import { type CorrectBets } from '@/util/betsCalculator';
-
 import ClockComponent from '../ClockComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
 import BetsColumn from './BetsColumn.vue';
@@ -85,7 +86,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

@@ -9,7 +9,7 @@ export default class ApiService {
     const requestOptions: RequestInit = {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...headers },
-      method: 'GET',
+      method: 'GET'
     };
     const url = `${this.baseUrl}${endpoint}`;
 
@@ -29,7 +29,7 @@ export default class ApiService {
       body: JSON.stringify(data),
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...headers },
-      method: 'POST',
+      method: 'POST'
     };
     const url = `${this.baseUrl}${endpoint}`;
 

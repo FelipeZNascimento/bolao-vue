@@ -1,15 +1,12 @@
 import { sha1 } from 'js-sha1';
-
-import type { IUser } from '@/stores/activeProfile.types';
-
 import { faIconsList } from '@/constants/font-awesome';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import type { IUser } from '@/stores/activeProfile.types';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
 import { randomHexColorGenerator } from '@/util/colorGenerator';
-
 import ApiService from './api_request';
 
 export default class UserService {
@@ -34,7 +31,7 @@ export default class UserService {
     const encryptedPassword = sha1(password).toString();
     const loginObject = {
       email,
-      password: encryptedPassword,
+      password: encryptedPassword
     };
 
     try {
@@ -72,7 +69,7 @@ export default class UserService {
     password: string,
     name: string,
     username: string,
-    callback: (isSuccess: boolean) => void,
+    callback: (isSuccess: boolean) => void
   ) {
     this.activeProfileStore.setLoading(true);
     const encryptedPassword = sha1(password).toString();
@@ -85,7 +82,7 @@ export default class UserService {
       fullName: name,
       icon: randomIcon,
       name: username,
-      password: encryptedPassword,
+      password: encryptedPassword
     };
 
     try {
@@ -108,7 +105,7 @@ export default class UserService {
 
     const updatedProfile = {
       currentPassword: sha1(currentPassword).toString(),
-      newPassword: sha1(newPassword).toString(),
+      newPassword: sha1(newPassword).toString()
     };
 
     try {
@@ -128,7 +125,7 @@ export default class UserService {
     this.activeProfileStore.setLoading(true);
     const updatedProfile = {
       color: this.activeProfileStore.activeProfile?.color,
-      icon: newIcon || this.activeProfileStore.activeProfile?.icon,
+      icon: newIcon || this.activeProfileStore.activeProfile?.icon
     };
 
     try {
@@ -153,7 +150,7 @@ export default class UserService {
       email: this.activeProfileStore.activeProfile?.email,
       icon: this.activeProfileStore.activeProfile?.icon,
       name: name,
-      username: username,
+      username: username
     };
 
     try {

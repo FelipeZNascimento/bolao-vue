@@ -1,5 +1,4 @@
 import './assets/main.scss';
-
 /* ---- FontAwesome Config ---- */
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
@@ -42,7 +41,6 @@ import PrimeToggleSwitch from 'primevue/toggleswitch';
 import PrimeTooltip from 'primevue/tooltip';
 /* ---- PrimeVue ---- */
 import { createApp } from 'vue';
-
 import App from './App.vue';
 import router from './router';
 
@@ -68,18 +66,18 @@ const MyPreset = definePreset(Aura, {
       700: '{blue.700}',
       800: '{blue.800}',
       900: '{blue.900}',
-      950: '{blue.950}',
-    },
-  },
+      950: '{blue.950}'
+    }
+  }
 });
 
 app.use(PrimeVue, {
   theme: {
     options: {
-      darkModeSelector: '.dark-mode',
+      darkModeSelector: '.dark-mode'
     },
-    preset: MyPreset,
-  },
+    preset: MyPreset
+  }
 });
 
 app.use(PrimeToastService);

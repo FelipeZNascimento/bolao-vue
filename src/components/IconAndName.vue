@@ -1,9 +1,19 @@
 <template>
-  <div class="outer" :class="{ 'outer-short': isShort }">
+  <div
+    class="outer"
+    :class="{ 'outer-short': isShort }"
+  >
     <span class="usericon">
-      <FontAwesomeIcon :style="{ color: color }" :icon="icon" />
+      <FontAwesomeIcon
+        :style="{ color: color }"
+        :icon="icon"
+      />
     </span>
-    <span class="username" :class="{ active: isActive }">{{ name }}</span>
+    <span
+      class="username"
+      :class="{ active: isActive }"
+      >{{ name }}</span
+    >
   </div>
 </template>
 <script lang="ts" setup>
@@ -19,8 +29,8 @@ withDefaults(
   }>(),
   {
     isActive: false,
-    isShort: false,
-  },
+    isShort: false
+  }
 );
 </script>
 <style lang="scss" scoped>

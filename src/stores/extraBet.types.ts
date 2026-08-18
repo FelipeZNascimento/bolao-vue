@@ -1,5 +1,4 @@
 import type { ExtraBetsValues } from '@/constants/bets';
-
 import type { IUser } from './activeProfile.types';
 import type { ITeam } from './matches.types';
 

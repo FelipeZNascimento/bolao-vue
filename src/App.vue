@@ -9,7 +9,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
-
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';
@@ -78,6 +77,6 @@ watch(activeProfile, async (newValue) => {
 
 <style scoped>
 .outer-view {
-  width: 100%;
+  width: var(--page-width);
 }
 </style>

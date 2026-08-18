@@ -896,7 +896,7 @@ export const faIconsList = [
   'fab fa-yelp',
   'fas fa-yen-sign',
   'fab fa-yoast',
-  'fab fa-youtube',
+  'fab fa-youtube'
 ];
 
 export const faIconsListObj = faIconsList.map((icon, index) => ({ id: index, value: icon }));

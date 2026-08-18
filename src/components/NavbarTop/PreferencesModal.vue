@@ -13,13 +13,25 @@
     </template>
     <div class="outer-color">
       <h3>Escolha uma cor</h3>
-      <PrimeColorPicker v-model="newColor" class="buttons" />
+      <PrimeColorPicker
+        v-model="newColor"
+        class="buttons"
+      />
     </div>
     <!-- <div class="preferences-group"> -->
     <div>
       <div class="outer-search-icons">
-        <PrimeFloatLabel variant="in" class="input">
-          <PrimeInputText name="iconSearch" type="search" v-model="iconSearch" fluid autofocus />
+        <PrimeFloatLabel
+          variant="in"
+          class="input"
+        >
+          <PrimeInputText
+            name="iconSearch"
+            type="search"
+            v-model="iconSearch"
+            fluid
+            autofocus
+          />
           <label for="iconSearch">Busque um ícone</label>
         </PrimeFloatLabel>
       </div>
@@ -41,7 +53,7 @@
             class="icon"
             :style="{ color: newColor }"
             :class="{
-              selected: filteredIcons[calculateIconIndex(index - 1)].value === newIcon,
+              selected: filteredIcons[calculateIconIndex(index - 1)].value === newIcon
             }"
             :icon="filteredIcons[calculateIconIndex(index - 1)].value"
             @click="newIcon = filteredIcons[calculateIconIndex(index - 1)].value"
@@ -82,22 +94,23 @@
           />
         </div>
         <p v-show="isUpdateSuccess">
-          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
+          <PrimeTag
+            severity="success"
+            icon="pi pi-check"
+            value="Alterações salvas com sucesso"
+          ></PrimeTag>
         </p>
       </div>
     </template>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import type { PageState } from 'primevue';
-
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import type { PageState } from 'primevue';
 import { computed, ref, watch, watchEffect } from 'vue';
-
 import { faIconsListObj } from '@/constants/font-awesome';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-
 import IconAndName from '../IconAndName.vue';
 
 const props = defineProps<{
@@ -185,7 +198,7 @@ watch(
     if (newValue) {
       isVisible.value = true;
     }
-  },
+  }
 );
 
 watch(isVisible, async (newValue) => {

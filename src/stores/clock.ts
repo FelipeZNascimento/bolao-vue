@@ -30,7 +30,7 @@ export const useClockStore = defineStore('clock', () => {
       const customDate = new Date(customTimestamp * 1000);
       return customDate.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
-        minute: '2-digit',
+        minute: '2-digit'
       });
     }
 
@@ -42,7 +42,7 @@ export const useClockStore = defineStore('clock', () => {
       const customDate = new Date(customTimestamp * 1000);
       return customDate.toLocaleDateString('pt-BR', {
         day: '2-digit',
-        month: '2-digit',
+        month: '2-digit'
       });
     }
 
@@ -55,6 +55,6 @@ export const useClockStore = defineStore('clock', () => {
     formattedDate,
     formattedTime,
     startClock,
-    stopClock,
+    stopClock
   };
 });

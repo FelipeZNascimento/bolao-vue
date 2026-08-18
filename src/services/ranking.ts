@@ -1,8 +1,6 @@
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
-import type { IRankingResponse } from '@/stores/ranking.types';
-
 import { useRankingStore } from '@/stores/ranking';
-
+import type { IRankingResponse } from '@/stores/ranking.types';
 import ApiService from './api_request';
 
 export default class RankingService {

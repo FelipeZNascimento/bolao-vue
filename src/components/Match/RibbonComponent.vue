@@ -1,25 +1,39 @@
 <template>
   <div
-    v-if="activeProfile && ribbon"
+    v-if="activeProfile"
     class="ribbon"
     :class="{
       'green-bg': ribbon === 'BULLSEYE',
       'blue-bg': ribbon === 'HALF',
       'red-bg': ribbon === 'MISS',
-      'grey-bg': ribbon === null,
+      'grey-bg': ribbon === null
     }"
   >
-    <i v-show="ribbon === 'BULLSEYE'" v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
-    <i v-show="ribbon === 'HALF'" v-tooltip.top="'Vencedor correto'" class="pi pi-check"></i>
-    <i v-show="ribbon === 'MISS'" v-tooltip.top="'Erroooou!'" class="pi pi-times"></i>
-    <i v-show="ribbon === null" v-tooltip.top="'Sem apostas'" class="pi pi-times"></i>
+    <i
+      v-show="ribbon === 'BULLSEYE'"
+      v-tooltip.top="'Na mosca'"
+      class="pi pi-bullseye"
+    ></i>
+    <i
+      v-show="ribbon === 'HALF'"
+      v-tooltip.top="'Vencedor correto'"
+      class="pi pi-check"
+    ></i>
+    <i
+      v-show="ribbon === 'MISS'"
+      v-tooltip.top="'Erroooou!'"
+      class="pi pi-times"
+    ></i>
+    <i
+      v-show="ribbon === null"
+      v-tooltip.top="'Sem apostas'"
+      class="pi pi-times"
+    ></i>
   </div>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-
 import type { Ribbon } from '@/constants/bets';
-
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 defineProps<{
@@ -45,7 +59,7 @@ const activeProfile = computed(() => {
   font-weight: bold;
   color: #fff;
   position: absolute;
-  left: 2px;
+  right: 2px;
   top: calc(-1 * var(--f));
   padding: 0.2em;
   border: solid #0000;
@@ -68,7 +82,7 @@ const activeProfile = computed(() => {
 
   @media (max-width: 1023px) {
     height: 30px;
-    left: 0px;
+    right: 0px;
     padding: 0 0.2em;
 
     i {

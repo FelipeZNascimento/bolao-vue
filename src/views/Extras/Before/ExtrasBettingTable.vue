@@ -1,6 +1,12 @@
 <template>
   <div class="outer-extras-betting-table">
-    <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
+    <PrimeDataTable
+      tableClass="extras-table"
+      :value="teams"
+      dataKey="id"
+      size="small"
+      showGridlines
+    >
       <template #header>
         <div>
           <h2>{{ title }}</h2>
@@ -18,7 +24,11 @@
           />
         </template>
       </PrimeColumn>
-      <PrimeColumn v-if="handleSelectWildcard" class="wildcard-column" header="Wild Card">
+      <PrimeColumn
+        v-if="handleSelectWildcard"
+        class="wildcard-column"
+        header="Wild Card"
+      >
         <template #body="slotProps">
           <div v-if="isUpdating">
             <i class="pi pi-spin pi-spinner"></i>
@@ -38,7 +48,11 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn v-if="handleSelectConferenceChampion" class="champion-column" header="Campeão">
+      <PrimeColumn
+        v-if="handleSelectConferenceChampion"
+        class="champion-column"
+        header="Campeão"
+      >
         <template #body="slotProps">
           <div v-if="isUpdating">
             <i class="pi pi-spin pi-spinner"></i>
@@ -59,7 +73,11 @@
           </div>
         </template>
       </PrimeColumn>
-      <PrimeColumn v-if="handleSelectChampion" class="champion-column" header="Vencedor">
+      <PrimeColumn
+        v-if="handleSelectChampion"
+        class="champion-column"
+        header="Vencedor"
+      >
         <template #body="slotProps">
           <div v-if="isUpdating">
             <i class="pi pi-spin pi-spinner"></i>
@@ -81,12 +99,20 @@
         </template>
       </PrimeColumn>
 
-      <PrimeColumn v-if="handleSelectSuperBowl" class="wildcard-column" header="Super Bowl">
+      <PrimeColumn
+        v-if="handleSelectSuperBowl"
+        class="wildcard-column"
+        header="Super Bowl"
+      >
         <template #body="slotProps">
           <div v-if="isUpdating">
             <i class="pi pi-spin pi-spinner"></i>
           </div>
-          <div v-else class="icon-outer" @click="() => handleSelectSuperBowl && handleSelectSuperBowl(slotProps.data)">
+          <div
+            v-else
+            class="icon-outer"
+            @click="() => handleSelectSuperBowl && handleSelectSuperBowl(slotProps.data)"
+          >
             <i
               class="pi trophy-icon pi-trophy"
               :class="selectedSuperBowl?.id === slotProps.data.id ? 'mint-trophy' : ''"
@@ -100,13 +126,11 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-
-import type { TExtrasTeam } from '@/stores/extraBet.types';
-import type { TConference, TDivision } from '@/stores/matches.types';
-
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
+import type { TExtrasTeam } from '@/stores/extraBet.types';
+import type { TConference, TDivision } from '@/stores/matches.types';
 
 defineProps<{
   division?: TDivision;

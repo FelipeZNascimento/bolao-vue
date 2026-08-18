@@ -1,0 +1,33 @@
+{
+  "singleQuote": true,
+  "sortPackageJson": false,
+  "trailingComma": "none",
+  "singleAttributePerLine": true,
+  "printWidth": 120,
+  "sortImports": {
+    "ignoreCase": true,
+    "internalPattern": ["@/"],
+    "newlinesBetween": false,
+    "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"], "unknown"]
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "public/**",
+    "routeTree.gen.ts",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    ".env",
+    ".env.local",
+    ".env.*.local",
+    ".vscode/**",
+    ".idea/**",
+    "*.log",
+    ".DS_Store",
+    "*.md",
+    "*.mdx"
+  ]
+}

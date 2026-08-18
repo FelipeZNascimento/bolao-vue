@@ -2,7 +2,12 @@
   <div style="display: flex">
     <div class="outer-matches">
       <PaginatorComponent />
-      <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
+      <PrimeMessage
+        v-show="errorConfiguration"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
         Ops, houve um problema de comunicação com o servidor.
         <p>
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -10,10 +15,22 @@
         </p>
         <p>{{ errorConfiguration }}</p>
       </PrimeMessage>
-      <div v-if="isLoading" style="width: 100%">
-        <PrimeSkeleton v-for="index in 16" :key="index" class="skeleton-match" />
+      <div
+        v-if="isLoading"
+        style="width: 100%"
+      >
+        <PrimeSkeleton
+          v-for="index in 16"
+          :key="index"
+          class="skeleton-match"
+        />
       </div>
-      <PrimeMessage v-else-if="errorMatches" class="error-message" severity="error" variant="outlined">
+      <PrimeMessage
+        v-else-if="errorMatches"
+        class="error-message"
+        severity="error"
+        variant="outlined"
+      >
         Ops, houve um problema de comunicação com o servidor para buscar as partidas.
         <p>
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -22,7 +39,12 @@
         <p>{{ errorMatches }}</p>
       </PrimeMessage>
       <div class="outer-line-mode">
-        <MatchComponent :isBetting="true" v-for="match in matches" :match="match" :key="match.id" />
+        <MatchComponent
+          :isBetting="true"
+          v-for="match in matches"
+          :match="match"
+          :key="match.id"
+        />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
@@ -31,7 +53,6 @@
 <script setup lang="ts">
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';

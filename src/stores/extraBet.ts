@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
 import type { IConferenceTeams, IExtraBet, IExtraBetBet, ITeamWithExtras } from './extraBet.types';
 
 const emptyConferenceObj = { East: [], North: [], South: [], West: [] };
@@ -77,6 +76,6 @@ export const useExtraBetStore = defineStore('extras', () => {
     setLoading,
     setLoggedUserBets,
     setNfcTeams,
-    setUpdating,
+    setUpdating
   };
 });

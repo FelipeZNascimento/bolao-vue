@@ -18,11 +18,9 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-
+import { useExtraBetStore } from '@/stores/extraBet';
 import type { TConferenceChampions, TExtrasTeam } from '@/stores/extraBet.types';
 import type { TConference, TDivision } from '@/stores/matches.types';
-
-import { useExtraBetStore } from '@/stores/extraBet';
 import ExtrasBettingTable from '@/views/Extras/Before/ExtrasBettingTable.vue';
 
 defineProps<{
@@ -41,14 +39,14 @@ const sortedTeams = computed(() => {
     ...extraBetStore.afcTeams.North,
     ...extraBetStore.afcTeams.East,
     ...extraBetStore.afcTeams.South,
-    ...extraBetStore.afcTeams.West,
+    ...extraBetStore.afcTeams.West
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const NFC = [
     ...extraBetStore.nfcTeams.North,
     ...extraBetStore.nfcTeams.East,
     ...extraBetStore.nfcTeams.South,
-    ...extraBetStore.nfcTeams.West,
+    ...extraBetStore.nfcTeams.West
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   return { AFC, NFC };
