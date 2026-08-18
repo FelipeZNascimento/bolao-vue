@@ -23,11 +23,6 @@ on:
         type: string
         required: false
         default: ''
-    secrets:
-      username:
-        required: true
-      password:
-        required: true
 
 jobs:
   deploy:

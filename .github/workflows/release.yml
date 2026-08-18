@@ -60,9 +60,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       snapshot_tag: ${{ needs.prepare.outputs.tag }}
-    secrets:
-      username: ${{ secrets.username }}
-      password: ${{ secrets.password }}
+    secrets: inherit
 
   promote:
     name: Promote to full release
