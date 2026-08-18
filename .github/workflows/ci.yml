@@ -1,0 +1,44 @@
+name: 🔍 CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  ci:
+    name: Type-check, lint, format & tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: 🔠 Type-check
+        run: pnpm type-check
+
+      - name: 🔍 Lint
+        run: oxlint . -D correctness --ignore-path .gitignore
+
+      - name: 🎨 Format
+        run: oxfmt . --check
+
+      # - name: 🧪 Unit tests
+      #   run: pnpm test:unit --run
