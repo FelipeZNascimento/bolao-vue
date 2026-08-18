@@ -77,6 +77,16 @@ jobs:
             echo "password=${{ secrets.password }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: 🐛 Debug inputs
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "inputs.environment: ${{ inputs.environment }}"
+          echo "inputs.snapshot_tag: ${{ inputs.snapshot_tag }}"
+          echo "creds.username is set: ${{ steps.creds.outputs.username != '' }}"
+          echo "creds.password is set: ${{ steps.creds.outputs.password != '' }}"
+          echo "secrets.host is set: ${{ secrets.host != '' }}"
+          echo "release/dist/ exists: $(ls ./release/dist/ 2>/dev/null && echo yes || echo no)"
+
       - id: deployTarget
         name: 📂 Sync files to target
         continue-on-error: true
