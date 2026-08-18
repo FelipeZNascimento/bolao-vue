@@ -1,0 +1,75 @@
+name: 📂 Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot_tag:
+        description: 'Snapshot tag to deploy (leave blank to use latest Actions artifact)'
+        required: false
+        default: ''
+      username:
+        description: 'SFTP username'
+        required: false
+      password:
+        description: 'SFTP password'
+        required: false
+
+  workflow_call:
+    inputs:
+      snapshot_tag:
+        description: 'Snapshot tag to deploy (leave blank to use latest Actions artifact)'
+        type: string
+        required: false
+        default: ''
+    secrets:
+      username:
+        required: true
+      password:
+        required: true
+
+jobs:
+  deploy:
+    name: 📂 Sync files via SFTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download dist from GitHub Release
+        if: ${{ inputs.snapshot_tag != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download ${{ inputs.snapshot_tag }} \
+            --repo ${{ github.repository }} \
+            --pattern 'dist.zip' \
+            --dir ./release
+          unzip ./release/dist.zip -d ./release
+
+      - name: 📥 Download dist from Actions artifact
+        if: ${{ inputs.snapshot_tag == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./release/dist/
+
+      - id: deployTarget
+        name: 📂 Sync files to target
+        continue-on-error: true
+        uses: wangyucode/sftp-upload-action@v3
+        with:
+          host: ${{ secrets.host }}
+          username: ${{ inputs.username || secrets.username }}
+          password: ${{ inputs.password || secrets.password }}
+          localDir: './release/dist/'
+          remoteDir: './'
+          port: 22
+
+      - name: 🔁 Retry upload if handshake failed
+        if: steps.deployTarget.outcome == 'failure'
+        uses: wangyucode/sftp-upload-action@v3
+        with:
+          host: ${{ secrets.host }}
+          username: ${{ inputs.username || secrets.username }}
+          password: ${{ inputs.password || secrets.password }}
+          localDir: './release/dist/'
+          remoteDir: './'
+          port: 22
