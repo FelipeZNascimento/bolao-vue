@@ -54,8 +54,8 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.18(typescript@5.8.3))
       zod:
-        specifier: ^4.0.14
-        version: 4.0.14
+        specifier: ^4.4.3
+        version: 4.4.3
     devDependencies:
       '@changesets/cli':
         specifier: ^3.0.0
@@ -3713,8 +3713,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.0.14:
-    resolution: {integrity: sha512-nGFJTnJN6cM2v9kXL+SOBq3AtjQby3Mv5ySGFof5UGRHrRioSJ5iG680cYNjE/yWk671nROcpPj4hAS8nyLhSw==}
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -7483,4 +7483,4 @@ snapshots:
 
   yaml@2.9.0: {}
 
-  zod@4.0.14: {}
+  zod@4.4.3: {}
