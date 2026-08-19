@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.4.0
+
+### Minor Changes
+
+- cc497ef: Home page was added;
+  Extensive adjustments to light and dark themes;
+
 ## 1.3.0
 
 ### Minor Changes
