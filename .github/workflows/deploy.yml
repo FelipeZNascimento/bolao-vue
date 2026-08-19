@@ -26,6 +26,10 @@ on:
     secrets:
       server:
         required: true
+      username:
+        required: true
+      password:
+        required: true
 
 jobs:
   deploy:
