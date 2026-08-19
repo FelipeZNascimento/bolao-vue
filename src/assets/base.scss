@@ -82,10 +82,13 @@ $colors: (
   --p-knob-text-color: white !important;
   --p-knob-range-background: var(--bolao-c-grey2) !important;
   --p-selectbutton-border-radius: 0 !important;
+
   --p-togglebutton-content-border-radius: 0 !important;
-  --p-togglebutton-background: transparent !important;
-  --p-togglebutton-checked-background: var(--color-main) !important;
-  --p-togglebutton-content-checked-background: var(--color-main) !important;
+  --p-togglebutton-background: var(--bolao-c-navy-l1) !important;
+  --p-togglebutton-checked-background: var(--bolao-c-navy-l3) !important;
+  --p-togglebutton-content-checked-background: var(--bolao-c-navy-l2) !important;
+  --p-togglebutton-content-sm-padding: 0 !important;
+  --p-togglebutton-hover-background: var(--bolao-c-navy-l2) !important;
   --p-paginator-border-radius: 0 !important;
   --p-paginator-background: var(--bolao-c-navbar) !important;
 

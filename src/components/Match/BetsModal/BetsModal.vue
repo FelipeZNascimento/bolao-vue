@@ -15,6 +15,7 @@
         :clock="match.clock"
         :ribbon="ribbon"
         :isMatchStarted="isMatchStarted"
+        :odds="{ overUnder: match.overUnder, odds: match.homeTeamOdds }"
       />
     </template>
 
