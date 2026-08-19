@@ -1,5 +1,11 @@
 # bolao-vue
 
+## 1.3.0
+
+### Minor Changes
+
+- cb9bab6: Fix match modal UI;
+
 ## 1.2.0
 
 ### Minor Changes
