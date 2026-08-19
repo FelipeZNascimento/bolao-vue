@@ -13,7 +13,9 @@
       <template #body="slotProps">
         <div style="display: flex; flex-direction: row">
           <div class="outer-position">
-            {{ slotProps.data.user.position < 10 ? `0${slotProps.data.user.position}` : slotProps.data.user.position }}
+            <span class="position-number">{{
+              slotProps.data.user.position < 10 ? `0${slotProps.data.user.position}` : slotProps.data.user.position
+            }}</span>
             <IconAndName
               class="clickable"
               :isShort="columnConfig === 'complete'"
@@ -21,12 +23,18 @@
               :name="slotProps.data.user.name"
               :icon="slotProps.data.user.icon"
               :isActive="activeProfile?.id === slotProps.data.user.id"
+              :isFavorite="activeProfile?.favorites?.includes(String(slotProps.data.user.id)) ?? false"
               @click="() => handleUserClick(slotProps.data.user)"
             />
-            <div
-              class="badge"
-              :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"
-            ></div>
+            <div class="badge-wrapper">
+              <div
+                class="badge"
+                :class="[
+                  slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline',
+                  { 'badge--favorite': activeProfile?.favorites?.includes(String(slotProps.data.user.id)) }
+                ]"
+              ></div>
+            </div>
           </div>
         </div>
       </template>
@@ -137,10 +145,27 @@ function handleUserClick(user: IUser) {
   display: flex;
   gap: var(--s-spacing);
   align-items: center;
+  overflow: visible;
+}
+
+.position-number {
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.badge-wrapper {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .badge {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -148,27 +173,35 @@ function handleUserClick(user: IUser) {
   &Online {
     @extend .badge;
     background-color: var(--bolao-c-mint);
-    color: var(--bolao-c-mint);
 
     &::after {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 8px;
-      height: 8px;
+      inset: 0;
       border-radius: 50%;
       animation: ripple 2s infinite ease-in-out;
-      border: 1px solid;
+      border: 1px solid var(--bolao-c-mint);
       content: '';
+    }
+
+    &.badge--favorite {
+      background-color: var(--bolao-c-gold);
+
+      &::after {
+        border-color: var(--bolao-c-gold);
+      }
     }
   }
 
   &Offline {
     @extend .badge;
-
-    background-color: var(--bolao-c-grey3);
-    color: var(--bolao-c-red);
+    background-color: transparent;
     opacity: 0.2;
+
+    &.badge--favorite {
+      opacity: 1;
+      outline: 1.5px solid var(--bolao-c-gold);
+      outline-offset: 1px;
+    }
   }
 }
 
@@ -179,6 +212,21 @@ function handleUserClick(user: IUser) {
   &:hover {
     opacity: 0.8;
     text-decoration: underline;
+  }
+}
+
+@keyframes badge-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
   }
 }
 </style>

@@ -142,6 +142,24 @@ export default class UserService {
     }
   }
 
+  public async updateFavorites(userId: number) {
+    const currentFavorites = this.activeProfileStore.activeProfile?.favorites ?? [];
+    const isAlreadyFavorite = currentFavorites.includes(String(userId));
+    const newFavorites = isAlreadyFavorite
+      ? currentFavorites.filter((id) => id !== String(userId))
+      : [...currentFavorites, String(userId)];
+
+    this.activeProfileStore.setFavoriteUpdating(true);
+    try {
+      const response = await this.apiRequest.post<string[]>('user/favorites', { favorites: newFavorites });
+      this.activeProfileStore.setFavorites(response);
+      this.activeProfileStore.setFavoriteUpdating(false);
+    } catch (error: unknown) {
+      this.activeProfileStore.setFavoriteUpdating(false);
+      this.activeProfileStore.setError(error as Error);
+    }
+  }
+
   public async updateProfile(callback: (isSuccess: boolean) => void, name: string, username: string) {
     this.activeProfileStore.setLoading(true);
 

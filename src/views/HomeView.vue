@@ -5,11 +5,14 @@
       <div class="hero-content">
         <img
           class="hero-logo"
-          :class="{ 'hero-logo--dropped': logoDropped, 'hero-logo--hovered': logoHovered }"
+          :class="{
+            'hero-logo--dropping': logoDropping,
+            'hero-logo--settled': logoSettled,
+            'hero-logo--hovered': logoHovered
+          }"
           src="/src/img/logo.png"
           alt="BolãoNFL logo"
           @mouseenter="onLogoHover"
-          @animationend="onAnimationEnd"
         />
         <h1 class="hero-title">BolãoNFL</h1>
         <p class="hero-subtitle">
@@ -116,28 +119,27 @@
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-const logoDropped = ref(false);
+const logoDropping = ref(false);
+const logoSettled = ref(false);
 const logoHovered = ref(false);
 
 onMounted(() => {
-  // Small delay so the page has painted before the animation fires
   setTimeout(() => {
-    logoDropped.value = true;
+    logoDropping.value = true;
+    // After drop animation (700ms), switch to settled so the drop never replays
+    setTimeout(() => {
+      logoDropping.value = false;
+      logoSettled.value = true;
+    }, 700);
   }, 200);
 });
 
 function onLogoHover() {
-  if (logoHovered.value) return;
+  if (!logoSettled.value || logoHovered.value) return;
   logoHovered.value = true;
-}
-
-function onAnimationEnd(e: AnimationEvent) {
-  if (e.animationName === 'helmet-drop') {
-    // drop finished — hover animation can now be used freely
-  }
-  if (e.animationName === 'helmet-kick') {
+  setTimeout(() => {
     logoHovered.value = false;
-  }
+  }, 500); // matches helmet-kick duration
 }
 
 const features = [
@@ -223,14 +225,18 @@ const comingSoon = [
   height: 96px;
   object-fit: contain;
   opacity: 0;
-  transform: translateY(-60px) rotate(-30deg);
   cursor: pointer;
 
-  &--dropped {
+  &--dropping {
     animation: helmet-drop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  &--hovered {
+  &--settled {
+    opacity: 1;
+    transform: none;
+  }
+
+  &--settled.hero-logo--hovered {
     animation: helmet-kick 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
   }
 }
@@ -255,21 +261,27 @@ const comingSoon = [
 
 @keyframes helmet-kick {
   0% {
+    opacity: 1;
     transform: rotate(0deg) scale(1);
   }
   15% {
+    opacity: 1;
     transform: rotate(-12deg) scale(1.08);
   }
   35% {
+    opacity: 1;
     transform: rotate(14deg) scale(1.1);
   }
   55% {
+    opacity: 1;
     transform: rotate(-8deg) scale(1.05);
   }
   75% {
+    opacity: 1;
     transform: rotate(5deg) scale(1.02);
   }
   100% {
+    opacity: 1;
     transform: rotate(0deg) scale(1);
   }
 }

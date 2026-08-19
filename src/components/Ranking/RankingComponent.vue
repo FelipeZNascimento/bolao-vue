@@ -16,12 +16,24 @@
       >
         Semana
       </span>
+      <button
+        v-if="activeProfile && activeProfile.favorites?.length"
+        class="favorites-filter-btn"
+        :class="{ 'favorites-filter-btn--active': showOnlyFavorites }"
+        @click="showOnlyFavorites = !showOnlyFavorites"
+        v-tooltip.top="showOnlyFavorites ? 'Mostrar todos' : 'Mostrar favoritos'"
+      >
+        <i
+          class="pi"
+          :class="showOnlyFavorites ? 'pi-star-fill' : 'pi-star'"
+        />
+      </button>
     </div>
     <div class="ranking-container">
       <RankingTable
         :isWeekly="isWeeklyRanking"
         :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
-        :rankingData="isWeeklyRanking ? selectedWeekRanking : seasonRanking"
+        :rankingData="isWeeklyRanking ? filteredWeekRanking : filteredSeasonRanking"
         :columnConfig="columnsOption"
         :rowSpacingConfig="rowSpacing"
         :activeProfile="activeProfile"
@@ -48,6 +60,7 @@ withDefaults(
 
 // ------ Refs ------
 const isWeeklyRanking = ref(false);
+const showOnlyFavorites = ref(false);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
@@ -63,10 +76,24 @@ const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStor
 const selectedWeek = computed(() => configurationStore.selectedWeek);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 const selectedWeekRanking = computed(
   () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || []
 );
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+
+const filteredSeasonRanking = computed(() => {
+  if (!showOnlyFavorites.value || !activeProfile.value?.favorites?.length) return seasonRanking.value;
+  return seasonRanking.value.filter(
+    (line) => line.user.id === activeProfile.value!.id || activeProfile.value!.favorites!.includes(String(line.user.id))
+  );
+});
+
+const filteredWeekRanking = computed(() => {
+  if (!showOnlyFavorites.value || !activeProfile.value?.favorites?.length) return selectedWeekRanking.value;
+  return selectedWeekRanking.value.filter(
+    (line) => line.user.id === activeProfile.value!.id || activeProfile.value!.favorites!.includes(String(line.user.id))
+  );
+});
 </script>
 <style scoped>
 .outer-ranking {
@@ -94,7 +121,8 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   justify-content: center;
   align-items: center;
   padding: var(--s-spacing) 0;
-  font-size: var(--m-font-size);
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey3);
   height: 50px;
 }
 
@@ -110,8 +138,32 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 }
 
 .activeToggle {
-  color: var(--color-contrast);
-  text-decoration: underline;
+  color: var(--bolao-c-white);
+}
+
+.favorites-filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0 var(--xxs-spacing);
+  cursor: pointer;
+  color: var(--bolao-c-grey3);
+  font-size: var(--m-font-size);
+  transition:
+    color 0.2s,
+    transform 0.15s;
+  margin-left: auto;
+
+  &:hover {
+    color: var(--bolao-c-gold);
+    transform: scale(1.15);
+  }
+
+  &--active {
+    color: var(--bolao-c-gold);
+  }
 }
 
 .error-message {

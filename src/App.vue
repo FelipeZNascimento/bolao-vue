@@ -73,7 +73,6 @@ watch(activeProfile, async (newValue) => {
   if (!selectedWeek.value) {
     return;
   }
-  rankingService.fetch();
 });
 </script>
 
