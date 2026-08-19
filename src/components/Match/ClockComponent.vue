@@ -1,8 +1,8 @@
 <template>
   <div
     :class="{
-      'outer-clock': !isGridMode,
-      'outer-clock-grid': isGridMode
+      'outer-clock': !isGridMode && !isMobileOnly,
+      'outer-clock-grid': isGridMode || isMobileOnly
     }"
   >
     <RibbonComponent
@@ -21,12 +21,36 @@
       v-if="!isMatchStarted"
       class="clock-time"
     >
-      <span style="font-weight: bold; margin-right: var(--xs-spacing)">{{ clockStore.formattedDate(timestamp) }}</span>
-      {{ clockStore.formattedTime(timestamp) }}
+      <div>
+        <span style="font-weight: bold; margin-right: var(--xs-spacing)"
+          ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(timestamp) }}</span
+        >
+        {{ clockStore.formattedTime(timestamp) }}
+      </div>
+      <div
+        style="font-size: var(--xs-font-size)"
+        v-if="odds.odds || odds.overUnder"
+      >
+        Odds:
+        <span
+          style="text-decoration: underline dotted; cursor: help"
+          v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
+        >
+          {{ odds.odds }}
+        </span>
+        |
+        <span
+          style="text-decoration: underline dotted; cursor: help"
+          v-tooltip.top="'Soma dos pontos'"
+        >
+          {{ odds.overUnder }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 import type { Ribbon } from '@/constants/bets';
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
@@ -41,6 +65,7 @@ const props = defineProps<{
   ribbon?: Ribbon;
   status: TMatchStatus;
   timestamp: number;
+  odds: { overUnder: string; odds: string };
 }>();
 
 // ------ Initialization ------
@@ -70,8 +95,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   font-size: var(--m-font-size);
   position: relative;
   color: var(--color-text);
-  border: 1px solid var(--color-border);
-  height: 50px;
 
   @media (max-width: 1023px) {
     width: 80px;
@@ -88,13 +111,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
     font-size: var(--m-font-size);
   }
 
-  .icon {
-    font-size: 22px;
-    margin: 0 var(--s-spacing);
-    transition: all 0.2s;
-    flex: 0;
-  }
-
   &:hover .icon {
     color: var(--bolao-c-gold);
     transform: scale(1.2);
@@ -102,7 +118,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 }
 
 .outer-clock-grid {
-  background-color: var(--bolao-c-navy-t2);
+  background-color: var(--bolao-c-navy-l1);
   color: var(--bolao-c-grey1);
   min-height: 40px;
   display: flex;
@@ -110,6 +126,18 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   position: relative;
   padding: 0 var(--m-spacing);
   font-size: var(--m-font-size);
+
+  &:hover .icon {
+    color: var(--bolao-c-gold);
+    transform: scale(1.2);
+  }
+}
+
+.icon {
+  font-size: 22px;
+  margin: 0 var(--s-spacing);
+  transition: all 0.2s;
+  flex: 0;
 }
 
 .clock-date {
@@ -121,6 +149,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-direction: column;
   flex: 1;
 
   @media (max-width: 1024px) {

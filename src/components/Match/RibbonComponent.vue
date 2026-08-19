@@ -3,10 +3,10 @@
     v-if="activeProfile"
     class="ribbon"
     :class="{
-      'green-bg': ribbon === 'BULLSEYE',
-      'blue-bg': ribbon === 'HALF',
-      'red-bg': ribbon === 'MISS',
-      'grey-bg': ribbon === null
+      'bullseye-bg': ribbon === 'BULLSEYE',
+      'half-bg': ribbon === 'HALF',
+      'miss-bg': ribbon === 'MISS',
+      'null-bg': ribbon === null
     }"
   >
     <i
@@ -91,15 +91,15 @@ const activeProfile = computed(() => {
   }
 }
 
-.green-bg {
-  --c: var(--bolao-c-green);
+.bullseye-bg {
+  --c: var(--bolao-c-gold);
 
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
     border-box;
   background-color: var(--c);
 }
 
-.blue-bg {
+.half-bg {
   --c: var(--bolao-c-blue);
 
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
@@ -107,7 +107,7 @@ const activeProfile = computed(() => {
   background-color: var(--c);
 }
 
-.red-bg {
+.miss-bg {
   --c: var(--bolao-c-red);
 
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat
@@ -115,7 +115,7 @@ const activeProfile = computed(() => {
   background-color: var(--c);
 }
 
-.grey-bg {
+.null-bg {
   --c: var(--bolao-c-grey4);
 
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 0 0 / calc(2 * var(--f)) var(--f) no-repeat

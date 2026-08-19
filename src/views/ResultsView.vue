@@ -112,7 +112,14 @@ const view = computed(() => configurationStore.resultsView);
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
-  gap: var(--xl-spacing);
+
+  @media (max-width: 1023px) {
+    gap: var(--m-spacing);
+  }
+
+  @media (min-width: 1024px) {
+    gap: var(--xl-spacing);
+  }
 }
 
 .error-message {

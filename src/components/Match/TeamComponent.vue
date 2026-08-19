@@ -1,18 +1,19 @@
 <template>
   <div
     class="outer-team"
-    :class="isNameless ? 'outer-team-nameless' : ''"
+    :class="{ 'outer-team-nameless': isNameless }"
     :style="{ backgroundColor: team.background, color: team.foreground }"
   >
     <span
       :class="{
         'team-shield-line': !isGridMode,
-        'team-shield-grid': isGridMode
+        'team-shield-grid': isGridMode && isMatchStarted,
+        'team-shield-grid--not-started': isGridMode && !isMatchStarted
       }"
       class="team-shield"
     >
       <img
-        :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
+        :class="isScoreless || (isGridMode && !isMatchStarted) ? 'team-shield-image-small' : 'team-shield-image'"
         :src="`/team_logos/${props.team.id}.gif`"
         :alt="`${props.team.name} Shield`"
       />
@@ -30,14 +31,14 @@
         {{ props.team.winLosses }}
       </p>
     </div>
-    <div
-      v-if="!isScoreless && odds"
+    <!-- <div
+      v-if="!isScoreless && !isMatchStarted && odds"
       class="team-odds"
     >
       {{ odds }}
-    </div>
+    </div> -->
     <div
-      v-if="!isScoreless && !odds"
+      v-if="!isScoreless && isMatchStarted"
       class="team-score"
       :style="{ fontWeight: isWinning ? 'bold' : 'normal' }"
     >
@@ -63,6 +64,7 @@ const props = defineProps<{
   isNameless?: boolean;
   isScoreless?: boolean;
   isWinning?: boolean;
+  isMatchStarted?: boolean;
   matchStatus: TMatchStatus;
   odds?: null | string;
   team: Partial<ITeam>;
@@ -81,10 +83,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   background-image: url('/match_layer.png');
   position: relative;
   overflow: hidden;
-
-  &:hover .team-shield-image {
-    transform: scale(1.4);
-  }
 }
 
 .outer-team-nameless {
@@ -98,7 +96,16 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   top: -50%;
 
   @media (max-width: 1024px) {
-    top: 0%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &--not-started {
+    position: absolute;
+    height: 60px;
+    left: 25%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 

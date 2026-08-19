@@ -1,110 +1,71 @@
 <template>
   <div
-    v-if="isMobileOnly"
-    class="outer-mobile-score-line"
+    :class="{
+      'outer-score-wrapper-mobile': isMobileOnly,
+      'outer-score-wrapper': !isMobileOnly
+    }"
   >
     <div
       :class="{
-        'outer-mobile-teams-line': !isGridMode || isBetting,
-        'outer-mobile-teams-grid': isGridMode
+        'outer-mobile-teams-line': isMobileOnly && !isGridStarted,
+        'outer-mobile-teams-grid': isMobileOnly && isGridStarted,
+        'outer-score-line': !isMobileOnly && !isGridStarted,
+        'outer-score-grid': !isMobileOnly && isGridStarted
       }"
       style="position: relative"
     >
-      <RibbonComponent
-        v-if="ribbon"
-        :ribbon="ribbon"
-      />
+      <!-- This is the indicator for the user's bet -->
       <div
         v-if="activeUserBet"
         class="userbet-indicator"
-        :style="{ left: indicatorPosition[activeUserBet.value] }"
+        :class="{
+          'userbet-indicator--bullseye': ribbon === 'BULLSEYE',
+          'userbet-indicator--half': ribbon === 'HALF',
+          'userbet-indicator--miss': ribbon === 'MISS',
+          'userbet-indicator--null': ribbon === null
+        }"
+        :style="calculateIndicatorPosition(activeUserBet.value, true, !isMatchStarted)"
       >
         <i
-          class="pi pi-angle-up"
-          :class="{ green: activeUserBet.value === correctMargin, white: activeUserBet.value !== correctMargin }"
+          class="pi"
+          :class="{
+            'pi-angle-left': isGridStarted,
+            'pi-angle-up': !isGridStarted
+          }"
           style="filter: drop-shadow(0px 0px 1px black) drop-shadow(0px 0px 1px black)"
         ></i>
       </div>
+      <!-- This is the indicator for the correct margin -->
       <div
         v-if="correctMargin !== null"
         class="bet-indicator"
-        :style="{ left: indicatorPosition[correctMargin !== null ? correctMargin : 1] }"
+        :style="calculateIndicatorPosition(correctMargin !== null ? correctMargin : 4, false)"
       >
         <i
-          class="pi pi-sort-up-fill"
+          class="pi"
+          :class="{ 'pi-caret-left': isGridMode, 'pi-sort-up-fill': !isGridMode }"
           style="color: var(--bolao-c-white); filter: drop-shadow(0px 0px 1px black) drop-shadow(0px 0px 1px black)"
         ></i>
       </div>
       <TeamComponent
-        isAlias
+        :isAlias="isMobileOnly"
         :isGridMode="isGridMode"
         :isHomeTeam="false"
         :isWinning="match.away.score > match.home.score"
         :team="match.away"
         :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.overUnder : ''"
+        :isMatchStarted="isMatchStarted"
+        :odds="match.overUnder"
       />
       <TeamComponent
-        isAlias
+        :isAlias="isMobileOnly"
         :isGridMode="isGridMode"
         :isHomeTeam="true"
         :isWinning="match.away.score < match.home.score"
         :team="match.home"
         :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.homeTeamOdds : ''"
-      />
-    </div>
-    <BettingComponent
-      v-if="!isGridMode && !isMatchStarted && activeProfile"
-      :match="match"
-      :activeUserBet="activeUserBet"
-      :isMatchStarted="isMatchStarted"
-    />
-  </div>
-  <div
-    style="display: flex; flex-direction: column; flex: 1"
-    v-else
-  >
-    <div
-      :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }"
-      style="position: relative"
-    >
-      <div
-        v-if="activeUserBet"
-        class="userbet-indicator"
-        :style="{ left: indicatorPosition[activeUserBet.value] }"
-      >
-        <i
-          class="pi pi-angle-up"
-          :class="{ green: activeUserBet.value === correctMargin, white: activeUserBet.value !== correctMargin }"
-          style="filter: drop-shadow(0px 0px 1px black) drop-shadow(0px 0px 1px black)"
-        ></i>
-      </div>
-      <div
-        v-if="correctMargin !== null"
-        class="bet-indicator"
-        :style="{ left: indicatorPosition[correctMargin !== null ? correctMargin : 1] }"
-      >
-        <i
-          class="pi pi-sort-up-fill"
-          style="color: var(--bolao-c-white); filter: drop-shadow(0px 0px 1px black) drop-shadow(0px 0px 1px black)"
-        ></i>
-      </div>
-      <TeamComponent
-        :isGridMode="isGridMode"
-        :isHomeTeam="false"
-        :isWinning="match.away.score > match.home.score"
-        :team="match.away"
-        :odds="!isMatchStarted ? match.overUnder : ''"
-        :matchStatus="match.status"
-      />
-      <TeamComponent
-        :isGridMode="isGridMode"
-        :isHomeTeam="true"
-        :isWinning="match.away.score < match.home.score"
-        :team="match.home"
-        :odds="!isMatchStarted ? match.homeTeamOdds : ''"
-        :matchStatus="match.status"
+        :isMatchStarted="isMatchStarted"
+        :odds="match.homeTeamOdds"
       />
     </div>
     <BettingComponent
@@ -118,12 +79,11 @@
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
-import { BETS_VALUES, type Ribbon } from '@/constants/bets';
+import { type Ribbon } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import type { IBet, IMatch } from '@/stores/matches.types';
 import { calculateCorrectMargin } from '@/util/betsCalculator.ts';
 import BettingComponent from './BettingComponent.vue';
-import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
   defineProps<{
@@ -141,11 +101,19 @@ const props = withDefaults(
 );
 
 const activeProfileStore = useActiveProfileStore();
-const indicatorPosition: Record<number, string> = {
+const indicatorPositionLine: Record<number, string> = {
   0: '12.5%',
   1: '37.5%',
   2: '62.5%',
-  3: '87.5%'
+  3: '87.5%',
+  4: '50%'
+};
+const indicatorPositionGrid: Record<number, string> = {
+  0: '10%',
+  1: '40%',
+  2: '60%',
+  3: '90%',
+  4: '50%'
 };
 
 // ------ Computed Properties ------
@@ -153,9 +121,33 @@ const activeProfile = computed(() => {
   return activeProfileStore.activeProfile;
 });
 const correctMargin = computed(() => calculateCorrectMargin(props.match.away.score, props.match.home.score));
+const isGridStarted = computed(() => props.isGridMode && props.isMatchStarted);
+
+// ------ Functions ------
+function calculateIndicatorPosition(value: number, userIndicator: boolean, forceLineMode?: boolean) {
+  if (forceLineMode || !props.isGridMode) {
+    return {
+      left: indicatorPositionLine[value],
+      bottom: userIndicator ? '-15%' : '-8%',
+      transform: 'translateX(-50%)'
+    };
+  } else {
+    return {
+      right: userIndicator ? '-3%' : '-1%',
+      top: indicatorPositionGrid[value],
+      transform: 'translateY(-50%)'
+    };
+  }
+}
 </script>
-<style scoped>
-.outer-mobile-score-line {
+<style lang="scss" scoped>
+.outer-score-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.outer-score-wrapper-mobile {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -183,7 +175,8 @@ const correctMargin = computed(() => calculateCorrectMargin(props.match.away.sco
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--s-spacing);
+  height: 50px;
+  max-height: 50px;
 }
 
 .outer-score-grid {
@@ -195,32 +188,37 @@ const correctMargin = computed(() => calculateCorrectMargin(props.match.away.sco
 .userbet-indicator {
   position: absolute;
   z-index: 999;
-  bottom: -8px;
   display: flex;
-  transform: translateX(-50%);
   transition: all 0.2s;
 
   i {
     font-size: var(--m-font-size);
+  }
+
+  &--bullseye {
+    color: var(--bolao-c-gold);
+  }
+
+  &--half {
+    color: var(--bolao-c-blue);
+  }
+
+  &--miss {
+    color: var(--bolao-c-red);
+  }
+
+  &--null {
+    color: var(--bolao-c-white);
   }
 }
 .bet-indicator {
   position: absolute;
   z-index: 990;
-  bottom: -4px;
   display: flex;
-  transform: translateX(-50%);
   transition: all 0.2s;
   color: white;
   i {
     font-size: var(--m-font-size);
   }
-}
-
-.green {
-  color: var(--bolao-c-green);
-}
-.white {
-  color: var(--bolao-c-white);
 }
 </style>

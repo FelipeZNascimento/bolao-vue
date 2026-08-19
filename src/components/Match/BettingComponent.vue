@@ -116,14 +116,7 @@ function renderTooltip(value: BetsValues) {
 </style>
 
 <style lang="scss">
-.p-selectbutton {
-  gap: var(--xs-spacing);
-  @media (min-width: 1024px) {
-    gap: var(--s-spacing);
-  }
-}
-
 .p-selectbutton .p-togglebutton {
-  border-width: 1px !important;
+  border-width: 0px !important;
 }
 </style>

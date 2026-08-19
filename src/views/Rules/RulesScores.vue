@@ -14,7 +14,7 @@
     </p>
     <p>
       <span style="color: var(--bolao-c-red); font-weight: bold">Errar o vencedor</span>: zero pontos. Sem choro nem
-      vela nem fica amarela gravada com o nome dela.
+      vela nem fita amarela gravada com o nome dela.
     </p>
     <p style="padding-top: var(--l-spacing)">
       Caso uma partida termine em empate, um acerto parcial é concedido a todos que apostaram em vitória difícil.
