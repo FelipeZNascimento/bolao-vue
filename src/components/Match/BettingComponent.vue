@@ -1,12 +1,12 @@
 <template>
-  <div style="display: flex; flex: 1; width: 100%">
+  <div style="display: flex; flex: 1; width: 100%; min-height: 40px">
     <PrimeSelectButton
       :disabled="isLoading || isMatchStarted"
       v-model="radioButton"
       :options="Object.values(BETS_VALUES)"
       aria-labelledby="custom"
-      size="small"
       style="flex: 1; width: 100%"
+      size="small"
       @value-change="handleNewBet"
       fluid
     >

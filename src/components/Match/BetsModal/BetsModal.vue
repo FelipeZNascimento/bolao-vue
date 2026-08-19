@@ -16,7 +16,7 @@
         :ribbon="ribbon"
         :isMatchStarted="isMatchStarted"
         :odds="{ overUnder: match.overUnder, odds: match.homeTeamOdds }"
-        style="padding: var(--m-spacing)"
+        fluid
       />
     </template>
 
@@ -28,7 +28,10 @@
         :ribbon="ribbon"
       />
     </div>
-    <div class="bets-outer">
+    <div
+      class="bets-outer"
+      v-if="isMatchStarted"
+    >
       <BetsColumn
         :bets="match.bets"
         :columnValue="BETS_VALUES.AWAY_EASY"
@@ -54,7 +57,6 @@
         :correctBets="correctBets"
       />
     </div>
-    <!-- <template #footer>a</template> -->
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -102,7 +104,7 @@ watch(isVisible, async (newValue) => {
 .teams-outer {
   display: flex;
   width: 100%;
-  height: 60px;
+  /* height: 50px; */
 }
 
 .team-column {

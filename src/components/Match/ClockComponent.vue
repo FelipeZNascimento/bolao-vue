@@ -1,7 +1,57 @@
 <template>
   <div
+    v-if="fluid"
+    style="display: flex; flex-direction: row; gap: var(--s-spacing)"
+  >
+    <div class="outer-clock-fluid">
+      <div class="clock-time">
+        <i class="pi pi-calendar-clock"></i>
+        <span style="font-weight: bold">
+          {{ clockStore.formattedDate(timestamp) }}
+        </span>
+        <span>{{ clockStore.formattedTime(timestamp) }}</span>
+      </div>
+    </div>
+    <div
+      v-if="isMatchStarted"
+      class="outer-clock-fluid"
+    >
+      <RibbonComponent
+        v-if="activeProfile"
+        :ribbon="ribbon"
+      />
+      <div style="flex: 1; display: flex; align-items: center">
+        <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
+        <span v-else> {{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span>
+      </div>
+    </div>
+    <div
+      class="outer-clock-fluid"
+      style="flex-direction: column"
+      v-if="odds.odds || odds.overUnder"
+    >
+      <div style="font-size: var(--s-font-size)">Odds</div>
+      <div style="font-size: var(--s-font-size)">
+        <span
+          style="text-decoration: underline dotted; cursor: help"
+          v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
+        >
+          {{ odds.odds }}
+        </span>
+        |
+        <span
+          style="text-decoration: underline dotted; cursor: help"
+          v-tooltip.top="'Soma dos pontos'"
+        >
+          {{ odds.overUnder }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    v-else
     :class="{
-      'outer-clock': !isGridMode && !isMobileOnly,
+      'outer-clock-line': !isGridMode && !isMobileOnly,
       'outer-clock-grid': isGridMode || isMobileOnly,
       clickable: isClickable
     }"
@@ -70,6 +120,7 @@ const props = defineProps<{
   ribbon?: Ribbon;
   status: TMatchStatus;
   timestamp: number;
+  fluid?: boolean;
   odds: { overUnder: string; odds: string };
 }>();
 
@@ -89,8 +140,8 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   cursor: pointer;
 }
 
-.outer-clock {
-  background-color: var(--bolao-c-navy-l1);
+.outer-clock-line {
+  background-color: var(--bolao-c-navy);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,6 +167,26 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   &:hover .icon {
     color: var(--bolao-c-gold);
     transform: scale(1.2);
+  }
+}
+
+.outer-clock-fluid {
+  background-color: var(--bolao-c-navy-l1);
+  color: var(--bolao-c-grey1);
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: var(--s-spacing);
+  min-height: 40px;
+
+  @media (max-width: 1023px) {
+    min-width: 80px;
+    font-size: var(--s-font-size);
+  }
+
+  @media (min-width: 1024px) {
+    min-width: 120px;
+    font-size: var(--m-font-size);
   }
 }
 

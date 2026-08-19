@@ -117,15 +117,15 @@ function handleMatchClick() {
 
   &--bullseye {
     border: 1px solid var(--bolao-c-gold);
-    box-shadow: 0px 0px 2px 2px var(--bolao-c-gold);
+    box-shadow: 0px 0px 1px 1px var(--bolao-c-gold);
   }
   &--half {
     border: 1px solid var(--bolao-c-blue);
-    box-shadow: 0px 0px 2px 2px var(--bolao-c-blue);
+    box-shadow: 0px 0px 1px 1px var(--bolao-c-blue);
   }
   &--miss {
     border: 1px solid var(--bolao-c-red);
-    box-shadow: 0px 0px 2px 2px var(--bolao-c-red);
+    box-shadow: 0px 0px 1px 1px var(--bolao-c-red);
   }
 
   &--unbetted {
@@ -140,7 +140,6 @@ function handleMatchClick() {
 
     &:hover {
       transform: scale(1.02);
-      box-shadow: 0 2px 6px -2px var(--color-contrast);
 
       :deep(.team-shield-image) {
         transform: scale(1.2);
@@ -152,19 +151,17 @@ function handleMatchClick() {
 .line {
   min-height: 50px;
   width: 100%;
-  gap: var(--xs-spacing);
 }
 
 .grid {
   flex-direction: column;
+  height: 140px;
 
   @media (max-width: 1023px) {
-    height: 120px;
     width: 170px;
   }
 
   @media (min-width: 1024px) {
-    height: 140px;
     width: 250px;
   }
 

@@ -2,12 +2,18 @@
   <div
     class="bets-column"
     :class="{
-      'green-bg': isBullseyeColumn,
-      'blue-bg': isHalfBetColumn,
-      'red-bg': isMissColumn
+      'bullseye-col': isBullseyeColumn,
+      'half-col': isHalfBetColumn,
+      'miss-col': isMissColumn
     }"
   >
-    <p class="bets-column-header">{{ BETS_LABELS[columnValue] }}</p>
+    <p class="bets-column-header">
+      <i
+        class="header-icon pi"
+        :class="headerIcon"
+      />
+      {{ BETS_LABELS[columnValue] }}
+    </p>
     <!-- Render active user bet first -->
     <div
       class="bets-line"
@@ -55,9 +61,14 @@ const props = defineProps<{
 }>();
 
 // ------ Computed Properties ------
-const isBullseyeColumn = computed(() => props.activeUserBet && isBullseye(props.correctBets, props.columnValue));
-const isHalfBetColumn = computed(() => props.activeUserBet && isHalfBet(props.correctBets, props.columnValue));
+const isBullseyeColumn = computed(() => isBullseye(props.correctBets, props.columnValue));
+const isHalfBetColumn = computed(() => isHalfBet(props.correctBets, props.columnValue));
 const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.value);
+const headerIcon = computed(() => {
+  if (isBullseyeColumn.value) return 'pi-bullseye';
+  if (isHalfBetColumn.value) return 'pi-check-circle';
+  return 'pi-times-circle';
+});
 </script>
 
 <style lang="scss" scoped>
@@ -68,23 +79,39 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
-  border: 1px solid var(--bolao-c-grey1-t1);
+  // border: 1px solid var(--bolao-c-grey1-t1);
   padding: var(--xs-spacing);
 }
 
-.green-bg {
-  background-color: var(--bolao-c-green-t1);
+.bullseye-col {
+  background: linear-gradient(to bottom, var(--bolao-c-gold-t1) 0%, transparent 80%);
+
+  .header-icon {
+    color: var(--bolao-c-gold);
+  }
 }
 
-.blue-bg {
-  background-color: var(--bolao-c-blue-t1);
+.half-col {
+  background: linear-gradient(to bottom, var(--bolao-c-blue-t1) 0%, transparent 80%);
+
+  .header-icon {
+    color: var(--bolao-c-blue);
+  }
 }
 
-.red-bg {
-  background-color: var(--bolao-c-red-t1);
+.miss-col {
+  background: linear-gradient(to bottom, var(--bolao-c-red-t1) 0%, transparent 80%);
+
+  .header-icon {
+    color: var(--bolao-c-red);
+  }
 }
 
 .bets-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--xs-spacing);
   text-align: center;
   width: 100%;
   font-size: var(--m-font-size);
