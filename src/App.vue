@@ -4,11 +4,13 @@
   <div class="outer-view">
     <RouterView />
   </div>
+  <FooterComponent />
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
+import FooterComponent from './components/FooterComponent.vue';
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';

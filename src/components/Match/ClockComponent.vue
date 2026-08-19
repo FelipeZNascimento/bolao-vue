@@ -2,7 +2,8 @@
   <div
     :class="{
       'outer-clock': !isGridMode && !isMobileOnly,
-      'outer-clock-grid': isGridMode || isMobileOnly
+      'outer-clock-grid': isGridMode || isMobileOnly,
+      clickable: isClickable
     }"
   >
     <RibbonComponent
@@ -19,32 +20,35 @@
     </div>
     <div
       v-if="!isMatchStarted"
-      class="clock-time"
+      style="display: flex; flex-direction: row; align-items: center; flex: 1"
     >
-      <div>
-        <span style="font-weight: bold; margin-right: var(--xs-spacing)"
-          ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(timestamp) }}</span
+      <i class="pi pi-plus-circle icon"></i>
+      <div class="clock-time">
+        <div>
+          <span style="font-weight: bold; margin-right: var(--xs-spacing)"
+            ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(timestamp) }}</span
+          >
+          <span>{{ clockStore.formattedTime(timestamp) }}</span>
+        </div>
+        <div
+          style="font-size: var(--xs-font-size)"
+          v-if="odds.odds || odds.overUnder"
         >
-        {{ clockStore.formattedTime(timestamp) }}
-      </div>
-      <div
-        style="font-size: var(--xs-font-size)"
-        v-if="odds.odds || odds.overUnder"
-      >
-        Odds:
-        <span
-          style="text-decoration: underline dotted; cursor: help"
-          v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
-        >
-          {{ odds.odds }}
-        </span>
-        |
-        <span
-          style="text-decoration: underline dotted; cursor: help"
-          v-tooltip.top="'Soma dos pontos'"
-        >
-          {{ odds.overUnder }}
-        </span>
+          Odds:
+          <span
+            style="text-decoration: underline dotted; cursor: help"
+            v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
+          >
+            {{ odds.odds }}
+          </span>
+          |
+          <span
+            style="text-decoration: underline dotted; cursor: help"
+            v-tooltip.top="'Soma dos pontos'"
+          >
+            {{ odds.overUnder }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +66,7 @@ const props = defineProps<{
   clock: string;
   isGridMode?: boolean;
   isMatchStarted: boolean;
+  isClickable?: boolean;
   ribbon?: Ribbon;
   status: TMatchStatus;
   timestamp: number;
@@ -80,15 +85,12 @@ const activeProfile = computed(() => {
 const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 </script>
 <style lang="scss" scoped>
-.left-aligned {
-  justify-content: flex-start;
-}
-
-.right-aligned {
-  justify-content: flex-end;
+.clickable {
+  cursor: pointer;
 }
 
 .outer-clock {
+  background-color: var(--bolao-c-navy-l1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,10 +123,11 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   background-color: var(--bolao-c-navy-l1);
   color: var(--bolao-c-grey1);
   min-height: 40px;
+  min-width: 120px;
   display: flex;
   align-items: center;
   position: relative;
-  padding: 0 var(--m-spacing);
+  padding: 0 var(--xs-spacing);
   font-size: var(--m-font-size);
 
   &:hover .icon {

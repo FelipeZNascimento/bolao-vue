@@ -16,6 +16,7 @@
         :ribbon="ribbon"
         :isMatchStarted="isMatchStarted"
         :odds="{ overUnder: match.overUnder, odds: match.homeTeamOdds }"
+        style="padding: var(--m-spacing)"
       />
     </template>
 
@@ -24,6 +25,7 @@
         :match="match"
         :activeUserBet="match.loggedUserBets"
         :isMatchStarted="isMatchStarted"
+        :ribbon="ribbon"
       />
     </div>
     <div class="bets-outer">

@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import { version } from './package.json';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -66,6 +67,9 @@ export default defineConfig({
       }
     })
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(version)
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
