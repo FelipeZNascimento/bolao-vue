@@ -1,22 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router';
-// import HomeView from '../views/HomeView.vue';
 import ResultsView from '@/views/ResultsView.vue';
-// import BetsView from '../views/BetsView.vue';
+import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: HomeView,
-    //   alias: '/home',
-    // },
+    {
+      component: HomeView,
+      name: 'home',
+      path: '/',
+      alias: '/home'
+    },
     {
       alias: '/jogos',
       component: ResultsView,
       name: 'jogos',
-      path: '/'
+      path: '/resultados'
     },
     // {
     //   component: BetsView,

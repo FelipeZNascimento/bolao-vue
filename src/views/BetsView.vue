@@ -91,7 +91,7 @@ const errorMatches = computed(() => matchesStore.error);
 }
 
 .skeleton-match {
-  height: 60px !important;
+  height: 50px !important;
   margin: var(--s-spacing) 0;
 }
 </style>

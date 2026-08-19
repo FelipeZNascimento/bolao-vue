@@ -4,7 +4,7 @@
     <h1>Extras</h1>
     <PrimeSelectButton
       :allowEmpty="false"
-      size="small"
+      size="large"
       v-model="selectedToggle"
       :options="buttonOptions"
     />

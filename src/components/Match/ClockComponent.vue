@@ -147,7 +147,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   justify-content: center;
   font-size: var(--m-font-size);
   position: relative;
-  color: var(--color-text);
+  color: var(--bolao-c-grey1);
 
   @media (max-width: 1023px) {
     width: 80px;

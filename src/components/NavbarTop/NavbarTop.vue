@@ -198,11 +198,11 @@ header {
   background-color: var(--bolao-c-navbar);
   box-shadow: 0 0 15px 1px #0006;
   width: 100%;
+  flex: 0;
 
   @media (min-width: 1024px) {
     display: flex;
     place-items: center;
-    flex: 1;
     align-items: center;
     justify-content: center;
   }
