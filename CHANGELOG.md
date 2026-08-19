@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.2.0
+
+### Minor Changes
+
+- c68333b: Clock can be clicked for more details on a match that hasn't started;
+  Added a footer to track version and source code;
+
 ## 1.1.0
 
 ### Minor Changes
