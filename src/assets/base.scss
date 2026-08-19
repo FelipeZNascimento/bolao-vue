@@ -89,10 +89,32 @@ $colors: (
   --p-togglebutton-content-checked-background: var(--bolao-c-navy-l2) !important;
   --p-togglebutton-content-sm-padding: 0 !important;
   --p-togglebutton-hover-background: var(--bolao-c-navy-l2) !important;
+  --p-togglebutton-checked-color: var(--bolao-c-white) !important;
+  --p-togglebutton-color: var(--bolao-c-grey2) !important;
+
   --p-paginator-border-radius: 0 !important;
   --p-paginator-background: var(--bolao-c-navbar) !important;
 
   --p-dialog-background: var(--bolao-c-navbar) !important;
+  --p-dialog-color: var(--bolao-c-white) !important;
+  --p-divider-border-color: var(--bolao-c-grey2) !important;
+
+  // Datatable
+  --p-datatable-header-background: var(--bolao-c-navbar) !important;
+  --p-datatable-header-cell-background: var(--bolao-c-navy-l2) !important;
+  --p-datatable-row-background: var(--bolao-c-navy-l1) !important;
+  --p-datatable-header-color: var(--bolao-c-white) !important;
+  --p-datatable-header-cell-color: var(--bolao-c-white) !important;
+  --p-datatable-sort-icon-color: var(--bolao-c-grey2) !important;
+  --p-datatable-row-background: var(--bolao-c-navy-l1) !important;
+  --p-datatable-row-striped-background: var(--bolao-c-navy) !important;
+  --p-datatable-row-color: var(--bolao-c-white) !important;
+
+  --p-button-outlined-secondary-border-color: var(--bolao-c-grey2) !important;
+  --p-button-outlined-secondary-color: var(--bolao-c-grey2) !important;
+  --p-popover-background: var(--bolao-c-navbar) !important;
+  --p-popover-border-color: var(--bolao-c-grey2) !important;
+  --p-paginator-nav-button-color: var(--bolao-c-grey2) !important;
 
   --bolao-c-navbar: #143b60;
   --nav-disabled: #545859;
@@ -132,8 +154,7 @@ $colors: (
   --color-main: var(--vt-c-white);
   --color-contrast: var(--vt-c-black);
 
-  // --color-background: var(--vt-c-white);
-  --color-background: var(--vt-c-white-mute);
+  --color-background: var(--bolao-c-navy-t1);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
 

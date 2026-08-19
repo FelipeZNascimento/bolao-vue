@@ -4,7 +4,7 @@
     v-if="isLoadingConfig"
   />
   <ExtrasBefore v-else-if="!isSeasonStarted" />
-  <ExtrasAfter />
+  <ExtrasAfter v-else />
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';

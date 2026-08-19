@@ -100,7 +100,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .teams-outer {
   display: flex;
   width: 100%;

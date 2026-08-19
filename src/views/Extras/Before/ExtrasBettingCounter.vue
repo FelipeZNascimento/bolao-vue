@@ -206,11 +206,11 @@ const knobColor = computed(() => {
   if (progressPercentage.value < 33) {
     return 'red';
   } else if (progressPercentage.value < 66) {
-    return 'gold';
+    return 'orange';
   } else if (progressPercentage.value < 95) {
-    return 'darkcyan';
+    return 'gold';
   } else {
-    return 'lime';
+    return 'green';
   }
 });
 
@@ -252,27 +252,19 @@ const progressPercentage = computed(() => {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  background-color: var(--vt-c-indigo);
+  background-color: var(--bolao-c-navbar);
   color: white;
   padding: var(--s-spacing);
   font-size: var(--xs-font-size);
   text-align: center;
-
-  // .p-knob-value {
-  //   stroke: var(--bolao-c-mint);
-  // }
 }
 
 .left-aligned {
   left: 0;
-  border-bottom-right-radius: 12px;
-  border-top-right-radius: 12px;
 }
 
 .right-aligned {
   right: 0;
-  border-bottom-left-radius: 12px;
-  border-top-left-radius: 12px;
 }
 
 .counter-line {
@@ -298,7 +290,7 @@ const progressPercentage = computed(() => {
 .mobile-knobs-outer {
   position: fixed;
   top: 100px;
-  background-color: var(--vt-c-indigo);
+  background-color: var(--bolao-c-navbar);
   padding: var(--s-spacing);
 }
 </style>

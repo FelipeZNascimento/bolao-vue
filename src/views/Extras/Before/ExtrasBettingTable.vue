@@ -5,7 +5,6 @@
       :value="teams"
       dataKey="id"
       size="small"
-      showGridlines
     >
       <template #header>
         <div>
@@ -51,7 +50,7 @@
       <PrimeColumn
         v-if="handleSelectConferenceChampion"
         class="champion-column"
-        header="Campeão"
+        header="Conf"
       >
         <template #body="slotProps">
           <div v-if="isUpdating">
@@ -222,13 +221,13 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
       flex-direction: column;
 
       img {
-        height: 60px;
+        height: 50px;
       }
     }
   }
 
   .icon-outer {
-    height: 60px;
+    height: 50px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -250,7 +249,7 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
   .trophy-icon,
   .sparkles-icon {
     transition: all 0.2s;
-    color: var(--color-text);
+    color: var(--bolao-c-grey3);
   }
 
   .golden-crown,

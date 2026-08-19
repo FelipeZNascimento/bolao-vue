@@ -16,12 +16,12 @@ export interface TROUTE {
 }
 
 export const ROUTES = [
-  // {
-  //   id: ROUTE_ID.HOME,
-  //   label: 'Home',
-  //   url: '/home',
-  //   needCredentials: false,
-  // },
+  {
+    id: ROUTE_ID.HOME,
+    label: 'Home',
+    url: '/home',
+    needCredentials: false
+  },
   {
     id: ROUTE_ID.GAMES,
     label: 'Jogos',

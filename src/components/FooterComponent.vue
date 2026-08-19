@@ -8,6 +8,15 @@
       <font-awesome-icon :icon="['fab', 'github']" />
       v{{ version }}
     </a>
+    <span style="padding: 0 var(--xs-spacing)">·</span>
+    <a
+      href="https://t.me/+SvMGiAUj4m2FZge4"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <font-awesome-icon :icon="['fab', 'telegram']" />
+      Telegram
+    </a>
   </footer>
 </template>
 
@@ -31,12 +40,12 @@ const version = __APP_VERSION__;
     display: flex;
     align-items: center;
     gap: var(--xs-spacing);
-    color: var(--nav-link);
+    color: var(--bolao-c-grey3);
     font-size: var(--xs-font-size);
     transition: color 0.2s;
 
     &:hover {
-      color: var(--nav-link-hover);
+      color: var(--bolao-c-grey1);
     }
   }
 }

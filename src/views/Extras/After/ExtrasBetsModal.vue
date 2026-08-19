@@ -161,11 +161,11 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .teams-outer {
   display: flex;
   width: 100%;
-  height: 60px;
+  height: 50px;
 }
 
 .team-column {
