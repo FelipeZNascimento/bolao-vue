@@ -16,7 +16,7 @@
       </PrimeMessage>
       <PaginatorComponent />
       <PrimeMessage
-        v-show="!activeProfileActive && !isProfileLoading"
+        v-show="activeProfile && !activeProfileActive && !isProfileLoading"
         class="notification-message"
         severity="warn"
       >
