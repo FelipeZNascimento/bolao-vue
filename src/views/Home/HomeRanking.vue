@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useRankingStore } from '@/stores/ranking';
@@ -56,8 +57,8 @@ import { useRankingStore } from '@/stores/ranking';
 defineProps<{ activeProfileId: number }>();
 
 const rankingStore = useRankingStore();
-const isLoadingRanking = computed(() => rankingStore.isLoadingSeason);
-const topRanking = computed(() => rankingStore.seasonRanking.slice(0, 10));
+const { isLoadingSeason: isLoadingRanking, seasonRanking } = storeToRefs(rankingStore);
+const topRanking = computed(() => seasonRanking.value.slice(0, 10));
 </script>
 
 <style lang="scss" scoped>
@@ -85,7 +86,9 @@ const topRanking = computed(() => rankingStore.seasonRanking.slice(0, 10));
   color: var(--bolao-c-sky);
   text-decoration: none;
   white-space: nowrap;
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .ranking-list {
@@ -109,11 +112,35 @@ const topRanking = computed(() => rankingStore.seasonRanking.slice(0, 10));
   }
 }
 
-.rank-pos { width: 28px; font-size: var(--s-font-size); font-weight: 700; color: var(--bolao-c-grey4); text-align: right; flex-shrink: 0; }
-.rank-icon { font-size: var(--m-font-size); flex-shrink: 0; }
-.rank-name { flex: 1; font-size: var(--s-font-size); color: var(--color-heading); font-weight: 600; }
-.rank-pts { font-size: var(--s-font-size); font-weight: 700; color: var(--color-heading); }
-.rank-pct { font-size: var(--xs-font-size); color: var(--bolao-c-grey4); min-width: 40px; text-align: right; }
+.rank-pos {
+  width: 28px;
+  font-size: var(--s-font-size);
+  font-weight: 700;
+  color: var(--bolao-c-grey4);
+  text-align: right;
+  flex-shrink: 0;
+}
+.rank-icon {
+  font-size: var(--m-font-size);
+  flex-shrink: 0;
+}
+.rank-name {
+  flex: 1;
+  font-size: var(--s-font-size);
+  color: var(--color-heading);
+  font-weight: 600;
+}
+.rank-pts {
+  font-size: var(--s-font-size);
+  font-weight: 700;
+  color: var(--color-heading);
+}
+.rank-pct {
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-grey4);
+  min-width: 40px;
+  text-align: right;
+}
 
 .empty-state {
   font-size: var(--s-font-size);

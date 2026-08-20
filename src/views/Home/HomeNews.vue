@@ -112,12 +112,22 @@ function formatDate(iso: string): string {
   border: 1px solid var(--bolao-c-grey2-t1);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
   overflow: hidden;
-  &:hover { border-color: var(--bolao-c-sky); transform: translateY(-2px); }
+  &:hover {
+    border-color: var(--bolao-c-sky);
+    transform: translateY(-2px);
+  }
 }
 
-.news-card-img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+.news-card-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
 
 .news-card-body {
   display: flex;
@@ -127,8 +137,18 @@ function formatDate(iso: string): string {
   flex: 1;
 }
 
-.news-card-headline { font-size: var(--s-font-size); font-weight: 700; color: var(--color-heading); line-height: 1.4; }
-.news-card-meta { font-size: var(--xs-font-size); color: var(--bolao-c-grey4); margin-top: auto; padding-top: var(--xxs-spacing); }
+.news-card-headline {
+  font-size: var(--s-font-size);
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.4;
+}
+.news-card-meta {
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-grey4);
+  margin-top: auto;
+  padding-top: var(--xxs-spacing);
+}
 
 .empty-state {
   font-size: var(--s-font-size);

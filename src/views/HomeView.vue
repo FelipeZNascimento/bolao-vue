@@ -18,14 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import HomeGuest from '@/views/Home/HomeGuest.vue';
 import HomeUser from '@/views/Home/HomeUser.vue';
 
-const activeProfileStore = useActiveProfileStore();
-const activeProfile = computed(() => activeProfileStore.activeProfile);
-const isLoading = computed(() => activeProfileStore.isLoading);
+const { activeProfile, isLoading } = storeToRefs(useActiveProfileStore());
 </script>
 
 <style lang="scss" scoped>

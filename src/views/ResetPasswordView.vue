@@ -105,7 +105,8 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { z } from 'zod';
 import UserService from '@/services/user';
@@ -115,7 +116,7 @@ import { useActiveProfileStore } from '@/stores/activeProfile';
 const route = useRoute();
 const router = useRouter();
 const userService = new UserService();
-const activeProfileStore = useActiveProfileStore();
+const { isLoading, error } = storeToRefs(useActiveProfileStore());
 
 // ------ Refs ------
 const success = ref(false);
@@ -135,10 +136,6 @@ const resolver = ref(
     })
   )
 );
-
-// ------ Computed ------
-const isLoading = computed(() => activeProfileStore.isLoading);
-const error = computed(() => activeProfileStore.error);
 
 // ------ Functions ------
 function startCountdown() {

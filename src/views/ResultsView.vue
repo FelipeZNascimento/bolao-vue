@@ -62,6 +62,7 @@
 </template>
 <script setup lang="ts">
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
@@ -69,19 +70,14 @@ import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
-// ------ Initialization ------
-const configurationStore = useConfigurationStore();
-const matchesStore = useMatchesStore();
-
-// ------ Computed Properties ------
-const isConfigurationLoading = computed(() => configurationStore.isLoading);
-const isMatchesLoading = computed(() => matchesStore.isLoading);
-const matches = computed(() => matchesStore.matches);
+const {
+  isLoading: isConfigurationLoading,
+  rankingPosition,
+  error: errorConfiguration,
+  resultsView: view
+} = storeToRefs(useConfigurationStore());
+const { isLoading: isMatchesLoading, matches, error: errorMatches } = storeToRefs(useMatchesStore());
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
-const rankingPosition = computed(() => configurationStore.rankingPosition);
-const errorConfiguration = computed(() => configurationStore.error);
-const errorMatches = computed(() => matchesStore.error);
-const view = computed(() => configurationStore.resultsView);
 </script>
 <style scoped>
 .outer-results {

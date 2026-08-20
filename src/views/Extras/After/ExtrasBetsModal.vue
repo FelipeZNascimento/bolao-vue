@@ -45,7 +45,8 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
@@ -61,15 +62,11 @@ const props = defineProps<{
 
 // ------ Initialization ------
 
-const extraBetStore = useExtraBetStore();
+const { extraBetsResults } = storeToRefs(useExtraBetStore());
 
 // ------ Refs ------
 
 const isVisible = ref(false);
-
-// ------ Computed Properties ------
-
-const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
 
 // ------ Functions ------
 

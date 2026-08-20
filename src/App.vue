@@ -8,7 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
 import { RouterView } from 'vue-router';
 import FooterComponent from './components/FooterComponent.vue';
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
@@ -26,8 +27,6 @@ const matchService = new MatchService();
 const rankingService = new RankingService();
 const extraBetService = new ExtraBetService();
 const clockStore = useClockStore();
-const configurationStore = useConfigurationStore();
-const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
 
 function initializationCallback(isSuccess: boolean) {
@@ -43,9 +42,8 @@ startupService.initialize(initializationCallback).then(() => {
   rankingService.fetch();
 });
 
-// ------ Computed ------
-const selectedWeek = computed(() => configurationStore.selectedWeek);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+const { selectedWeek } = storeToRefs(useConfigurationStore());
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 // ------ Watches ------
 // Fetches week's matches and week's ranking when selectedWeek is changed

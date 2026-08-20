@@ -34,19 +34,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import type { PageState } from 'primevue';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { WEEKS } from '@/constants/weeks';
 import { useConfigurationStore } from '@/stores/configuration';
 
 // ------ Refs ------
 const weeks = ref(WEEKS);
 
-// ------ Initialization ------
 const configurationStore = useConfigurationStore();
-
-// ------ Computed Properties ------
-const selectedWeek = computed(() => configurationStore.selectedWeek);
+const { selectedWeek } = storeToRefs(configurationStore);
 
 // ------ Functions ------
 function handlePageChange(e: PageState) {

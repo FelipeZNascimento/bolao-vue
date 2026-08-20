@@ -58,6 +58,7 @@
   />
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue';
 import { computed, ref, watchEffect } from 'vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
@@ -110,22 +111,8 @@ const extraBetStore = useExtraBetStore();
 const teamsStore = useTeamsStore();
 const toast = useToast();
 
-// ------ Computed Properties ------
-const isLoading = computed(() => extraBetStore.isLoading);
-const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
-const afcTeams = computed(() => ({
-  East: teamsStore.afcTeams.East,
-  North: teamsStore.afcTeams.North,
-  South: teamsStore.afcTeams.South,
-  West: teamsStore.afcTeams.West
-}));
-
-const nfcTeams = computed(() => ({
-  East: teamsStore.nfcTeams.East,
-  North: teamsStore.nfcTeams.North,
-  South: teamsStore.nfcTeams.South,
-  West: teamsStore.nfcTeams.West
-}));
+const { isLoading, loggedUserBets } = storeToRefs(extraBetStore);
+const { afcTeams, nfcTeams } = storeToRefs(teamsStore);
 
 // ------ Watch Effects ------
 watchEffect(() => {

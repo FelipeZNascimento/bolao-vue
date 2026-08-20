@@ -54,14 +54,14 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useTeamsStore } from '@/stores/teams';
 
 const teamsStore = useTeamsStore();
-
-const isLoading = computed(() => teamsStore.isLoading);
-const sortedTeams = computed(() => teamsStore.teams.slice().sort((a, b) => a.name.localeCompare(b.name)));
+const { isLoading, teams } = storeToRefs(teamsStore);
+const sortedTeams = computed(() => teams.value.slice().sort((a, b) => a.name.localeCompare(b.name)));
 </script>
 
 <style lang="scss" scoped>

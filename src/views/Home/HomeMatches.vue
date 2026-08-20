@@ -31,17 +31,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import TinyMatchComponent from './TinyMatchComponent.vue';
 
-const configurationStore = useConfigurationStore();
-const matchesStore = useMatchesStore();
-
-const matches = computed(() => matchesStore.currentWeekMatches);
-const isLoadingMatches = computed(() => matchesStore.isLoading);
-const currentWeek = computed(() => configurationStore.currentWeek);
+const { currentWeekMatches: matches, isLoading: isLoadingMatches } = storeToRefs(useMatchesStore());
+const { currentWeek } = storeToRefs(useConfigurationStore());
 </script>
 
 <style lang="scss" scoped>

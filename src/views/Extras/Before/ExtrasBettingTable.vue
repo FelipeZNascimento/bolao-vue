@@ -124,7 +124,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -145,11 +145,7 @@ defineProps<{
   title: string;
 }>();
 
-// ------ Initialization ------
-const extraBetStore = useExtraBetStore();
-
-// ------ Computed Properties ------
-const isUpdating = computed(() => extraBetStore.isUpdating);
+const { isUpdating } = storeToRefs(useExtraBetStore());
 </script>
 <style lang="scss">
 .outer-extras-betting-table {

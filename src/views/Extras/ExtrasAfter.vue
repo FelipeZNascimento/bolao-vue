@@ -31,7 +31,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type { TExtrasAfterToggle } from '@/stores/extraBet.types';
@@ -42,13 +43,8 @@ import ExtrasAfterUserBets from './After/ExtrasAfterUserBets.vue';
 const selectedToggle = ref<TExtrasAfterToggle>('Minhas');
 const buttonOptions = ref<TExtrasAfterToggle[]>(['Minhas', 'Geral']);
 
-// ------ Initialization ------
-const configurationStore = useConfigurationStore();
-const extraBetStore = useExtraBetStore();
-
-// ------ Computed Properties ------
-const isLoadingExtras = computed(() => extraBetStore.isLoading);
-const isLoadingConfig = computed(() => configurationStore.isLoading);
+const { isLoading: isLoadingExtras } = storeToRefs(useExtraBetStore());
+const { isLoading: isLoadingConfig } = storeToRefs(useConfigurationStore());
 </script>
 <style lang="scss" scoped>
 .outer-extras {
