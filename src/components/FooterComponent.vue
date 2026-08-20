@@ -1,5 +1,15 @@
 <template>
   <footer class="app-footer">
+    <template v-if="activeProfile?.admin">
+      <RouterLink
+        to="/admin"
+        class="admin-link"
+      >
+        Admin
+      </RouterLink>
+      <span style="padding: 0 var(--xs-spacing)">·</span>
+    </template>
+
     <a
       href="https://github.com/FelipeZNascimento/bolao-vue"
       target="_blank"
@@ -29,7 +39,9 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 
 declare const __APP_VERSION__: string;
@@ -37,6 +49,8 @@ const version = __APP_VERSION__;
 
 const configurationStore = useConfigurationStore();
 const isDark = computed(() => configurationStore.theme === 'dark');
+
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 function toggleTheme() {
   configurationStore.setTheme(isDark.value ? 'light' : 'dark');
@@ -65,6 +79,15 @@ function toggleTheme() {
     &:hover {
       color: var(--bolao-c-grey1);
     }
+  }
+}
+
+.admin-link {
+  color: var(--bolao-c-gold) !important;
+
+  &:hover {
+    color: var(--bolao-c-gold) !important;
+    opacity: 0.8;
   }
 }
 

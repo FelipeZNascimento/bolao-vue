@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import ResultsView from '@/views/ResultsView.vue';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import MatchesView from '@/views/MatchesView.vue';
 import HomeView from '../views/HomeView.vue';
 import ResetPasswordView from '../views/ResetPasswordView.vue';
 
@@ -19,7 +20,7 @@ const router = createRouter({
     },
     {
       alias: '/jogos',
-      component: ResultsView,
+      component: MatchesView,
       name: 'jogos',
       path: '/resultados'
     },
@@ -53,6 +54,15 @@ const router = createRouter({
       component: () => import('../views/TeamView.vue'),
       name: 'team',
       path: '/teams/:id'
+    },
+    {
+      beforeEnter: () => {
+        const { activeProfile } = useActiveProfileStore();
+        if (!activeProfile?.admin) return { name: 'home' };
+      },
+      component: () => import('../views/AdminView.vue'),
+      name: 'admin',
+      path: '/admin'
     }
   ]
 });

@@ -1,6 +1,9 @@
 <template>
   <section class="greeting">
-    <div class="greeting-left">
+    <div
+      class="greeting-left"
+      v-if="activeProfile"
+    >
       <font-awesome-icon
         class="greeting-icon"
         :style="{ color: activeProfile.color }"
@@ -26,7 +29,10 @@
         </p>
       </div>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: var(--s-spacing)">
+    <div
+      v-if="activeProfileActive"
+      class="greeting-right"
+    >
       <RouterLink
         to="/jogos"
         style="width: 100%"
@@ -47,6 +53,7 @@
           label="Entrar no Telegram"
           severity="secondary"
           variant="outlined"
+          fluid
         >
           <template #icon>
             <font-awesome-icon :icon="['fab', 'telegram']" />
@@ -54,18 +61,58 @@
         </PrimeButton>
       </a>
     </div>
+    <div
+      v-else
+      class="greeting-right"
+    >
+      <PrimeButton
+        v-if="!seasonRegistered"
+        label="Inscrever-se na temporada atual"
+        @click="openSeasonRegisterModal()"
+        fluid
+      />
+      <div v-else>
+        <i
+          class="pi pi-check-square"
+          style="color: var(--bolao-c-mint)"
+        ></i>
+        Inscrição feita
+      </div>
+      <p
+        v-if="!seasonRegistered || (seasonRegistered && !activeProfile?.active)"
+        style="text-align: center"
+      >
+        <i
+          class="pi pi-stop"
+          style="color: var(--bolao-c-red)"
+        ></i>
+
+        Assim que confirmarmos seu pagamento, sua conta será liberada!
+      </p>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import type { IUser } from '@/stores/activeProfile.types';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 defineProps<{
-  activeProfile: IUser;
   myRankingLine: IRankingLine | undefined;
 }>();
+
+const activeProfileStore = useActiveProfileStore();
+const { activeProfile } = storeToRefs(activeProfileStore);
+const { currentSeason } = storeToRefs(useConfigurationStore());
+
+const seasonRegistered = computed(() => activeProfile.value && activeProfile.value.seasonId === currentSeason.value);
+const activeProfileActive = computed(() => activeProfile.value?.active && seasonRegistered.value);
+
+const { openSeasonRegisterModal } = activeProfileStore;
 </script>
 
 <style lang="scss" scoped>
@@ -93,8 +140,17 @@ defineProps<{
 
 .greeting-left {
   display: flex;
+  flex: 2;
   align-items: center;
   gap: var(--l-spacing);
+}
+
+.greeting-right {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-spacing);
 }
 
 .greeting-icon {

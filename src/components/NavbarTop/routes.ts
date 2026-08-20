@@ -29,14 +29,7 @@ export const ROUTES = [
     needCredentials: false,
     url: '/jogos'
   },
-  // {
-  //   id: ROUTE_ID.BET,
-  //   label: 'Apostar',
-  //   needCredentials: true,
-  //   url: '/apostar'
-  // },
   { id: ROUTE_ID.EXTRAS, label: 'Extras', needCredentials: true, url: '/extras' },
-  // { id: ROUTE_ID.RECORDS, label: 'Records', url: '/records', needCredentials: false },
   { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' },
   { id: ROUTE_ID.RANKING, label: 'Ranking', needCredentials: true, url: '/ranking' },
   { id: ROUTE_ID.TEAMS, label: 'Equipes', needCredentials: false, url: '/teams' }

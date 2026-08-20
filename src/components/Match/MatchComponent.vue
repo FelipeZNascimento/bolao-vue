@@ -145,13 +145,13 @@ function handleMatchClick() {
 
 .grid {
   flex-direction: column;
-  height: 140px;
 
   @media (max-width: 1023px) {
     width: 170px;
   }
 
   @media (min-width: 1024px) {
+    max-height: 140px;
     width: 250px;
   }
 

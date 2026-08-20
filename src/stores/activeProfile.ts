@@ -7,6 +7,7 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
   const isLoading = ref(false);
   const isFavoriteUpdating = ref(false);
   const error = ref<Error | null>(null);
+  const isSeasonRegisterModalOpen = ref(false);
 
   function setLoading(loadingState: boolean) {
     isLoading.value = loadingState;
@@ -30,11 +31,22 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     error.value = newError;
   }
 
+  function openSeasonRegisterModal() {
+    isSeasonRegisterModalOpen.value = true;
+  }
+
+  function closeSeasonRegisterModal() {
+    isSeasonRegisterModalOpen.value = false;
+  }
+
   return {
     activeProfile,
+    closeSeasonRegisterModal,
     error,
     isFavoriteUpdating,
     isLoading,
+    isSeasonRegisterModalOpen,
+    openSeasonRegisterModal,
     setActiveProfile,
     setError,
     setFavoriteUpdating,

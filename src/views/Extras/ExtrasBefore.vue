@@ -1,6 +1,31 @@
 <!-- <template>&nbsp;</template> -->
 <template>
-  <div class="outer-extras">
+  <div
+    v-if="!activeProfileActive && !isProfileLoading"
+    class="outer-extras"
+  >
+    <PrimeMessage
+      style="text-align: center"
+      severity="warn"
+    >
+      <!-- variant="outlined" -->
+      Sua inscrição para a temporada atual ainda não está ativa.
+      <p v-if="activeProfile && activeProfile.seasonId !== currentSeason">
+        <span
+          class="register-link"
+          @click="openSeasonRegisterModal()"
+          >Registre-se na atual temporada</span
+        >
+        e efetue o pagamento para participar do Bolão.
+      </p>
+      <p v-else>Assim que confirmarmos seu pagamento, sua conta será liberada!</p>
+      <p><RouterLink to="/regras">Ver regras.</RouterLink></p>
+    </PrimeMessage>
+  </div>
+  <div
+    v-else
+    class="outer-extras"
+  >
     <h1>Extras</h1>
     <PrimeSelectButton
       :allowEmpty="false"
@@ -39,23 +64,23 @@
         :handleSelectWildcard="handleSelectWildcard"
       />
     </div>
+    <ExtrasBettingCounter
+      alignment="left"
+      conference="AFC"
+      :selectedConferenceChampion="selectedConferenceChampions.AFC"
+      :selectedDivisionChampions="selectedDivisionChampions.AFC"
+      :selectedWildcards="selectedWildcards.AFC"
+      :selectedSuperBowlWinner="selectedSuperBowl"
+    />
+    <ExtrasBettingCounter
+      alignment="right"
+      conference="NFC"
+      :selectedConferenceChampion="selectedConferenceChampions.NFC"
+      :selectedDivisionChampions="selectedDivisionChampions.NFC"
+      :selectedWildcards="selectedWildcards.NFC"
+      :selectedSuperBowlWinner="selectedSuperBowl"
+    />
   </div>
-  <ExtrasBettingCounter
-    alignment="left"
-    conference="AFC"
-    :selectedConferenceChampion="selectedConferenceChampions.AFC"
-    :selectedDivisionChampions="selectedDivisionChampions.AFC"
-    :selectedWildcards="selectedWildcards.AFC"
-    :selectedSuperBowlWinner="selectedSuperBowl"
-  />
-  <ExtrasBettingCounter
-    alignment="right"
-    conference="NFC"
-    :selectedConferenceChampion="selectedConferenceChampions.NFC"
-    :selectedDivisionChampions="selectedDivisionChampions.NFC"
-    :selectedWildcards="selectedWildcards.NFC"
-    :selectedSuperBowlWinner="selectedSuperBowl"
-  />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
@@ -63,6 +88,8 @@ import { useToast } from 'primevue';
 import { computed, ref, watchEffect } from 'vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
+import { useActiveProfileStore } from '@/stores/activeProfile.ts';
+import { useConfigurationStore } from '@/stores/configuration.ts';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type {
   TConference,
@@ -107,12 +134,19 @@ const selectedSuperBowl = ref<null | TExtrasTeam>(null);
 
 // ------ Initialization ------
 const extraBetService = new ExtraBetService();
-const extraBetStore = useExtraBetStore();
-const teamsStore = useTeamsStore();
 const toast = useToast();
 
-const { isLoading, loggedUserBets } = storeToRefs(extraBetStore);
-const { afcTeams, nfcTeams } = storeToRefs(teamsStore);
+const activeProfileStore = useActiveProfileStore();
+
+const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+const { isLoading, loggedUserBets } = storeToRefs(useExtraBetStore());
+const { afcTeams, nfcTeams } = storeToRefs(useTeamsStore());
+const { currentSeason } = storeToRefs(useConfigurationStore());
+const { openSeasonRegisterModal } = activeProfileStore;
+
+const activeProfileActive = computed(
+  () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value
+);
 
 // ------ Watch Effects ------
 watchEffect(() => {
@@ -294,6 +328,11 @@ function updateCallback(isSuccess: boolean, error?: Error) {
 }
 </script>
 <style lang="scss" scoped>
+.register-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .outer-extras {
   display: flex;
   flex-direction: column;

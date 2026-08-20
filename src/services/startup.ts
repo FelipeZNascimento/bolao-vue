@@ -41,65 +41,58 @@ export default class StartupService {
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     this.teamsStore.setLoading(true);
-    try {
-      const [activeProfileResponse, seasonResponse, teamByConferenceAndDivisionResponse, teamResponse] =
-        await Promise.allSettled([
-          this.apiRequest.get<IUser>('user/activeProfile'),
-          this.apiRequest.get<InitializeObj>('season/current'),
-          this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
-          this.apiRequest.get<ITeam[]>('team/')
-        ]);
 
-      if (
-        isRejected(activeProfileResponse) ||
-        isRejected(seasonResponse) ||
-        isRejected(teamByConferenceAndDivisionResponse) ||
-        isRejected(teamResponse)
-      ) {
-        throw new Error('Falha ao inicializar a aplicação');
-      }
+    // Clear any stale errors from a previous attempt
+    this.activeProfileStore.setError(null);
+    this.configurationStore.setError(null);
+    this.teamsStore.setError(null);
 
-      const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
-      const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
-      const teamByConferenceAndDivision = isFulfilled(teamByConferenceAndDivisionResponse)
-        ? teamByConferenceAndDivisionResponse.value
-        : null;
-      const teams = isFulfilled(teamResponse) ? teamResponse.value : null;
+    const [activeProfileResponse, seasonResponse, teamByConferenceAndDivisionResponse, teamResponse] =
+      await Promise.allSettled([
+        this.apiRequest.get<IUser>('user/activeProfile'),
+        this.apiRequest.get<InitializeObj>('season/current'),
+        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
+        this.apiRequest.get<ITeam[]>('team/')
+      ]);
 
-      // Set Active Profile store properties
-      this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(loggedUser);
+    // Active profile: a 401 (guest) is not an error — treat rejection as "no user"
+    this.activeProfileStore.setLoading(false);
+    this.activeProfileStore.setActiveProfile(isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null);
 
-      // Set Configuration store properties
-      this.configurationStore.setLoading(false);
-      const currentWeek = seasonData?.currentWeek ?? 1;
-      if (seasonData) {
-        this.configurationStore.setCurrentSeason(seasonData.currentSeason);
-        this.configurationStore.setCurrentWeek(currentWeek);
-        this.configurationStore.setSelectedWeek(currentWeek);
-        this.configurationStore.setSeasonStart(parseInt(seasonData.seasonStart));
-        this.configurationStore.setError(null);
-      }
-
-      // Set Extras store properties
-      if (teams) {
-        this.teamsStore.setTeams(teams);
-      }
-      if (teamByConferenceAndDivision) {
-        this.teamsStore.setAfcTeams(teamByConferenceAndDivision.AFC);
-        this.teamsStore.setNfcTeams(teamByConferenceAndDivision.NFC);
-      }
-      this.extraBetStore.setLoading(false);
-      this.teamsStore.setLoading(false);
-
-      return callback(true);
-    } catch (error: unknown) {
-      this.activeProfileStore.setLoading(false);
-      this.configurationStore.setLoading(false);
-      this.extraBetStore.setLoading(false);
-      this.configurationStore.setError(new Error(String(error)));
-      return callback(false);
+    // Season config: required for the app to function
+    this.configurationStore.setLoading(false);
+    if (isFulfilled(seasonResponse)) {
+      const seasonData = seasonResponse.value;
+      const currentWeek = seasonData.currentWeek ?? 1;
+      this.configurationStore.setCurrentSeason(seasonData.currentSeason);
+      this.configurationStore.setCurrentWeek(currentWeek);
+      this.configurationStore.setSelectedWeek(currentWeek);
+      this.configurationStore.setSeasonStart(parseInt(seasonData.seasonStart));
+    } else {
+      const reason = seasonResponse.reason;
+      this.configurationStore.setError(reason instanceof Error ? reason : new Error(String(reason)));
     }
+
+    // Teams: required for bets/extras to work
+    this.teamsStore.setLoading(false);
+    this.extraBetStore.setLoading(false);
+    if (isFulfilled(teamResponse)) {
+      this.teamsStore.setTeams(teamResponse.value);
+    } else {
+      const reason = teamResponse.reason;
+      this.teamsStore.setError(reason instanceof Error ? reason : new Error(String(reason)));
+    }
+    if (isFulfilled(teamByConferenceAndDivisionResponse)) {
+      this.teamsStore.setAfcTeams(teamByConferenceAndDivisionResponse.value.AFC);
+      this.teamsStore.setNfcTeams(teamByConferenceAndDivisionResponse.value.NFC);
+    } else {
+      const reason = teamByConferenceAndDivisionResponse.reason;
+      this.teamsStore.setError(reason instanceof Error ? reason : new Error(String(reason)));
+    }
+
+    // Fail the startup only if the critical season data could not be loaded
+    const criticalFailure = isRejected(seasonResponse);
+    return callback(!criticalFailure);
   }
 
   initializeLocalStoragePreferences() {

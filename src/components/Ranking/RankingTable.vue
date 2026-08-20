@@ -103,7 +103,7 @@
       Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
       administradores do Bolão.
     </p>
-    <p>{{ error }}</p>
+    <p>{{ error?.message }}</p>
   </PrimeMessage>
   <UserTrackingModal
     :isOpen="isUserTrackingModalOpen"

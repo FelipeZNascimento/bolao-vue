@@ -21,6 +21,7 @@ export default class ExtraBetService {
   public async fetch() {
     const activeProfile = this.activeProfileStore.activeProfile;
     this.extraBetStore.setLoading(true);
+    this.extraBetStore.setError(null);
 
     try {
       const [extraResponse, extraResultsResponse] = await Promise.allSettled([
@@ -50,7 +51,7 @@ export default class ExtraBetService {
       this.extraBetStore.setLoading(false);
     } catch (error: unknown) {
       this.extraBetStore.setLoading(false);
-      this.extraBetStore.setError(new Error(String(error)));
+      this.extraBetStore.setError(error instanceof Error ? error : new Error(String(error)));
     }
   }
 

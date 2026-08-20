@@ -14,16 +14,16 @@ export default class RankingService {
 
   public async fetch() {
     this.rankingStore.setLoadingSeason(true);
+    this.rankingStore.setErrorSeason(null);
 
     try {
       const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/season/`);
       this.rankingStore.setLoadingSeason(false);
       this.rankingStore.setSeason(rankingResponse.seasonRanking);
       this.rankingStore.setWeeks(rankingResponse.weeklyRanking);
-      this.rankingStore.setErrorSeason(null);
     } catch (error: unknown) {
       this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setErrorSeason(new Error(String(error)));
+      this.rankingStore.setErrorSeason(error instanceof Error ? error : new Error(String(error)));
     }
   }
 

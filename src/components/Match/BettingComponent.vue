@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; flex: 1; width: 100%; min-height: 40px">
     <PrimeSelectButton
-      :disabled="isLoading || isMatchStarted"
+      :disabled="isLoading || isMatchStarted || !activeProfileActive"
       v-model="radioButton"
       :options="Object.values(BETS_VALUES)"
       aria-labelledby="custom"
@@ -19,10 +19,11 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
@@ -42,6 +43,10 @@ const matchService = new MatchService();
 const matchesStore = useMatchesStore();
 const toast = useToast();
 const { activeProfile } = storeToRefs(useActiveProfileStore());
+const { currentSeason } = storeToRefs(useConfigurationStore());
+const activeProfileActive = computed(
+  () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value
+);
 
 // ------ Watch Effect Properties ------
 watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));

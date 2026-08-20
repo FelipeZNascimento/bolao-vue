@@ -17,6 +17,8 @@ import PrimeChart from 'primevue/chart';
 import PrimeColorPicker from 'primevue/colorpicker';
 import PrimeColumn from 'primevue/column';
 import PrimeVue from 'primevue/config';
+import PrimeConfirmationService from 'primevue/confirmationservice';
+import PrimeConfirmDialog from 'primevue/confirmdialog';
 import PrimeDataTable from 'primevue/datatable';
 import PrimeDialog from 'primevue/dialog';
 import PrimeDivider from 'primevue/divider';
@@ -81,8 +83,10 @@ app.use(PrimeVue, {
 });
 
 app.use(PrimeToastService);
+app.use(PrimeConfirmationService);
 
 app.component('PrimeButton', PrimeButton);
+app.component('PrimeConfirmDialog', PrimeConfirmDialog);
 app.component('PrimeDialog', PrimeDialog);
 app.component('PrimeInputText', PrimeInputText);
 app.component('PrimeMessage', PrimeMessage);

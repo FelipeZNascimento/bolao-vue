@@ -59,6 +59,14 @@
           <PrimePopover ref="profilePopover">
             <div class="outer-profile-popover">
               <PrimeButton
+                v-if="activeProfile?.admin"
+                variant="text"
+                severity="warn"
+                size="small"
+                label="Admin"
+                @click="$router.push('/admin')"
+              />
+              <PrimeButton
                 variant="text"
                 severity="secondary"
                 size="small"
@@ -110,10 +118,15 @@
     :isOpen="isConfigModalOpen"
     :handleCloseModal="() => (isConfigModalOpen = false)"
   />
+  <SeasonRegisterModal
+    :isOpen="isSeasonRegisterModalOpen"
+    :currentSeason="currentSeason"
+    :handleCloseModal="activeProfileStore.closeSeasonRegisterModal"
+  />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import UserService from '@/services/user';
@@ -124,6 +137,7 @@ import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTES } from './routes';
+import SeasonRegisterModal from './SeasonRegisterModal.vue';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
@@ -148,12 +162,20 @@ onMounted(() => {
   }
 });
 
-const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+const { activeProfile, isLoading: isProfileLoading, isSeasonRegisterModalOpen } = storeToRefs(activeProfileStore);
+const { currentSeason } = storeToRefs(configurationStore);
 
 // ------ Computed Properties ------
 const filteredRoutes = computed(() =>
   ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true))
 );
+
+// ------ Watches ------
+watch(activeProfile, (profile) => {
+  if (profile && currentSeason.value !== null && profile.seasonId !== currentSeason.value) {
+    isSeasonRegisterModalOpen.value = true;
+  }
+});
 
 // ------ Functions ------
 function handleLogout() {

@@ -1,9 +1,6 @@
 <template>
   <div class="home">
-    <HomeGreeting
-      :activeProfile="activeProfile"
-      :myRankingLine="myRankingLine"
-    />
+    <HomeGreeting :myRankingLine="myRankingLine" />
     <HomeExtras v-if="!isSeasonStarted" />
     <HomeMatches />
     <HomeNews />
