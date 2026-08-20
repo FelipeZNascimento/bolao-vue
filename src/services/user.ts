@@ -64,6 +64,43 @@ export default class UserService {
     }
   }
 
+  public async resetPassword(
+    token: string,
+    email: string,
+    newPassword: string,
+    callback: (isSuccess: boolean) => void
+  ) {
+    this.activeProfileStore.setLoading(true);
+    try {
+      await this.apiRequest.post('user/password-token', {
+        email,
+        password: sha1(newPassword).toString(),
+        token
+      });
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(null);
+      return callback(true);
+    } catch (error: unknown) {
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(error as Error);
+      return callback(false);
+    }
+  }
+
+  public async forgotPassword(email: string, callback: (isSuccess: boolean) => void) {
+    this.activeProfileStore.setLoading(true);
+    try {
+      await this.apiRequest.post('user/forgot-password', { email });
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(null);
+      return callback(true);
+    } catch (error: unknown) {
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(error as Error);
+      return callback(false);
+    }
+  }
+
   public async signup(
     email: string,
     password: string,

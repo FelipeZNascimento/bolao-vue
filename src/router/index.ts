@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import ResultsView from '@/views/ResultsView.vue';
 import HomeView from '../views/HomeView.vue';
+import ResetPasswordView from '../views/ResetPasswordView.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -10,6 +11,11 @@ const router = createRouter({
       name: 'home',
       path: '/',
       alias: '/home'
+    },
+    {
+      component: ResetPasswordView,
+      name: 'reset-password',
+      path: '/reset-password'
     },
     {
       alias: '/jogos',

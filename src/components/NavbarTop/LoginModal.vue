@@ -9,12 +9,12 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <h2>{{ isSignupMode ? 'Cadastro' : 'Login' }}</h2>
+      <h2>{{ modalTitle }}</h2>
     </template>
     <Form
       noValidate
       :initialValues
-      :resolver="isSignupMode ? signupResolver : loginResolver"
+      :resolver="currentResolver"
       v-slot="$form"
       @submit="(formData) => onFormSubmit(formData)"
     >
@@ -39,6 +39,7 @@
         <label for="email">Email</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
+        v-if="mode !== 'forgotPassword'"
         variant="in"
         class="input"
       >
@@ -60,7 +61,7 @@
         <label for="password">Senha</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
-        v-if="isSignupMode"
+        v-if="mode === 'signup'"
         variant="in"
         class="input"
       >
@@ -80,7 +81,7 @@
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
-        v-if="isSignupMode"
+        v-if="mode === 'signup'"
         variant="in"
         class="input"
       >
@@ -101,17 +102,22 @@
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
-          rounded
+          v-if="mode === 'login'"
           :disabled="isLoading"
           label="Esqueci a senha"
           variant="text"
           severity="secondary"
-          @click="$form.reset()"
-        >
-          Esqueci a senha
-        </PrimeButton>
+          @click="setMode('forgotPassword')"
+        />
         <PrimeButton
-          rounded
+          v-if="mode === 'forgotPassword'"
+          :disabled="isLoading"
+          label="Voltar ao login"
+          variant="text"
+          severity="secondary"
+          @click="setMode('login')"
+        />
+        <PrimeButton
           type="submit"
           label="Confirmar"
           variant="primary"
@@ -132,12 +138,26 @@
       </p>
     </Form>
     <template
-      v-if="!isSignupMode"
+      v-if="mode === 'signup'"
       #footer
     >
       <PrimeButton
-        rounded
-        @click="toggleMode"
+        @click="setMode('login')"
+        class="signup-button"
+        type="submit"
+        label="Voltar ao login"
+        variant="text"
+        severity="secondary"
+        icon="pi pi-check"
+        :disabled="isLoading"
+      />
+    </template>
+    <template
+      v-else-if="mode === 'login'"
+      #footer
+    >
+      <PrimeButton
+        @click="setMode('signup')"
         class="signup-button"
         type="submit"
         label="Faça aqui o seu cadastro"
@@ -152,6 +172,7 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { useToast } from 'primevue/usetoast';
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
 import UserService from '@/services/user';
@@ -162,20 +183,23 @@ const props = defineProps<{
   isOpen: boolean;
 }>();
 
+type Mode = 'login' | 'signup' | 'forgotPassword';
+
 // ------ Refs ------
 const isVisible = ref(false);
-const isSignupMode = ref(false);
+const mode = ref<Mode>('login');
 const initialValues = ref({
   email: '',
   name: '',
   password: '',
   username: ''
 });
+
 const loginResolver = ref(
   zodResolver(
     z.object({
       email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(1, { message: 'Senha está vazia' })
+      password: z.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' })
     })
   )
 );
@@ -185,7 +209,7 @@ const signupResolver = ref(
     z.object({
       email: z.email({ error: 'Email inválido' }),
       name: z.string().min(1, { message: 'Nome está vazio' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
+      password: z.string().min(6, { message: 'Senha deve ter pelo menos 6 caracteres' }),
       username: z
         .string()
         .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
@@ -194,13 +218,38 @@ const signupResolver = ref(
   )
 );
 
+const forgotPasswordResolver = ref(
+  zodResolver(
+    z.object({
+      email: z.email({ error: 'Email inválido' })
+    })
+  )
+);
+
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const toast = useToast();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);
 const loginError = computed(() => activeProfileStore.error);
+const modalTitle = computed(() => {
+  if (mode.value === 'signup') return 'Cadastro';
+  if (mode.value === 'forgotPassword') return 'Recuperar senha';
+  return 'Login';
+});
+const currentResolver = computed(() => {
+  if (mode.value === 'signup') return signupResolver.value;
+  if (mode.value === 'forgotPassword') return forgotPasswordResolver.value;
+  return loginResolver.value;
+});
+
+// ------ Functions  ------
+function setMode(newMode: Mode) {
+  mode.value = newMode;
+  activeProfileStore.setError(null);
+}
 
 function loginCallback(isSuccess: boolean) {
   if (isSuccess) {
@@ -209,41 +258,49 @@ function loginCallback(isSuccess: boolean) {
   }
 }
 
-// ------ Functions  ------
+function forgotPasswordCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    isVisible.value = false;
+    toast.add({
+      detail: 'Se o email existir na nossa base, você receberá um link para redefinir sua senha.',
+      life: 6000,
+      severity: 'success',
+      summary: 'Email enviado'
+    });
+  }
+}
+
 function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
-  if (isSignupMode.value) {
+  if (mode.value === 'signup') {
     onSignupSubmit(formData);
+  } else if (mode.value === 'forgotPassword') {
+    onForgotPasswordSubmit(formData);
   } else {
     onLoginSubmit(formData);
   }
 }
 
 function onLoginSubmit(formData: FormSubmitEvent<Record<string, string>>) {
+  if (!formData.valid || !formData.values) return;
   activeProfileStore.setError(null);
-  if (!formData.values) {
-    return;
-  }
-
   const { email, password } = formData.values;
   userService.login(email, password, loginCallback);
 }
 
 function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
-  if (!formData.values) {
-    return;
-  }
-
+  if (!formData.valid || !formData.values) return;
   const { email, name, password, username } = formData.values;
   userService.signup(email, password, name, username, loginCallback);
 }
 
-function resetState() {
-  isSignupMode.value = false;
-  activeProfileStore.setError(null);
+function onForgotPasswordSubmit(formData: FormSubmitEvent<Record<string, string>>) {
+  if (!formData.valid || !formData.values) return;
+  const { email } = formData.values;
+  userService.forgotPassword(email, forgotPasswordCallback);
 }
 
-function toggleMode() {
-  isSignupMode.value = !isSignupMode.value;
+function resetState() {
+  mode.value = 'login';
   activeProfileStore.setError(null);
 }
 
