@@ -74,7 +74,6 @@
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
-          rounded
           type="submit"
           label="Confirmar"
           variant="primary"

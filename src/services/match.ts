@@ -27,6 +27,7 @@ export default class MatchService {
 
   public async fetch(week?: null | number, season?: null | number) {
     this.matchesStore.setLoading(true);
+    this.matchesStore.setError(null);
     // Week may be "0" so needs to be checked against null and undefined
     if (week === undefined || week === null) {
       week = this.configurationStore.selectedWeek;
@@ -53,7 +54,7 @@ export default class MatchService {
       this.websocketInstance.connect();
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
-      this.matchesStore.setError(new Error(String(error)));
+      this.matchesStore.setError(error instanceof Error ? error : new Error(String(error)));
     }
   }
 

@@ -3,7 +3,7 @@
     <div class="outer-matches">
       <PrimeMessage
         v-show="errorConfiguration"
-        class="error-message"
+        class="notification-message"
         severity="error"
         variant="outlined"
       >
@@ -12,12 +12,30 @@
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
           administradores do Bolão.
         </p>
-        <p>{{ errorConfiguration }}</p>
+        <p>{{ errorConfiguration?.message }}</p>
       </PrimeMessage>
       <PaginatorComponent />
       <PrimeMessage
+        v-show="!activeProfileActive && !isProfileLoading"
+        class="notification-message"
+        severity="warn"
+      >
+        <!-- variant="outlined" -->
+        Sua inscrição para a temporada atual ainda não está ativa.
+        <p v-if="activeProfile && activeProfile.seasonId !== currentSeason">
+          <span
+            class="register-link"
+            @click="openSeasonRegisterModal()"
+            >Registre-se na atual temporada</span
+          >
+          e efetue o pagamento para participar do Bolão.
+        </p>
+        <p v-else>Assim que confirmarmos seu pagamento, sua conta será liberada!</p>
+        <p><RouterLink to="/regras">Ver regras.</RouterLink></p>
+      </PrimeMessage>
+      <PrimeMessage
         v-show="errorMatches"
-        class="error-message"
+        class="notification-message"
         severity="error"
         variant="outlined"
       >
@@ -26,7 +44,7 @@
           Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
           administradores do Bolão.
         </p>
-        <p>{{ errorMatches }}</p>
+        <p>{{ errorMatches?.message }}</p>
       </PrimeMessage>
       <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
         <span
@@ -67,17 +85,26 @@ import { computed } from 'vue';
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
 const {
   isLoading: isConfigurationLoading,
+  currentSeason,
   rankingPosition,
   error: errorConfiguration,
   resultsView: view
 } = storeToRefs(useConfigurationStore());
 const { isLoading: isMatchesLoading, matches, error: errorMatches } = storeToRefs(useMatchesStore());
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
+const activeProfileStore = useActiveProfileStore();
+const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+const { openSeasonRegisterModal } = activeProfileStore;
+
+const activeProfileActive = computed(
+  () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value
+);
 </script>
 <style scoped>
 .outer-results {
@@ -121,9 +148,15 @@ const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoadin
   }
 }
 
-.error-message {
-  width: 100%;
+.notification-message {
+  align-self: center;
+  text-align: center;
   margin: var(--xl-spacing) 0;
+}
+
+.register-link {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .outer-skeleton-line {

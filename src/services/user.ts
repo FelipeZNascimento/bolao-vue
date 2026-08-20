@@ -60,7 +60,7 @@ export default class UserService {
       this.extraBetStore.resetLoggedUserBets();
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setError(new Error(String(error)));
+      this.activeProfileStore.setError(error instanceof Error ? error : new Error(String(error)));
     }
   }
 
@@ -194,6 +194,19 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setFavoriteUpdating(false);
       this.activeProfileStore.setError(error as Error);
+    }
+  }
+
+  public async seasonRegister(callback: (isSuccess: boolean) => void) {
+    this.activeProfileStore.setLoading(true);
+    try {
+      await this.apiRequest.get('user/season-register', {});
+      this.activeProfileStore.setLoading(false);
+      return callback(true);
+    } catch (error: unknown) {
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(error instanceof Error ? error : new Error(String(error)));
+      return callback(false);
     }
   }
 

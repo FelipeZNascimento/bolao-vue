@@ -71,7 +71,6 @@
         />
         <div>
           <PrimeButton
-            rounded
             :loading="isLoading"
             type="submit"
             label="Desfazer"
@@ -82,7 +81,6 @@
             style="margin-right: var(--l-spacing)"
           />
           <PrimeButton
-            rounded
             :loading="isLoading"
             type="submit"
             label="Confirmar"
