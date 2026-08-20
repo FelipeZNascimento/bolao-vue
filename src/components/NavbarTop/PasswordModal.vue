@@ -198,8 +198,4 @@ watch(isVisible, async (newValue) => {
   align-items: center;
   gap: var(--m-spacing);
 }
-
-.signup-button {
-  width: 100%;
-}
 </style>

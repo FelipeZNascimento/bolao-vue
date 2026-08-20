@@ -95,25 +95,6 @@ function renderTooltip(value: BetsValues) {
   }
 }
 </script>
-<style lang="scss" scoped>
-.betting-radio-button {
-  margin: var(--m-spacing);
-
-  @media (min-width: 1440px) {
-    margin: var(--l-spacing);
-  }
-}
-
-.betting-label {
-  position: absolute;
-  // bottom: -50%;
-  // left: 50%;
-  transform: translateY(100%) translateX(-100%);
-  font-size: var(--xs-font-size);
-  color: var(--text-color);
-  z-index: 1;
-}
-</style>
 
 <style lang="scss">
 .p-selectbutton .p-togglebutton {

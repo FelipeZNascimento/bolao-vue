@@ -6,6 +6,7 @@ import type { IMatch } from './matches.types';
 export const useMatchesStore = defineStore('matches', () => {
   const isLoading = ref<boolean>(false);
   const matches = ref<IMatch[]>([]);
+  const currentWeekMatches = ref<IMatch[]>([]);
   const error = ref<Error | null>(null);
 
   function resetLoggedUserBets() {
@@ -16,6 +17,10 @@ export const useMatchesStore = defineStore('matches', () => {
 
   function setMatches(newMatches: IMatch[]) {
     matches.value = newMatches;
+  }
+
+  function setCurrentWeekMatches(newMatches: IMatch[]) {
+    currentWeekMatches.value = newMatches;
   }
 
   function updateMatches(updatedMatches: IMatch[]) {
@@ -30,6 +35,22 @@ export const useMatchesStore = defineStore('matches', () => {
         matches.value[index].overUnder = updatedMatch.overUnder;
         matches.value[index].homeTeamOdds = updatedMatch.homeTeamOdds;
         matches.value[index].bets = updatedMatch.bets;
+      }
+    });
+  }
+
+  function updateCurrentWeekMatches(updatedMatches: IMatch[]) {
+    updatedMatches.forEach((updatedMatch) => {
+      const index = currentWeekMatches.value.findIndex((m) => m.id === updatedMatch.id);
+      if (index !== -1) {
+        currentWeekMatches.value[index].away.possession = updatedMatch.away.possession;
+        currentWeekMatches.value[index].away.score = updatedMatch.away.score;
+        currentWeekMatches.value[index].home.possession = updatedMatch.home.possession;
+        currentWeekMatches.value[index].home.score = updatedMatch.home.score;
+        currentWeekMatches.value[index].status = updatedMatch.status;
+        currentWeekMatches.value[index].overUnder = updatedMatch.overUnder;
+        currentWeekMatches.value[index].homeTeamOdds = updatedMatch.homeTeamOdds;
+        currentWeekMatches.value[index].bets = updatedMatch.bets;
       }
     });
   }
@@ -53,13 +74,16 @@ export const useMatchesStore = defineStore('matches', () => {
   }
 
   return {
+    currentWeekMatches,
     error,
     isLoading,
     matches,
     resetLoggedUserBets,
+    setCurrentWeekMatches,
     setError,
     setLoading,
     setMatches,
+    updateCurrentWeekMatches,
     updateLoggedUserBet,
     updateMatches
   };

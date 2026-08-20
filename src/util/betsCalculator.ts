@@ -1,4 +1,4 @@
-import { BETS_VALUES, type BetsValues } from '@/constants/bets';
+import { BETS_VALUES, type BetsValues, type Ribbon } from '@/constants/bets';
 
 export type CorrectBets = { bullseye: BetsValues[]; half: BetsValues[] };
 
@@ -50,6 +50,17 @@ export function isBullseye(correctBets: CorrectBets, betValue: BetsValues | unde
 
 export function isHalfBet(correctBets: CorrectBets, betValue: BetsValues | undefined) {
   return correctBets.half.find((halfBet) => halfBet === betValue) !== undefined;
+}
+
+export function calculateRibbon(
+  correctBets: CorrectBets,
+  betValue: BetsValues | undefined,
+  matchStarted: boolean
+): Ribbon {
+  if (betValue === undefined || !matchStarted) return null;
+  if (isBullseye(correctBets, betValue)) return 'BULLSEYE';
+  if (isHalfBet(correctBets, betValue)) return 'HALF';
+  return 'MISS';
 }
 
 export function calculateCorrectMargin(awayScore: number, homeScore: number) {

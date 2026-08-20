@@ -17,12 +17,30 @@
       <font-awesome-icon :icon="['fab', 'telegram']" />
       Telegram
     </a>
+    <span style="padding: 0 var(--xs-spacing)">·</span>
+    <button
+      class="theme-toggle"
+      :title="isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'"
+      @click="toggleTheme"
+    >
+      <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" />
+    </button>
   </footer>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useConfigurationStore } from '@/stores/configuration';
+
 declare const __APP_VERSION__: string;
 const version = __APP_VERSION__;
+
+const configurationStore = useConfigurationStore();
+const isDark = computed(() => configurationStore.theme === 'dark');
+
+function toggleTheme() {
+  configurationStore.setTheme(isDark.value ? 'light' : 'dark');
+}
 </script>
 
 <style scoped>
@@ -47,6 +65,22 @@ const version = __APP_VERSION__;
     &:hover {
       color: var(--bolao-c-grey1);
     }
+  }
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--bolao-c-grey3);
+  font-size: var(--xs-font-size);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--bolao-c-grey1);
   }
 }
 </style>

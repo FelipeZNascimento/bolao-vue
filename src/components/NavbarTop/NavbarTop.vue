@@ -270,10 +270,6 @@ nav {
   color: var(--nav-disabled);
 }
 
-.prime-dialog {
-  width: 400px;
-}
-
 .outer-profile-popover {
   display: flex;
   flex-direction: column;

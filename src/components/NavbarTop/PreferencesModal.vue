@@ -18,7 +18,6 @@
         class="buttons"
       />
     </div>
-    <!-- <div class="preferences-group"> -->
     <div>
       <div class="outer-search-icons">
         <PrimeFloatLabel
@@ -209,23 +208,6 @@ watch(isVisible, async (newValue) => {
 });
 </script>
 <style scoped>
-.preferences-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: var(--xxs-spacing) 0;
-
-  .label {
-    flex: 2;
-  }
-
-  .buttons {
-    flex: 3;
-    justify-content: flex-start;
-  }
-}
-
 .outer-color {
   flex-direction: column;
   display: flex;
@@ -269,14 +251,6 @@ watch(isVisible, async (newValue) => {
 
 .selected {
   background-color: var(--bolao-c-grey5);
-}
-
-.outer-color-picker {
-  width: 100%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .iconAndName {

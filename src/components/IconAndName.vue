@@ -76,37 +76,4 @@ withDefaults(
 .active {
   font-weight: bold;
 }
-
-.badge {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-
-  &Online {
-    @extend .badge;
-    background-color: var(--bolao-c-mint);
-    color: var(--bolao-c-mint);
-
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: ripple 2s infinite ease-in-out;
-      border: 1px solid;
-      content: '';
-    }
-  }
-
-  &Offline {
-    @extend .badge;
-
-    background-color: var(--bolao-c-grey3);
-    color: var(--bolao-c-red);
-    opacity: 0.2;
-  }
-}
 </style>

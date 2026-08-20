@@ -110,11 +110,6 @@ const filteredWeekRanking = computed(() => {
   overflow-y: auto;
 }
 
-.outer-position {
-  display: flex;
-  gap: var(--s-spacing);
-}
-
 .ranking-header {
   display: flex;
   gap: var(--s-spacing);
@@ -124,12 +119,6 @@ const filteredWeekRanking = computed(() => {
   font-size: var(--s-font-size);
   color: var(--bolao-c-grey3);
   height: 50px;
-}
-
-.skeleton-ranking-line {
-  /* width: 100%; */
-  height: 40px !important;
-  margin: var(--xs-spacing) 0;
 }
 
 .toggle {
@@ -164,10 +153,5 @@ const filteredWeekRanking = computed(() => {
   &--active {
     color: var(--bolao-c-gold);
   }
-}
-
-.error-message {
-  width: 100%;
-  margin: var(--xl-spacing) 0;
 }
 </style>
