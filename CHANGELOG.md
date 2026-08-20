@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.7.1
+
+### Patch Changes
+
+- a4aa2c6: Hide activation warning when there's no active profile;
+  Add admin to mobile menu;
+
 ## 1.7.0
 
 ### Minor Changes
