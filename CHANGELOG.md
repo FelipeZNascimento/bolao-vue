@@ -1,5 +1,15 @@
 # bolao-vue
 
+## 1.5.0
+
+### Minor Changes
+
+- 05535e8: Fix reset password flow;
+- 05535e8: Add favorites;
+- 9021aca: Home now has two versions: for logged in users and for guests;
+  Logged in Home now has a News section;
+  New ranking page;
+
 ## 1.4.0
 
 ### Minor Changes
