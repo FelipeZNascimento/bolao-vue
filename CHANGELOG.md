@@ -1,5 +1,14 @@
 # bolao-vue
 
+## 1.7.0
+
+### Minor Changes
+
+- 42a6176: Guide users through account activation;
+  Retry mechanism on all API requests;
+  Revamp error handling;
+  Add admin page;
+
 ## 1.6.0
 
 ### Minor Changes
