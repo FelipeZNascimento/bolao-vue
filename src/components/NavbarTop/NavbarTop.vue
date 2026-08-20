@@ -59,6 +59,14 @@
           <PrimePopover ref="profilePopover">
             <div class="outer-profile-popover">
               <PrimeButton
+                v-if="activeProfile?.admin"
+                variant="text"
+                severity="warn"
+                size="small"
+                label="Admin"
+                @click="$router.push('/admin')"
+              />
+              <PrimeButton
                 variant="text"
                 severity="secondary"
                 size="small"

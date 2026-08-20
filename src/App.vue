@@ -1,6 +1,7 @@
 <template>
   <NavbarTop />
   <PrimeToast />
+  <PrimeConfirmDialog />
   <div class="outer-view">
     <RouterView />
   </div>

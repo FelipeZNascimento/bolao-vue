@@ -3,6 +3,7 @@ export interface IUser {
   admin: boolean;
   color: string;
   email: string;
+  extraBetsCount?: number;
   fullName: string;
   icon: string;
   id: number;
