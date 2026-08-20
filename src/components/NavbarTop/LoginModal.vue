@@ -172,6 +172,7 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
@@ -230,10 +231,8 @@ const forgotPasswordResolver = ref(
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
 const toast = useToast();
+const { isLoading, error: loginError } = storeToRefs(activeProfileStore);
 
-// ------ Computed Properties ------
-const isLoading = computed(() => activeProfileStore.isLoading);
-const loginError = computed(() => activeProfileStore.error);
 const modalTitle = computed(() => {
   if (mode.value === 'signup') return 'Cadastro';
   if (mode.value === 'forgotPassword') return 'Recuperar senha';

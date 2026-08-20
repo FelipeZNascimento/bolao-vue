@@ -95,7 +95,8 @@
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
-import { computed, ref, watch, watchEffect } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, watch, watchEffect } from 'vue';
 import { useConfigurationStore } from '@/stores/configuration';
 import type {
   TColumn,
@@ -147,13 +148,8 @@ const columnOptions = ref<TColumn[]>([
 // ------ Initialization ------
 const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
-
-// ------ Computed Properties ------
-const rankingPosition = computed(() => configurationStore.rankingPosition);
-const columnConfig = computed(() => rankingStore.columnsOption);
-const rowSpacingConfig = computed(() => rankingStore.rowSpacing);
-const theme = computed(() => configurationStore.theme);
-const resultsView = computed(() => configurationStore.resultsView);
+const { rankingPosition, theme, resultsView } = storeToRefs(configurationStore);
+const { columnsOption: columnConfig, rowSpacing: rowSpacingConfig } = storeToRefs(rankingStore);
 
 // ------ Functions  ------
 function handleColumnConfig(newOption: TColumnsValue) {

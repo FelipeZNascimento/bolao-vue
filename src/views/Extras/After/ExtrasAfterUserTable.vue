@@ -112,7 +112,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref, type Ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, type Ref, watch } from 'vue';
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
@@ -138,14 +139,8 @@ const divisionResults = ref<ITeam[]>([]);
 const conferenceResults = ref<ITeam[]>([]);
 const superbowlResults = ref<ITeam[]>([]);
 
-// ------ Initialization ------
-const extraBetStore = useExtraBetStore();
-const activeProfileStore = useActiveProfileStore();
-
-// ------ Computed Properties ------
-const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
-const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+const { extraBetsResults, loggedUserBets } = storeToRefs(useExtraBetStore());
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 // ------ Functions ------
 function findConferenceChampions(betsArray: IExtraBetBet[], referenceVar: Ref<ITeam[]>) {

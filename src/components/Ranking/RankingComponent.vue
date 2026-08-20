@@ -43,6 +43,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -57,23 +58,25 @@ defineProps<{
 const isWeeklyRanking = ref(false);
 const showOnlyFavorites = ref(false);
 
-// ------ Initialization ------
-const configurationStore = useConfigurationStore();
+const { isLoading: isConfigLoading, selectedWeek } = storeToRefs(useConfigurationStore());
 const rankingStore = useRankingStore();
-const activeProfileStore = useActiveProfileStore();
+const {
+  columnsOption,
+  rowSpacing,
+  errorWeek,
+  errorSeason,
+  isLoadingWeek: isLoadingWeekStore,
+  isLoadingSeason: isLoadingSeasonStore,
+  seasonRanking,
+  weeksRanking
+} = storeToRefs(rankingStore);
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 // ------ Computed Properties  ------
-const columnsOption = computed(() => rankingStore.columnsOption);
-const rowSpacing = computed(() => rankingStore.rowSpacing);
-const errorWeek = computed(() => rankingStore.errorWeek);
-const errorSeason = computed(() => rankingStore.errorSeason);
-const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStore.isLoadingWeek);
-const selectedWeek = computed(() => configurationStore.selectedWeek);
-const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
-const seasonRanking = computed(() => rankingStore.seasonRanking);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+const isLoadingWeek = computed(() => isConfigLoading.value || isLoadingWeekStore.value);
+const isLoadingSeason = computed(() => isConfigLoading.value || isLoadingSeasonStore.value);
 const selectedWeekRanking = computed(
-  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || []
+  () => weeksRanking.value?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || []
 );
 
 const filteredSeasonRanking = computed(() => {

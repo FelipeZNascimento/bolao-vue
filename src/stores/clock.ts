@@ -1,9 +1,16 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useConfigurationStore } from './configuration';
 
 export const useClockStore = defineStore('clock', () => {
+  const configurationStore = useConfigurationStore();
+
   const currentTime = ref<Date>(new Date());
   const currentTimestamp = ref<number>(Math.floor(currentTime.value.getTime() / 1000));
+
+  const isSeasonStarted = computed(
+    () => !!configurationStore.seasonStart && currentTimestamp.value >= configurationStore.seasonStart
+  );
   let timer: null | number = null;
 
   function startClock() {
@@ -54,6 +61,7 @@ export const useClockStore = defineStore('clock', () => {
     currentTimestamp,
     formattedDate,
     formattedTime,
+    isSeasonStarted,
     startClock,
     stopClock
   };

@@ -43,14 +43,12 @@
   </PrimePanel>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 
 const clockStore = useClockStore();
-const configurationStore = useConfigurationStore();
-
-const seasonStart = computed(() => configurationStore.seasonStart);
+const { seasonStart } = storeToRefs(useConfigurationStore());
 
 function formatDate() {
   if (!seasonStart.value) {

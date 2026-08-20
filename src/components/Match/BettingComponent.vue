@@ -17,8 +17,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
-import { computed, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -39,11 +40,8 @@ const isLoading = ref<boolean>(false);
 // ------ Initializations ------
 const matchService = new MatchService();
 const matchesStore = useMatchesStore();
-const activeProfileStore = useActiveProfileStore();
 const toast = useToast();
-
-// ------ Computed Properties ------
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 // ------ Watch Effect Properties ------
 watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));

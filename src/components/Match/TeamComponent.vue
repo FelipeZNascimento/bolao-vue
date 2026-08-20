@@ -21,7 +21,6 @@
     <div
       v-if="!isNameless"
       class="team-alias"
-      :style="{ textShadow: `1px 1px 2px ${team.foreground}` }"
     >
       {{ isGridMode || isAlias ? team.code : team.alias }}
       <p
@@ -106,6 +105,9 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
     left: 25%;
     top: 50%;
     transform: translate(-50%, -50%);
+    @media (max-width: 1024px) {
+      height: 50px;
+    }
   }
 }
 
@@ -133,7 +135,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 }
 
 .team-shield-image-small {
-  height: 60px;
+  height: 50px;
   z-index: -1;
 }
 

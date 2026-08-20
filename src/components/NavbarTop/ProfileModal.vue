@@ -105,6 +105,7 @@
 </template>
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -122,11 +123,8 @@ const isVisible = ref(false);
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const { isLoading, error, activeProfile } = storeToRefs(activeProfileStore);
 
-// ------ Computed Properties ------
-const isLoading = computed(() => activeProfileStore.isLoading);
-const error = computed(() => activeProfileStore.error);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
 const initialValues = computed(() => {
   return {
     email: activeProfile.value?.email,

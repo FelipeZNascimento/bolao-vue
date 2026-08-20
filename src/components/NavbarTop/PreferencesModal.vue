@@ -105,6 +105,7 @@
 </template>
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { storeToRefs } from 'pinia';
 import type { PageState } from 'primevue';
 import { computed, ref, watch, watchEffect } from 'vue';
 import { faIconsListObj } from '@/constants/font-awesome';
@@ -129,6 +130,7 @@ const isVisible = ref(false);
 const activeProfileStore = useActiveProfileStore();
 const userService = new UserService();
 const numOfIconsPerPage = 80;
+const { isLoading, activeProfile } = storeToRefs(activeProfileStore);
 
 // ------ Computed Properties ------
 const filteredIcons = computed(() => {
@@ -137,8 +139,6 @@ const filteredIcons = computed(() => {
   return filtered;
 });
 
-const isLoading = computed(() => activeProfileStore.isLoading);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
 const maxNumOfPages = computed(() => Math.ceil(filteredIcons.value.length / numOfIconsPerPage));
 const maxNumOfIconsCurrentPage = computed(() => {
   if (filteredIcons.value.length === 0) {

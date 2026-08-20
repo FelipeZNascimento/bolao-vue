@@ -29,6 +29,7 @@ export interface ITeam {
   division: TDivision;
   foreground: string;
   id: number;
+  espnId: number;
   name: string;
   possession: boolean;
   score: number;

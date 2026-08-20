@@ -112,6 +112,7 @@
   />
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref } from 'vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
@@ -147,9 +148,9 @@ onMounted(() => {
   }
 });
 
+const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+
 // ------ Computed Properties ------
-const activeProfile = computed(() => activeProfileStore.activeProfile);
-const isProfileLoading = computed(() => activeProfileStore.isLoading);
 const filteredRoutes = computed(() =>
   ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true))
 );

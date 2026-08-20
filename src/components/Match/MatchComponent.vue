@@ -45,6 +45,7 @@
 </template>
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import { useClockStore } from '@/stores/clock';
@@ -73,11 +74,10 @@ const isBetsModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const activeProfileStore = useActiveProfileStore();
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 
 // ------ Computed Properties ------
 const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
-const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.match.timestamp;

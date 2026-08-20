@@ -43,6 +43,7 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
 import UserService from '@/services/user';
@@ -63,13 +64,11 @@ const isVisible = ref(false);
 // ------ Initialization ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
-const rankingStore = useRankingStore();
+const { isFavoriteUpdating, activeProfile } = storeToRefs(activeProfileStore);
+const { weeksRanking: ranking } = storeToRefs(useRankingStore());
 
 // ------ Computed ------
-const isFavoriteUpdating = computed(() => activeProfileStore.isFavoriteUpdating);
-const isFavorite = computed(
-  () => activeProfileStore.activeProfile?.favorites?.includes(String(props.selectedUser?.id)) ?? false
-);
+const isFavorite = computed(() => activeProfile.value?.favorites?.includes(String(props.selectedUser?.id)) ?? false);
 
 // ------ Functions ------
 function handleFavoriteClick() {
@@ -77,9 +76,6 @@ function handleFavoriteClick() {
     userService.updateFavorites(props.selectedUser.id);
   }
 }
-
-// ------ Computed Properties  ------
-const ranking = computed(() => rankingStore.weeksRanking);
 
 // ------ Functions  ------
 function chartData() {

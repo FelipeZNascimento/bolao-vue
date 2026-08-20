@@ -1,12 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { IConferenceTeams, IExtraBet, IExtraBetBet, ITeamWithExtras } from './extraBet.types';
+import type { IExtraBet, IExtraBetBet, ITeamWithExtras } from './extraBet.types';
 
-const emptyConferenceObj = { East: [], North: [], South: [], West: [] };
 export const useExtraBetStore = defineStore('extras', () => {
-  const afcTeams = ref<IConferenceTeams>(emptyConferenceObj);
-  const nfcTeams = ref<IConferenceTeams>(emptyConferenceObj);
-
   const allUsersBets = ref<IExtraBet[]>([]);
   const extraBetsResults = ref<IExtraBetBet[] | null>(null);
   const loggedUserBets = ref<IExtraBet | null>(null);
@@ -37,14 +33,6 @@ export const useExtraBetStore = defineStore('extras', () => {
     allUsersBets.value = newExtras;
   }
 
-  function setAfcTeams(newTeams: IConferenceTeams) {
-    afcTeams.value = newTeams;
-  }
-
-  function setNfcTeams(newTeams: IConferenceTeams) {
-    nfcTeams.value = newTeams;
-  }
-
   function setUpdating(loadingState: boolean) {
     isUpdating.value = loadingState;
   }
@@ -58,7 +46,6 @@ export const useExtraBetStore = defineStore('extras', () => {
   }
 
   return {
-    afcTeams,
     allUsersBets,
     allUsersBetsByTeam,
     error,
@@ -66,16 +53,13 @@ export const useExtraBetStore = defineStore('extras', () => {
     isLoading,
     isUpdating,
     loggedUserBets,
-    nfcTeams,
     resetLoggedUserBets,
-    setAfcTeams,
     setAllUsersBets,
     setAllUsersBetsByTeam,
     setError,
     setExtraBetsResults,
     setLoading,
     setLoggedUserBets,
-    setNfcTeams,
     setUpdating
   };
 });

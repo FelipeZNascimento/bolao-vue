@@ -174,6 +174,7 @@
 </template>
 <script setup lang="ts">
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
@@ -205,11 +206,9 @@ const modalInfo = ref<ModalInfo>({ team: null, teamsWithExtras: [] });
 const sortField = ref<'conference' | 'division' | 'name' | 'superbowl' | 'wildcard'>('name');
 const sortOrder = ref<number | undefined>(1);
 
-// ------ Initialization ------
-const extraBetStore = useExtraBetStore();
+const { extraBetsResults } = storeToRefs(useExtraBetStore());
 
 // ------ Computed Properties ------
-const extraBetsResults = computed(() => extraBetStore.extraBetsResults);
 const sortedTeams = computed(() => {
   return props.teamsWithBets.slice().sort((a: ITeamWithExtras, b: ITeamWithExtras) => {
     if (sortField.value === 'name') {

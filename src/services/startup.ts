@@ -4,6 +4,8 @@ import { useConfigurationStore } from '@/stores/configuration';
 import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type { IConferenceTeams } from '@/stores/extraBet.types';
+import type { ITeam } from '@/stores/matches.types';
+import { useTeamsStore } from '@/stores/teams';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
 import ApiService from './api_request';
 
@@ -23,12 +25,14 @@ export default class StartupService {
   private apiRequest;
   private configurationStore;
   private extraBetStore;
+  private teamsStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.configurationStore = useConfigurationStore();
     this.extraBetStore = useExtraBetStore();
+    this.teamsStore = useTeamsStore();
   }
 
   public async initialize(callback: (isSuccess: boolean) => void) {
@@ -36,20 +40,31 @@ export default class StartupService {
     this.activeProfileStore.setLoading(true);
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
+    this.teamsStore.setLoading(true);
     try {
-      const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
-        this.apiRequest.get<IUser>('user/activeProfile'),
-        this.apiRequest.get<InitializeObj>('season/current'),
-        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision')
-      ]);
+      const [activeProfileResponse, seasonResponse, teamByConferenceAndDivisionResponse, teamResponse] =
+        await Promise.allSettled([
+          this.apiRequest.get<IUser>('user/activeProfile'),
+          this.apiRequest.get<InitializeObj>('season/current'),
+          this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
+          this.apiRequest.get<ITeam[]>('team/')
+        ]);
 
-      if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
+      if (
+        isRejected(activeProfileResponse) ||
+        isRejected(seasonResponse) ||
+        isRejected(teamByConferenceAndDivisionResponse) ||
+        isRejected(teamResponse)
+      ) {
         throw new Error('Falha ao inicializar a aplicação');
       }
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
       const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
-      const teamByConferenceAndDivision = isFulfilled(teamResponse) ? teamResponse.value : null;
+      const teamByConferenceAndDivision = isFulfilled(teamByConferenceAndDivisionResponse)
+        ? teamByConferenceAndDivisionResponse.value
+        : null;
+      const teams = isFulfilled(teamResponse) ? teamResponse.value : null;
 
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
@@ -67,11 +82,15 @@ export default class StartupService {
       }
 
       // Set Extras store properties
-      this.extraBetStore.setLoading(false);
-      if (teamByConferenceAndDivision) {
-        this.extraBetStore.setAfcTeams(teamByConferenceAndDivision.AFC);
-        this.extraBetStore.setNfcTeams(teamByConferenceAndDivision.NFC);
+      if (teams) {
+        this.teamsStore.setTeams(teams);
       }
+      if (teamByConferenceAndDivision) {
+        this.teamsStore.setAfcTeams(teamByConferenceAndDivision.AFC);
+        this.teamsStore.setNfcTeams(teamByConferenceAndDivision.NFC);
+      }
+      this.extraBetStore.setLoading(false);
+      this.teamsStore.setLoading(false);
 
       return callback(true);
     } catch (error: unknown) {

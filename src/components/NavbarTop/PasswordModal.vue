@@ -117,7 +117,8 @@
 </template>
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
-import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { updatePasswordResolver } from '@/util/zodResolvers';
@@ -134,16 +135,12 @@ const isVisible = ref(false);
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const { isLoading, error } = storeToRefs(activeProfileStore);
 
-// ------ Computed Properties ------
-const isLoading = computed(() => activeProfileStore.isLoading);
-const error = computed(() => activeProfileStore.error);
-const initialValues = computed(() => {
-  return {
-    currentPassword: '',
-    newPassword: '',
-    newPasswordConfirmation: ''
-  };
+const initialValues = ref({
+  currentPassword: '',
+  newPassword: '',
+  newPasswordConfirmation: ''
 });
 
 // ------ Functions ------

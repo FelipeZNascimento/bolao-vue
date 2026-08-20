@@ -58,6 +58,7 @@
   />
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue';
 import { computed, ref, watchEffect } from 'vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
@@ -72,6 +73,7 @@ import type {
   TExtrasTeam,
   TWildcards
 } from '@/stores/extraBet.types';
+import { useTeamsStore } from '@/stores/teams';
 import ExtrasBettingCounter from './Before/ExtrasBettingCounter.vue';
 import ExtrasBettingPerConference from './Before/ExtrasBettingPerConference.vue';
 import ExtrasBettingPlayoffs from './Before/ExtrasBettingPlayoffs.vue';
@@ -106,28 +108,11 @@ const selectedSuperBowl = ref<null | TExtrasTeam>(null);
 // ------ Initialization ------
 const extraBetService = new ExtraBetService();
 const extraBetStore = useExtraBetStore();
+const teamsStore = useTeamsStore();
 const toast = useToast();
 
-// ------ Computed Properties ------
-const isLoading = computed(() => extraBetStore.isLoading);
-const loggedUserBets = computed(() => extraBetStore.loggedUserBets);
-const afcTeams = computed(() => {
-  return {
-    East: extraBetStore.afcTeams.East,
-    North: extraBetStore.afcTeams.North,
-    South: extraBetStore.afcTeams.South,
-    West: extraBetStore.afcTeams.West
-  };
-});
-
-const nfcTeams = computed(() => {
-  return {
-    East: extraBetStore.nfcTeams.East,
-    North: extraBetStore.nfcTeams.North,
-    South: extraBetStore.nfcTeams.South,
-    West: extraBetStore.nfcTeams.West
-  };
-});
+const { isLoading, loggedUserBets } = storeToRefs(extraBetStore);
+const { afcTeams, nfcTeams } = storeToRefs(teamsStore);
 
 // ------ Watch Effects ------
 watchEffect(() => {
