@@ -1,7 +1,7 @@
 <template>
   <section class="dashboard-section">
     <div class="section-header">
-      <h2 class="section-title">Top ranking da temporada</h2>
+      <h2 class="section-title">Top 10</h2>
       <RouterLink
         to="/ranking"
         class="section-link"

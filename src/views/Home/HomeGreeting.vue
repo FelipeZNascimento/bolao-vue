@@ -27,16 +27,21 @@
       </div>
     </div>
     <div style="display: flex; flex-direction: column; align-items: center; gap: var(--s-spacing)">
-      <RouterLink to="/jogos">
+      <RouterLink
+        to="/jogos"
+        style="width: 100%"
+      >
         <PrimeButton
           label="Apostar agora"
           icon="pi pi-american-football"
+          fluid
         />
       </RouterLink>
       <a
         href="https://t.me/+SvMGiAUj4m2FZge4"
         target="_blank"
         rel="noopener noreferrer"
+        style="width: 100%"
       >
         <PrimeButton
           label="Entrar no Telegram"
@@ -67,12 +72,20 @@ defineProps<{
 .greeting {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--l-spacing);
   padding: var(--xl-spacing);
   background: var(--color-background-soft);
   border: 1px solid var(--bolao-c-grey2-t1);
   flex-wrap: wrap;
+
+  @media (max-width: 1023px) {
+    justify-content: center;
+  }
+
+  @media (min-width: 1024px) {
+    justify-content: space-between;
+  }
+
   a {
     text-decoration: none;
   }
@@ -89,9 +102,15 @@ defineProps<{
 }
 
 .greeting-title {
-  font-size: var(--xl-font-size);
   font-weight: 800;
   color: var(--color-heading);
+
+  @media (max-width: 1023px) {
+    font-size: var(--l-font-size);
+  }
+  @media (min-width: 1024px) {
+    font-size: var(--xl-font-size);
+  }
 }
 
 .greeting-sub {

@@ -31,7 +31,10 @@
           <span class="extras-stat-value">{{ placedCount }}</span>
           <span class="extras-stat-label">apostas feitas</span>
         </div>
-        <div class="extras-stat-divider" />
+        <div
+          v-if="isDesktop"
+          class="extras-stat-divider"
+        />
         <div
           class="extras-stat extras-stat--missing"
           :class="{ 'extras-stat--ok': missingCount === 0 }"
@@ -39,7 +42,10 @@
           <span class="extras-stat-value">{{ missingCount }}</span>
           <span class="extras-stat-label">{{ missingCount === 1 ? 'aposta faltando' : 'apostas faltando' }}</span>
         </div>
-        <div class="extras-stat-divider" />
+        <div
+          v-if="isDesktop"
+          class="extras-stat-divider"
+        />
         <div class="extras-stat">
           <span class="extras-stat-value">{{ TOTAL_BETS }}</span>
           <span class="extras-stat-label">total de apostas</span>
@@ -91,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
@@ -210,6 +217,7 @@ const countdownSeconds = computed(() => String(Math.floor((countdownMs.value % 6
 .extras-stats {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--l-spacing);
   flex-wrap: wrap;
 }
@@ -234,10 +242,17 @@ const countdownSeconds = computed(() => String(Math.floor((countdownMs.value % 6
 }
 
 .extras-stat-value {
-  font-size: var(--xxl-font-size);
   font-weight: 800;
   color: var(--color-heading);
   line-height: 1;
+
+  @media (max-width: 1023px) {
+    font-size: var(--l-font-size);
+  }
+
+  @media (min-width: 1024px) {
+    font-size: var(--xxl-font-size);
+  }
 }
 
 .extras-stat-label {

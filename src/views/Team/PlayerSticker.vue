@@ -100,7 +100,7 @@ function onPhotoError(e: Event) {
 .sticker {
   display: flex;
   flex-direction: column;
-  background: var(--color-background-soft);
+  background: var(--sticker-color, var(--bolao-c-sky));
   border: 1.5px solid var(--bolao-c-grey2-t1);
   text-decoration: none;
   color: inherit;
@@ -130,11 +130,7 @@ function onPhotoError(e: Event) {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: linear-gradient(
-    170deg,
-    color-mix(in srgb, var(--sticker-color, var(--bolao-c-navy)) 30%, var(--bolao-c-navy-l1)) 0%,
-    var(--color-background-soft) 100%
-  );
+  background: linear-gradient(170deg, var(--sticker-color) 0%, var(--color-background-soft) 100%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -170,7 +166,7 @@ function onPhotoError(e: Event) {
     font-size: 10px;
     font-weight: 800;
     color: #fff;
-    background: var(--sticker-color, var(--bolao-c-sky));
+    background: var(--bolao-c-grey5);
     padding: 2px 6px;
     letter-spacing: 0.06em;
     text-shadow: 0 1px 2px #0004;
@@ -180,10 +176,12 @@ function onPhotoError(e: Event) {
     top: 6px;
     right: 6px;
     font-size: var(--xs-font-size);
+    background: var(--bolao-c-grey5);
     font-weight: 900;
     color: #fff;
     text-shadow: 0 1px 4px #0006;
     letter-spacing: -0.02em;
+    padding: 2px 6px;
   }
 
   &--name {

@@ -21,10 +21,13 @@
       v-tooltip.top="match.loggedUserBets ? 'Aposta feita' : 'Sem aposta'"
     />
     <!-- away -->
-    <div class="match-team match-team--away">
+    <div
+      class="match-team match-team--away"
+      :style="{ background: `linear-gradient(to right, ${match.away.background}, transparent)` }"
+    >
       <span
         class="team-code"
-        :style="{ color: match.away.foreground, backgroundColor: match.away.background }"
+        :style="{ color: match.away.foreground }"
         >{{ match.away.code }}</span
       >
       <span
@@ -44,7 +47,10 @@
       <span v-else>@</span>
     </span>
     <!-- home -->
-    <div class="match-team match-team--home">
+    <div
+      class="match-team match-team--home"
+      :style="{ background: `linear-gradient(to left, ${match.home.background}, transparent)` }"
+    >
       <span
         v-if="isStarted"
         class="match-score"
@@ -52,7 +58,7 @@
       >
       <span
         class="team-code"
-        :style="{ color: match.home.foreground, backgroundColor: match.home.background }"
+        :style="{ color: match.home.foreground }"
         >{{ match.home.code }}</span
       >
     </div>
@@ -106,7 +112,7 @@ function closeModal() {
   display: flex;
   align-items: center;
   gap: var(--s-spacing);
-  padding: var(--s-spacing) var(--m-spacing);
+  padding-left: var(--m-spacing);
   background: var(--color-background-soft);
   border: 1px solid var(--bolao-c-grey2-t1);
   cursor: pointer;
@@ -168,6 +174,7 @@ function closeModal() {
   display: flex;
   align-items: center;
   gap: var(--xs-spacing);
+  padding: var(--s-spacing) var(--xs-spacing);
   flex: 1;
 
   &--away {
@@ -180,11 +187,11 @@ function closeModal() {
 }
 
 .team-code {
-  font-size: var(--xs-font-size);
-  font-weight: 700;
-  padding: 2px 5px;
-  border-radius: 3px;
+  font-size: var(--s-font-size);
+  font-weight: 800;
+  padding: 2px 4px;
   line-height: 1.4;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .match-score {
@@ -196,7 +203,7 @@ function closeModal() {
 }
 
 .match-sep {
-  flex: 1;
+  flex: 0;
   display: flex;
   align-items: center;
   justify-content: center;

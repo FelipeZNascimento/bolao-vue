@@ -121,7 +121,7 @@
               :key="tab.key"
               class="roster-toggle-btn"
               :class="{ 'roster-toggle-btn--active': activeRosterTab === tab.key }"
-              :style="activeRosterTab === tab.key ? { '--tab-color': tab.color, '--bg-color': tab.bgColor } : {}"
+              :style="activeRosterTab === tab.key ? { '--tab-color': tab.color } : {}"
               @click="activeRosterTab = tab.key"
             >
               {{ tab.label }}
@@ -267,22 +267,20 @@ function sortedPlayers(players: RosterPlayer[]) {
   );
 }
 
-const rosterTabs: { key: RosterTab; label: string; color: string; bgColor: string }[] = [
+const rosterTabs: { key: RosterTab; label: string; color: string }[] = [
   {
     key: 'offense',
     label: 'Ataque',
-    color: team.value?.foreground ?? '#1565c0',
-    bgColor: team.value?.background ?? '#be2a2a'
+    color: team.value?.foreground ?? '#1565c0'
   },
   {
     key: 'defense',
     label: 'Defesa',
-    color: team.value?.background ?? '#be2a2a',
-    bgColor: team.value?.foreground ?? '#1565c0'
+    color: team.value?.background ?? '#be2a2a'
   },
-  { key: 'specialTeam', label: 'Times Especiais', color: 'var(--color-contrast)', bgColor: '#0d9488' },
-  { key: 'injuredReserveOrOut', label: 'Lesionados', color: 'var(--color-contrast)', bgColor: '#7c5cbf' },
-  { key: 'practiceSquad', label: 'Practice Squad', color: 'var(--color-contrast)', bgColor: '#5b7fa6' }
+  { key: 'specialTeam', label: 'Times Especiais', color: 'var(--color-contrast)' },
+  { key: 'injuredReserveOrOut', label: 'Lesionados', color: 'var(--color-contrast)' },
+  { key: 'practiceSquad', label: 'Practice Squad', color: 'var(--color-contrast)' }
 ];
 
 const TAB_GROUPS: Record<RosterTab, RosterGroup['position'][]> = {
@@ -345,10 +343,10 @@ function groupColor(pos: RosterGroup['position']) {
   const map: Record<RosterGroup['position'], string> = {
     offense: team.value?.foreground ?? '#1565c0',
     defense: team.value?.background ?? '#be2a2a',
-    specialTeam: '#0d9488',
-    injuredReserveOrOut: '#7c5cbf',
-    suspended: '#7c5cbf',
-    practiceSquad: '#5b7fa6'
+    specialTeam: 'var(--color-contrast)',
+    injuredReserveOrOut: 'var(--color-contrast)',
+    suspended: 'var(--color-contrast)',
+    practiceSquad: 'var(--color-contrast)'
   };
   return map[pos] ?? '#cfd8dc';
 }
@@ -703,8 +701,6 @@ watch(espnId, (id) => fetchTeam(id));
 
   &--active {
     border-color: var(--tab-color, var(--bolao-c-sky));
-    color: var(--tab-color, var(--bolao-c-sky));
-    background: color-mix(in srgb, var(--bg-color, var(--bolao-c-sky)) 50%, transparent);
   }
 
   &:not(.roster-toggle-btn--active):hover {
