@@ -10,15 +10,29 @@
     style="width: 60%; padding: var(--s-spacing)"
   >
     <template #header>
-      <p>
+      <div class="modal-header">
         <IconAndName
           v-if="selectedUser"
           :color="selectedUser.color"
           :name="selectedUser.name"
           :icon="selectedUser.icon"
           :isActive="isUserActive"
+          :isFavorite="isFavorite"
         />
-      </p>
+        <button
+          v-if="selectedUser && !isUserActive"
+          class="favorite-btn"
+          :class="{ 'favorite-btn--active': isFavorite }"
+          :disabled="isFavoriteUpdating"
+          @click="handleFavoriteClick"
+          v-tooltip.top="isFavorite ? 'Remover favorito' : 'Adicionar favorito'"
+        >
+          <i
+            class="pi"
+            :class="isFavoriteUpdating ? 'pi-spin pi-spinner' : isFavorite ? 'pi-star-fill' : 'pi-star'"
+          />
+        </button>
+      </div>
     </template>
     <PrimeChart
       type="bar"
@@ -31,6 +45,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
+import UserService from '@/services/user';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
 import { useRankingStore } from '@/stores/ranking';
 
@@ -45,7 +61,22 @@ const props = defineProps<{
 const isVisible = ref(false);
 
 // ------ Initialization ------
+const userService = new UserService();
+const activeProfileStore = useActiveProfileStore();
 const rankingStore = useRankingStore();
+
+// ------ Computed ------
+const isFavoriteUpdating = computed(() => activeProfileStore.isFavoriteUpdating);
+const isFavorite = computed(
+  () => activeProfileStore.activeProfile?.favorites?.includes(String(props.selectedUser?.id)) ?? false
+);
+
+// ------ Functions ------
+function handleFavoriteClick() {
+  if (props.selectedUser) {
+    userService.updateFavorites(props.selectedUser.id);
+  }
+}
 
 // ------ Computed Properties  ------
 const ranking = computed(() => rankingStore.weeksRanking);
@@ -166,5 +197,41 @@ watch(isVisible, async (newValue) => {
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;
+}
+</style>
+<style lang="scss" scoped>
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-spacing);
+}
+
+.favorite-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0 var(--xxs-spacing);
+  cursor: pointer;
+  color: var(--bolao-c-grey3);
+  font-size: var(--m-font-size);
+  transition:
+    color 0.2s,
+    transform 0.15s;
+
+  &:hover:not(:disabled) {
+    color: var(--bolao-c-gold);
+    transform: scale(1.2);
+  }
+
+  &--active {
+    color: var(--bolao-c-gold);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
 }
 </style>

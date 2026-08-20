@@ -54,7 +54,10 @@
         />
       </div>
     </div>
-    <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
+    <RankingComponent
+      v-if="isDesktop && rankingPosition === 'active'"
+      mode="compact"
+    />
   </div>
 </template>
 <script setup lang="ts">

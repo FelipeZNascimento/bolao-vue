@@ -129,7 +129,7 @@ const themeOptions = ref<TTheme[]>([
 ]);
 const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
-  { label: 'Modal (menu)', value: 'modal' }
+  { label: 'Apenas menu', value: 'modal' }
 ]);
 const resultsViewOptions = ref<TResultsView[]>([
   { label: 'Grid', value: 'grid' },

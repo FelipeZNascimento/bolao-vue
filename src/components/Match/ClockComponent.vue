@@ -214,10 +214,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   flex: 0;
 }
 
-.clock-date {
-  font-size: var(--m2-font-size);
-}
-
 .clock-time {
   font-size: var(--s-font-size);
   display: flex;

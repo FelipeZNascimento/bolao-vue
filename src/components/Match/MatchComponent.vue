@@ -49,7 +49,7 @@ import { computed, ref } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import { useClockStore } from '@/stores/clock';
 import type { IMatch } from '@/stores/matches.types';
-import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
+import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 import BetsModal from './BetsModal/BetsModal.vue';
 import ClockComponent from './ClockComponent.vue';
 import ScoreComponent from './ScoreComponent.vue';
@@ -83,19 +83,9 @@ const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.match.timestamp;
 });
 
-const ribbon = computed(() => {
-  if (!props.match.loggedUserBets || !isMatchStarted.value) {
-    return null;
-  }
-
-  if (isBullseye(correctBets.value, props.match.loggedUserBets.value)) {
-    return 'BULLSEYE';
-  } else if (isHalfBet(correctBets.value, props.match.loggedUserBets.value)) {
-    return 'HALF';
-  }
-
-  return 'MISS';
-});
+const ribbon = computed(() =>
+  calculateRibbon(correctBets.value, props.match.loggedUserBets?.value, isMatchStarted.value)
+);
 
 function handleCloseModal() {
   isBetsModalOpen.value = false;

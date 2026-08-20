@@ -7,4 +7,5 @@ export interface IUser {
   isOnline: boolean;
   name: string;
   status: number;
+  favorites: string[];
 }

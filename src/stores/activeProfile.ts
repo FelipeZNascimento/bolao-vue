@@ -5,10 +5,15 @@ import type { IUser } from './activeProfile.types';
 export const useActiveProfileStore = defineStore('activeProfile', () => {
   const activeProfile = ref<IUser | null>(null);
   const isLoading = ref(false);
+  const isFavoriteUpdating = ref(false);
   const error = ref<Error | null>(null);
 
   function setLoading(loadingState: boolean) {
     isLoading.value = loadingState;
+  }
+
+  function setFavoriteUpdating(loadingState: boolean) {
+    isFavoriteUpdating.value = loadingState;
   }
 
   function setActiveProfile(profile: IUser | null) {
@@ -16,9 +21,24 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     isLoading.value = false;
   }
 
+  function setFavorites(favorites: string[]) {
+    if (!activeProfile.value) return;
+    activeProfile.value = { ...activeProfile.value, favorites };
+  }
+
   function setError(newError: Error | null) {
     error.value = newError;
   }
 
-  return { activeProfile, error, isLoading, setActiveProfile, setError, setLoading };
+  return {
+    activeProfile,
+    error,
+    isFavoriteUpdating,
+    isLoading,
+    setActiveProfile,
+    setError,
+    setFavoriteUpdating,
+    setFavorites,
+    setLoading
+  };
 });

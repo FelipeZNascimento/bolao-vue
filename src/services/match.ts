@@ -40,6 +40,9 @@ export default class MatchService {
     try {
       const response = await this.apiRequest.get<fetchMatch>(`match/${season}/${week}`);
       this.matchesStore.setMatches(response.matches);
+      if (week === this.configurationStore.currentWeek) {
+        this.matchesStore.setCurrentWeekMatches(response.matches);
+      }
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
@@ -85,10 +88,17 @@ export default class MatchService {
       week: number;
     };
 
-    // Update matches if the update is for the current week being viewed
+    const matchesStore = useMatchesStore();
+    const currentWeek = configurationStore.currentWeek;
+
+    // Update the selected-week view if the websocket update is for the week being viewed
     if (selectedWeek === week) {
-      const matchesStore = useMatchesStore();
       matchesStore.updateMatches(matches);
+    }
+
+    // Always keep the current-week snapshot up to date for the home dashboard
+    if (currentWeek === week) {
+      matchesStore.updateCurrentWeekMatches(matches);
     }
 
     const rankingStore = useRankingStore();
