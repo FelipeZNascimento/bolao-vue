@@ -1,5 +1,14 @@
 # bolao-vue
 
+## 1.6.0
+
+### Minor Changes
+
+- 5b8f5c2: Add teams view;
+  Improve logged in home with new sections (extras, news);
+  Started working with Pinia's storeToRefs;
+  Mobile UI/UX improvements;
+
 ## 1.5.0
 
 ### Minor Changes
