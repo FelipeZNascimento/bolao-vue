@@ -18,9 +18,9 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useExtraBetStore } from '@/stores/extraBet';
 import type { TConferenceChampions, TExtrasTeam } from '@/stores/extraBet.types';
 import type { TConference, TDivision } from '@/stores/matches.types';
+import { useTeamsStore } from '@/stores/teams';
 import ExtrasBettingTable from '@/views/Extras/Before/ExtrasBettingTable.vue';
 
 defineProps<{
@@ -31,22 +31,22 @@ defineProps<{
 }>();
 
 // ------ Initialization ------
-const extraBetStore = useExtraBetStore();
+const teamsStore = useTeamsStore();
 
 // ------ Computed Properties ------
 const sortedTeams = computed(() => {
   const AFC = [
-    ...extraBetStore.afcTeams.North,
-    ...extraBetStore.afcTeams.East,
-    ...extraBetStore.afcTeams.South,
-    ...extraBetStore.afcTeams.West
+    ...teamsStore.afcTeams.North,
+    ...teamsStore.afcTeams.East,
+    ...teamsStore.afcTeams.South,
+    ...teamsStore.afcTeams.West
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const NFC = [
-    ...extraBetStore.nfcTeams.North,
-    ...extraBetStore.nfcTeams.East,
-    ...extraBetStore.nfcTeams.South,
-    ...extraBetStore.nfcTeams.West
+    ...teamsStore.nfcTeams.North,
+    ...teamsStore.nfcTeams.East,
+    ...teamsStore.nfcTeams.South,
+    ...teamsStore.nfcTeams.West
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   return { AFC, NFC };

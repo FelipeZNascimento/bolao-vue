@@ -4,6 +4,7 @@ import { useConfigurationStore } from '@/stores/configuration';
 import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type { IConferenceTeams } from '@/stores/extraBet.types';
+import { useTeamsStore } from '@/stores/teams';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
 import ApiService from './api_request';
 
@@ -23,12 +24,14 @@ export default class StartupService {
   private apiRequest;
   private configurationStore;
   private extraBetStore;
+  private teamsStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.configurationStore = useConfigurationStore();
     this.extraBetStore = useExtraBetStore();
+    this.teamsStore = useTeamsStore();
   }
 
   public async initialize(callback: (isSuccess: boolean) => void) {
@@ -36,6 +39,7 @@ export default class StartupService {
     this.activeProfileStore.setLoading(true);
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
+    this.teamsStore.setLoading(true);
     try {
       const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile'),
@@ -68,9 +72,10 @@ export default class StartupService {
 
       // Set Extras store properties
       this.extraBetStore.setLoading(false);
+      this.teamsStore.setLoading(false);
       if (teamByConferenceAndDivision) {
-        this.extraBetStore.setAfcTeams(teamByConferenceAndDivision.AFC);
-        this.extraBetStore.setNfcTeams(teamByConferenceAndDivision.NFC);
+        this.teamsStore.setAfcTeams(teamByConferenceAndDivision.AFC);
+        this.teamsStore.setNfcTeams(teamByConferenceAndDivision.NFC);
       }
 
       return callback(true);

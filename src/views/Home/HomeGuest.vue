@@ -176,7 +176,7 @@ const steps = [
   },
   {
     title: 'Acumule pontos',
-    description: 'Acerto exato vale 10 pts, resultado correto vale 7 pts, vencedor correto vale 3 pts.'
+    description: 'Acertar o vencedor e a margem correta vale 10 pts, acertar apenas o vencedor vale 5 pts.'
   }
 ];
 

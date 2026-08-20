@@ -17,7 +17,7 @@
             Você está em
             <strong>{{ myRankingLine.user.position }}º lugar</strong>
             com
-            <strong>{{ myRankingLine.user.totalPoints }} pts</strong>
+            <strong>{{ myRankingLine.score.total }} pts</strong>
             na temporada.
           </p>
           <p
@@ -28,12 +28,29 @@
           </p>
         </div>
       </div>
-      <RouterLink to="/jogos">
-        <PrimeButton
-          label="Apostar agora"
-          icon="pi pi-american-football"
-        />
-      </RouterLink>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: var(--s-spacing)">
+        <RouterLink to="/jogos">
+          <PrimeButton
+            label="Apostar agora"
+            icon="pi pi-american-football"
+          />
+        </RouterLink>
+        <a
+          href="https://t.me/+SvMGiAUj4m2FZge4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <PrimeButton
+            label="Entrar no Telegram"
+            severity="secondary"
+            variant="outlined"
+          >
+            <template #icon>
+              <font-awesome-icon :icon="['fab', 'telegram']" />
+            </template>
+          </PrimeButton>
+        </a>
+      </div>
     </section>
 
     <!-- ── This week's matches ── -->
@@ -149,8 +166,8 @@
             :icon="line.user.icon"
           />
           <span class="rank-name">{{ line.user.name }}</span>
-          <span class="rank-pts">{{ line.user.totalPoints }} pts</span>
-          <span class="rank-pct">{{ line.user.totalPercentage }}%</span>
+          <span class="rank-pts">{{ line.score.total }} pts</span>
+          <span class="rank-pct">{{ line.score.percentage }}%</span>
         </li>
       </ol>
       <p
