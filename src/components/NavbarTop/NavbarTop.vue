@@ -218,9 +218,16 @@ nav {
 
   a {
     display: inline-block;
-    padding: 0;
     transition: 0.2s;
     color: var(--nav-link);
+
+    @media (max-width: 1023px) {
+      padding: 0;
+    }
+
+    @media (min-width: 1024px) {
+      padding: 0 var(--m-spacing);
+    }
   }
 }
 
