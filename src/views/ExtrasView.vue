@@ -7,21 +7,15 @@
   <ExtrasAfter v-else />
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import ExtrasAfter from './Extras/ExtrasAfter.vue';
 import ExtrasBefore from './Extras/ExtrasBefore.vue';
 
 // ------ Initialization ------
-const clockStore = useClockStore();
-const configurationStore = useConfigurationStore();
-
-// ------ Computed Properties ------
-const isLoadingConfig = computed(() => configurationStore.isLoading);
-const isSeasonStarted = computed(
-  () => configurationStore.seasonStart && clockStore.currentTimestamp >= configurationStore.seasonStart
-);
+const { isSeasonStarted } = storeToRefs(useClockStore());
+const { isLoading: isLoadingConfig } = storeToRefs(useConfigurationStore());
 </script>
 <style lang="scss" scoped>
 .skeleton-outer {
