@@ -38,7 +38,7 @@
 
     <!-- ── This week's matches ── -->
     <section class="dashboard-section">
-      <h2 class="section-title">Jogos da semana {{ configurationStore.currentWeek }}</h2>
+      <h2 class="section-title">Semana {{ configurationStore.currentWeek }}</h2>
       <div
         v-if="isLoadingMatches"
         class="match-grid"
@@ -82,17 +82,17 @@
         class="ranking-list"
       >
         <PrimeSkeleton
-          v-for="n in 5"
+          v-for="n in 10"
           :key="n"
           height="48px"
         />
       </div>
       <ol
-        v-else-if="top5.length"
+        v-else-if="topRanking.length"
         class="ranking-list"
       >
         <li
-          v-for="line in top5"
+          v-for="line in topRanking"
           :key="line.user.id"
           class="ranking-row"
           :class="{ 'ranking-row--me': line.user.id === activeProfile.id }"
@@ -138,7 +138,7 @@ const rankingStore = useRankingStore();
 const matches = computed(() => matchesStore.currentWeekMatches);
 const isLoadingMatches = computed(() => matchesStore.isLoading);
 const isLoadingRanking = computed(() => rankingStore.isLoadingSeason);
-const top5 = computed(() => rankingStore.seasonRanking.slice(0, 5));
+const topRanking = computed(() => rankingStore.seasonRanking.slice(0, 10));
 const myRankingLine = computed(() => rankingStore.seasonRanking.find((l) => l.user.id === props.activeProfile.id));
 </script>
 
@@ -202,10 +202,9 @@ const myRankingLine = computed(() => rankingStore.seasonRanking.find((l) => l.us
 }
 
 .section-title {
-  font-size: var(--xl-font-size);
+  font-size: var(--l-font-size);
   font-weight: 700;
   color: var(--color-heading);
-  margin-bottom: var(--l-spacing);
 }
 
 .section-link {

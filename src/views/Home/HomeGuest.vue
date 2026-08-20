@@ -336,10 +336,9 @@ const comingSoon = [
 }
 
 .section-title {
-  font-size: var(--xl-font-size);
+  font-size: var(--l-font-size);
   font-weight: 700;
   color: var(--color-heading);
-  margin-bottom: var(--l-spacing);
 }
 
 .steps {

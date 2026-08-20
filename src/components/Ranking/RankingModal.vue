@@ -11,7 +11,7 @@
     <template #header>
       <h2>Ranking</h2>
     </template>
-    <RankingComponent isModal />
+    <RankingComponent mode="modal" />
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -43,22 +43,6 @@ watch(isVisible, async (newValue) => {
 });
 </script>
 <style>
-.input {
-  padding-bottom: var(--m-spacing);
-}
-
-.buttons-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: var(--m-spacing);
-}
-
-.signup-button {
-  width: 100%;
-}
-
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;

@@ -4,11 +4,13 @@
     <nav>
       <PrimeMenubar :model="filteredRoutes">
         <template #start>
-          <img
-            class="logo-image"
-            src="/src/img/logo.png"
-            :alt="`Bolao NFL logo`"
-          />
+          <RouterLink to="/home">
+            <img
+              class="logo-image"
+              src="/src/img/logo.png"
+              :alt="`Bolao NFL logo`"
+            />
+          </RouterLink>
         </template>
         <template #item="{ item }">
           <RouterLink
@@ -24,16 +26,6 @@
             custom
           >
             <a @click="navigate()">
-              <span>{{ item.label }}</span>
-            </a>
-          </RouterLink>
-          <RouterLink
-            v-else-if="isMobile || rankingPosition === 'modal'"
-            to=""
-            @click="isRankingModalOpen = true"
-            custom
-          >
-            <a>
               <span>{{ item.label }}</span>
             </a>
           </RouterLink>
@@ -118,13 +110,8 @@
     :isOpen="isConfigModalOpen"
     :handleCloseModal="() => (isConfigModalOpen = false)"
   />
-  <RankingModal
-    :isOpen="isRankingModalOpen"
-    :handleCloseModal="() => (isRankingModalOpen = false)"
-  />
 </template>
 <script setup lang="ts">
-import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, onMounted, ref } from 'vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
@@ -132,11 +119,10 @@ import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import IconAndName from '../IconAndName.vue';
-import RankingModal from '../Ranking/RankingModal.vue';
 import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
 import ProfileModal from './ProfileModal.vue';
-import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
+import { ROUTES } from './routes';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
@@ -144,15 +130,9 @@ const isLoginModalOpen = ref(false);
 const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
 const isPreferencesModalOpen = ref(false);
-const isRankingModalOpen = ref(false);
 const profilePopover = ref();
 const isConfigModalOpen = ref(false);
 const activeRoute = ref(ROUTES[0].id);
-const rankingRoute = {
-  id: ROUTE_ID.RANKING,
-  label: 'Ranking',
-  needCredentials: true
-};
 
 // ------ Initializations ------
 const configurationStore = useConfigurationStore();
@@ -170,13 +150,9 @@ onMounted(() => {
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isProfileLoading = computed(() => activeProfileStore.isLoading);
-const rankingPosition = computed(() => configurationStore.rankingPosition);
-const filteredRoutes = computed(() => {
-  const filtered: TROUTE[] = ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true));
-  filtered.push(rankingRoute);
-
-  return filtered;
-});
+const filteredRoutes = computed(() =>
+  ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true))
+);
 
 // ------ Functions ------
 function handleLogout() {
@@ -218,6 +194,8 @@ nav {
   top: 0;
 
   .p-menubar {
+    --p-menubar-mobile-button-size: 2.5rem;
+    --p-icon-size: 1.5rem;
     border: none;
     height: 100%;
     border-radius: 0;
@@ -235,12 +213,12 @@ nav {
   }
 
   .logo-image {
-    max-height: 60px;
+    max-height: 50px;
   }
 
   a {
     display: inline-block;
-    padding: 0 12px;
+    padding: 0;
     transition: 0.2s;
     color: var(--nav-link);
   }

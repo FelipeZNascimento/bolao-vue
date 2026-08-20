@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'outer-ranking': !isModal }">
+  <div :class="{ 'outer-ranking--compact': mode === 'compact', 'outer-ranking--full': mode === 'full' }">
     <div class="ranking-header">
       <span
         class="toggle"
@@ -34,8 +34,8 @@
         :isWeekly="isWeeklyRanking"
         :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
         :rankingData="isWeeklyRanking ? filteredWeekRanking : filteredSeasonRanking"
-        :columnConfig="columnsOption"
-        :rowSpacingConfig="rowSpacing"
+        :columnConfig="mode === 'full' ? 'complete' : columnsOption"
+        :rowSpacingConfig="mode === 'full' ? 'normal' : rowSpacing"
         :activeProfile="activeProfile"
         :error="isWeeklyRanking ? errorSeason : errorWeek"
       />
@@ -49,14 +49,9 @@ import { useConfigurationStore } from '@/stores/configuration';
 import { useRankingStore } from '@/stores/ranking';
 import RankingTable from './RankingTable.vue';
 
-withDefaults(
-  defineProps<{
-    isModal?: boolean;
-  }>(),
-  {
-    isModal: false
-  }
-);
+defineProps<{
+  mode: 'full' | 'compact' | 'modal';
+}>();
 
 // ------ Refs ------
 const isWeeklyRanking = ref(false);
@@ -95,14 +90,20 @@ const filteredWeekRanking = computed(() => {
   );
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .outer-ranking {
-  top: 80px;
-  right: 0;
-
-  position: sticky;
-  min-width: 310px;
-  max-height: calc(100vh - 80px);
+  &--full {
+    flex: 1;
+    max-width: 100vw;
+    overflow-x: auto;
+  }
+  &--compact {
+    top: 80px;
+    right: 0;
+    position: sticky;
+    min-width: 310px;
+    max-height: calc(100vh - 80px);
+  }
 }
 
 .ranking-container {
