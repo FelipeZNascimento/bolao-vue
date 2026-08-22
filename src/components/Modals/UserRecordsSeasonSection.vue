@@ -47,6 +47,7 @@
       :sortOrder="-1"
       size="small"
       class="records-table"
+      stripedRows
     >
       <PrimeColumn
         field="seasonLabel"
@@ -89,10 +90,12 @@ defineProps<{
 <style lang="scss" scoped>
 .records-totals {
   display: flex;
-  gap: var(--l-spacing);
+  flex-wrap: wrap;
+  gap: var(--s-spacing);
   padding: var(--m-spacing) 0;
   border-bottom: 1px solid var(--p-surface-border);
   margin-bottom: var(--s-spacing);
+  justify-content: center;
 }
 
 .total-stat {
@@ -101,6 +104,7 @@ defineProps<{
   gap: 2px;
   background-color: var(--bolao-c-grey3-t1);
   padding: var(--s-spacing);
+  flex: 1;
 
   .total-label {
     font-size: 0.7rem;
@@ -113,6 +117,10 @@ defineProps<{
     font-size: var(--m-font-size);
     font-weight: 700;
     color: var(--bolao-c-grey2);
+
+    @media (max-width: 1023px) {
+      font-size: var(--s-font-size);
+    }
   }
 }
 

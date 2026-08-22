@@ -79,7 +79,7 @@
         </template>
         <template v-if="liveMatches.length">
           <div class="section-header section-header--live">
-            <i class="pi pi-circle-fill" />
+            <span class="live-dot" />
             Ao vivo
           </div>
           <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
@@ -185,6 +185,7 @@ const activeProfileActive = computed(
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
+  width: 100%;
 
   @media (max-width: 1023px) {
     gap: var(--m-spacing);
@@ -208,21 +209,31 @@ const activeProfileActive = computed(
 
   &--live {
     color: var(--bolao-c-red);
-
-    i {
-      font-size: var(--xs-font-size);
-      animation: pulse 1.2s ease-in-out infinite;
-    }
   }
+
+  @media (max-width: 1023px) {
+    padding-left: var(--m-spacing);
+  }
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--bolao-c-red);
+  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%,
   100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.3;
+    opacity: 0.4;
+    transform: scale(0.7);
   }
 }
 
