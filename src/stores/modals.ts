@@ -35,6 +35,6 @@ export const useModalsStore = defineStore('modals', () => {
     isUserTrackingModalOpen,
     selectedUserTracking,
     openUserTrackingModal,
-    closeUserTrackingModal,
+    closeUserTrackingModal
   };
 });
