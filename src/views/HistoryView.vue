@@ -36,6 +36,23 @@
           size="small"
           display="chip"
         />
+        <div
+          class="filter-toggle"
+          v-tooltip.top="'Oculta entradas com menos de 90% das apostas da temporada'"
+        >
+          <PrimeSelectButton
+            v-model="filterIncomplete"
+            :options="incompleteOptions"
+            optionLabel="label"
+            optionValue="value"
+            :allowEmpty="false"
+            :size="isMobileOnly ? 'small' : 'large'"
+          />
+          <span class="filter-toggle__label">
+            <i class="pi pi-info-circle" />
+            Participação mínima para ser considerado completo: 90%
+          </span>
+        </div>
       </div>
 
       <PrimeDataTable
@@ -46,6 +63,7 @@
         :paginator="true"
         :rows="25"
         class="history-table"
+        stripedRows
       >
         <PrimeColumn
           field="season.label"
@@ -112,6 +130,7 @@
 </template>
 
 <script setup lang="ts">
+import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed, onMounted, ref } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
 import type { ISeasonRecord, ISeasonRecordsResponse } from '@/components/Modals/userRecords.types';
@@ -124,6 +143,12 @@ const error = ref<string | null>(null);
 
 const filterUser = ref('');
 const filterSeasons = ref<string[]>([]);
+const filterIncomplete = ref(false);
+
+const incompleteOptions = [
+  { label: 'Todos', value: false },
+  { label: 'Completos', value: true }
+];
 
 const seasonOptions = computed(() => {
   if (!records.value) return [];
@@ -135,7 +160,8 @@ const filteredRecords = computed(() => {
   return records.value.filter((r) => {
     const matchesUser = !filterUser.value || r.user.name.toLowerCase().includes(filterUser.value.toLowerCase());
     const matchesSeason = filterSeasons.value.length === 0 || filterSeasons.value.includes(r.season.label);
-    return matchesUser && matchesSeason;
+    const matchesComplete = !filterIncomplete.value || r.totalBets >= 0.9 * r.totalGames;
+    return matchesUser && matchesSeason && matchesComplete;
   });
 });
 
@@ -196,6 +222,21 @@ onMounted(fetchRecords);
   display: flex;
   gap: var(--s-spacing);
   flex-wrap: wrap;
+}
+
+.filter-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: help;
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: var(--xs-spacing);
+    font-size: var(--xs-font-size);
+    color: var(--p-text-muted-color);
+  }
 }
 
 .history-table {

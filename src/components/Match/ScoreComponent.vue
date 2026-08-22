@@ -187,7 +187,7 @@ function calculateIndicatorPosition(value: number, userIndicator: boolean, force
 
 .userbet-indicator {
   position: absolute;
-  z-index: 999;
+  z-index: 99;
   display: flex;
   transition: all 0.2s;
 
@@ -213,7 +213,7 @@ function calculateIndicatorPosition(value: number, userIndicator: boolean, force
 }
 .bet-indicator {
   position: absolute;
-  z-index: 990;
+  z-index: 98;
   display: flex;
   transition: all 0.2s;
   color: white;

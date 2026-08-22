@@ -29,6 +29,7 @@
         sortField="percentage"
         :sortOrder="-1"
         size="small"
+        stripedRows
       >
         <PrimeColumn
           field="seasonLabel"
