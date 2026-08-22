@@ -1,5 +1,16 @@
 # bolao-vue
 
+## 1.9.1
+
+### Patch Changes
+
+- c18d94d: UX/UI improvements:
+  - Tables in History page now have a filter for minimum participation percentage;
+  - Tables have now striped rows for better readability;
+  - Mobile styles for History page;
+  - Live games now have a pulsing red dot, and are centralized;
+  - Other minor UI tweaks;
+
 ## 1.9.0
 
 ### Minor Changes
