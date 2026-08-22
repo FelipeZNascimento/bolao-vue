@@ -34,22 +34,55 @@
         </button>
       </div>
     </template>
-    <PrimeChart
-      type="bar"
-      :data="chartData()"
-      :style="{ height: '300px' }"
-      :options="chartOptions"
-    ></PrimeChart>
+
+    <PrimeTabs value="grafico">
+      <PrimeTabList>
+        <PrimeTab value="grafico">Gráfico</PrimeTab>
+        <PrimeTab value="historico">Temporadas</PrimeTab>
+        <PrimeTab value="topBottom">Semanas</PrimeTab>
+      </PrimeTabList>
+
+      <PrimeTabPanels>
+        <PrimeTabPanel value="grafico">
+          <PrimeChart
+            type="bar"
+            :data="chartData()"
+            :style="{ height: '300px' }"
+            :options="chartOptions"
+          />
+        </PrimeTabPanel>
+
+        <PrimeTabPanel value="historico">
+          <UserRecordsSeasonSection
+            :records="records"
+            :isLoading="isLoadingRecords"
+            :error="recordsError"
+          />
+        </PrimeTabPanel>
+
+        <PrimeTabPanel value="topBottom">
+          <UserReacordsWeeksSection
+            :records="records"
+            :isLoading="isLoadingRecords"
+            :error="recordsError"
+          />
+        </PrimeTabPanel>
+      </PrimeTabPanels>
+    </PrimeTabs>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
+import ApiService from '@/services/api_request';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
 import { useRankingStore } from '@/stores/ranking';
+import UserReacordsWeeksSection from './UserReacordsWeeksSection.vue';
+import type { IUserRecords } from './userRecords.types';
+import UserRecordsSeasonSection from './UserRecordsSeasonSection.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -60,8 +93,12 @@ const props = defineProps<{
 
 // ------ Refs ------
 const isVisible = ref(false);
+const records = ref<IUserRecords | null>(null);
+const isLoadingRecords = ref(false);
+const recordsError = ref<string | null>(null);
 
 // ------ Initialization ------
+const apiService = new ApiService();
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
 const { isFavoriteUpdating, activeProfile } = storeToRefs(activeProfileStore);
@@ -141,25 +178,25 @@ const chartOptions = {
   maintainAspectRatio: false,
   responsive: true,
   scales: {
-    x: { stacked: true, ticks: { color: 'white' }, grid: { color: '#ffffff20' } },
+    x: { stacked: true, ticks: { color: 'grey' }, grid: { color: '#77777720' } },
     y: {
       position: 'left',
       stacked: true,
-      grid: { color: '#ffffff20' },
+      grid: { color: '#77777720' },
       ticks: {
-        color: 'white'
+        color: 'grey'
       },
       title: {
         display: true,
         text: 'Porcentagem de Pontos',
-        color: 'white'
+        color: 'grey'
       }
     },
     y1: {
       display: true,
       grid: {
         display: false,
-        color: 'white',
+        color: 'grey',
         drawOnChartArea: false
       },
       max: 35,
@@ -170,23 +207,39 @@ const chartOptions = {
       ticks: {
         min: 1,
         stepSize: 1,
-        color: 'white'
+        color: 'grey'
       },
       title: {
         display: true,
         text: 'Posição',
-        color: 'white'
+        color: 'grey'
       },
       type: 'linear'
     }
   }
 };
+async function fetchRecords(userId: number) {
+  isLoadingRecords.value = true;
+  recordsError.value = null;
+  records.value = null;
+  try {
+    records.value = await apiService.get<IUserRecords>(`user/records/${userId}`);
+  } catch (e) {
+    recordsError.value = e instanceof Error ? e.message : 'Erro ao carregar histórico.';
+  } finally {
+    isLoadingRecords.value = false;
+  }
+}
+
 // ------ Watches ------
 watch(
   () => props.isOpen,
-  async (newValue) => {
+  (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      if (props.selectedUser) fetchRecords(props.selectedUser.id);
+    } else {
+      records.value = null;
     }
   }
 );

@@ -56,6 +56,11 @@ const router = createRouter({
       path: '/teams/:id'
     },
     {
+      component: () => import('../views/HistoryView.vue'),
+      name: 'history',
+      path: '/history'
+    },
+    {
       beforeEnter: () => {
         const { activeProfile } = useActiveProfileStore();
         if (!activeProfile?.admin) return { name: 'home' };

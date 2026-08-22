@@ -27,6 +27,7 @@
           class="pi"
           :class="showOnlyFavorites ? 'pi-star-fill' : 'pi-star'"
         />
+        Favoritos
       </button>
     </div>
     <div class="ranking-container">
@@ -119,8 +120,7 @@ const filteredWeekRanking = computed(() => {
   justify-content: center;
   align-items: center;
   padding: var(--s-spacing) 0;
-  font-size: var(--s-font-size);
-  color: var(--bolao-c-grey3);
+  font-size: var(--xs-font-size);
   height: 50px;
 }
 
@@ -130,7 +130,7 @@ const filteredWeekRanking = computed(() => {
 }
 
 .activeToggle {
-  color: var(--bolao-c-white);
+  color: var(--color-contrast);
 }
 
 .favorites-filter-btn {
@@ -142,11 +142,12 @@ const filteredWeekRanking = computed(() => {
   padding: 0 var(--xxs-spacing);
   cursor: pointer;
   color: var(--bolao-c-grey3);
-  font-size: var(--m-font-size);
   transition:
     color 0.2s,
     transform 0.15s;
-  margin-left: auto;
+  gap: var(--xs-spacing);
+  border-left: 1px solid var(--bolao-c-grey2-t1);
+  padding-left: var(--s-spacing);
 
   &:hover {
     color: var(--bolao-c-gold);
@@ -155,6 +156,10 @@ const filteredWeekRanking = computed(() => {
 
   &--active {
     color: var(--bolao-c-gold);
+  }
+
+  .pi {
+    font-size: var(--m-font-size);
   }
 }
 </style>

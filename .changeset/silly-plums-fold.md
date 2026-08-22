@@ -1,6 +1,10 @@
 ---
 "bolao-vue": minor
 ---
+Features:
+- History page was added with season records;
+- User modal now has tabs with records, weeks and graph;
+
 Bug fixes:
 - Reset password email link now works;
 

@@ -82,6 +82,8 @@ $colors: (
   --p-selectbutton-border-radius: 0 !important;
   --p-message-border-radius: 0 !important;
   --p-panel-border-radius: 0 !important;
+  --p-tabs-tablist-background: light-dark(var(--bolao-c-navy), var(--bolao-c-navy)) !important;
+  --p-tabs-tabpanel-background: light-dark(var(--bolao-c-navy-l1), var(--bolao-c-navy-d1)) !important;
 
   --p-knob-text-color: white !important;
   --p-knob-range-background: var(--bolao-c-grey2) !important;
@@ -113,6 +115,7 @@ $colors: (
   --p-datatable-row-striped-background: var(--bolao-c-navy) !important;
   --p-datatable-row-color: var(--bolao-c-white) !important;
   --p-datatable-header-cell-hover-background: var(--bolao-c-navy-l3) !important;
+  --p-datatable-header-cell-selected-background: var(--bolao-c-navy-l3) !important;
 
   --p-button-outlined-secondary-border-color: var(--bolao-c-grey2) !important;
   --p-button-outlined-secondary-color: var(--bolao-c-grey2) !important;
