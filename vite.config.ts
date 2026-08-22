@@ -70,6 +70,9 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(version)
   },
+  build: {
+    cssMinify: 'esbuild'
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
