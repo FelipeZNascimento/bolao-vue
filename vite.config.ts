@@ -70,6 +70,16 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(version)
   },
+  css: {
+    transformer: 'lightningcss',
+    lightningcss: {
+      targets: {
+        chrome: 111 << 16, // light-dark() supported since Chrome 111
+        firefox: 120 << 16, // light-dark() supported since Firefox 120
+        safari: (16 << 16) | (4 << 8) // light-dark() supported since Safari 16.4
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
