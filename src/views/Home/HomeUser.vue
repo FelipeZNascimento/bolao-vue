@@ -5,6 +5,7 @@
     <HomeMatches />
     <HomeNews />
     <HomeRanking />
+    <ComingSoonSection />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import { computed } from 'vue';
 import type { IUser } from '@/stores/activeProfile.types';
 import { useClockStore } from '@/stores/clock';
 import { useRankingStore } from '@/stores/ranking';
+import ComingSoonSection from './ComingSoonSection.vue';
 import HomeExtras from './HomeExtras.vue';
 import HomeGreeting from './HomeGreeting.vue';
 import HomeMatches from './HomeMatches.vue';

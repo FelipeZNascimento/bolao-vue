@@ -71,19 +71,7 @@
     </section>
 
     <!-- ── Coming soon ── -->
-    <section class="coming-soon">
-      <h2 class="section-title">Em breve</h2>
-      <div class="soon-grid">
-        <div
-          class="soon-card"
-          v-for="item in comingSoon"
-          :key="item.title"
-        >
-          <i :class="`pi ${item.icon}`" />
-          <span>{{ item.title }}</span>
-        </div>
-      </div>
-    </section>
+    <ComingSoonSection />
 
     <!-- ── CTA ── -->
     <section class="cta">
@@ -120,6 +108,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import ComingSoonSection from './ComingSoonSection.vue';
 
 const logoDropping = ref(false);
 const logoSettled = ref(false);
@@ -180,13 +169,6 @@ const steps = [
     title: 'Acumule pontos',
     description: 'Acertar o vencedor e a margem correta vale 10 pts, acertar apenas o vencedor vale 5 pts.'
   }
-];
-
-const comingSoon = [
-  { icon: 'pi-trophy', title: 'Histórico de temporadas' },
-  { icon: 'pi-chart-line', title: 'Estatísticas pessoais por temporada' },
-  { icon: 'pi-bell', title: 'Notificações para avisar de apostas abertas' },
-  { icon: 'pi-calendar', title: 'Visualização por semana no calendário' }
 ];
 </script>
 
@@ -380,26 +362,6 @@ const comingSoon = [
   color: var(--bolao-c-white);
   font-weight: 700;
   font-size: var(--s-font-size);
-}
-
-.soon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--m-spacing);
-}
-
-.soon-card {
-  display: flex;
-  align-items: center;
-  gap: var(--s-spacing);
-  padding: var(--m-spacing) var(--l-spacing);
-  border: 1px dashed var(--bolao-c-grey4);
-  color: var(--color-contrast);
-  font-size: var(--xs-font-size);
-  i {
-    font-size: var(--m-font-size);
-    color: var(--bolao-c-grey3);
-  }
 }
 
 .cta {

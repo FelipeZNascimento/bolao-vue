@@ -20,10 +20,6 @@
     header="Quanto vale uma Aposta Extra"
     toggleable
   >
-    <p style="padding-bottom: var(--l-spacing)">
-      Ao longo da temporada, as apostas mudam de valor. Quanto mais importante uma partida, mais pontos tem uma aposta
-      correta.
-    </p>
     <PrimeDataTable
       showGridlines
       rowHover

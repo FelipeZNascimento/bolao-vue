@@ -24,7 +24,7 @@
               :icon="slotProps.data.user.icon"
               :isActive="activeProfile?.id === slotProps.data.user.id"
               :isFavorite="activeProfile?.favorites?.includes(String(slotProps.data.user.id)) ?? false"
-              @click="() => handleUserClick(slotProps.data.user)"
+              @click="() => openUserTrackingModal(slotProps.data.user)"
             />
             <div class="badge-wrapper">
               <div
@@ -126,11 +126,6 @@ defineProps<{
 
 const { activeProfile } = storeToRefs(useActiveProfileStore());
 const { openUserTrackingModal } = useModalsStore();
-
-// ------ Functions ------
-function handleUserClick(user: IUser) {
-  openUserTrackingModal(user);
-}
 </script>
 <style lang="scss" scoped>
 .outer-position {

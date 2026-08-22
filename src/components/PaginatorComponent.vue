@@ -1,26 +1,28 @@
 <template>
   <div class="outer-paginator">
-    <span
-      style="cursor: pointer"
-      @click="() => configurationStore.setSelectedWeek(0)"
-      >Pre</span
-    >
-
-    <select
-      name="weekSelector"
-      id="weekSelector"
-      class="week-selector"
-      @change="handlePageChangeFromDropdown"
-    >
-      <option
-        v-for="week in weeks.filter((week) => !week.hidden)"
-        :key="week.num"
-        :value="week.num"
-        :selected="week.num === selectedWeek"
+    <div style="display: flex; align-items: center; gap: var(--s-spacing)">
+      <div
+        style="cursor: pointer"
+        @click="() => configurationStore.setSelectedWeek(0)"
       >
-        {{ week.display }}
-      </option>
-    </select>
+        Pre
+      </div>
+      <select
+        name="weekSelector"
+        id="weekSelector"
+        class="week-selector"
+        @change="handlePageChangeFromDropdown"
+      >
+        <option
+          v-for="week in weeks.filter((week) => !week.hidden)"
+          :key="week.num"
+          :value="week.num"
+          :selected="week.num === selectedWeek"
+        >
+          {{ week.display }}
+        </option>
+      </select>
+    </div>
     <PrimePaginator
       class="paginator"
       :first="selectedWeek && selectedWeek - 1"
@@ -65,15 +67,14 @@ function handlePageChangeFromDropdown(e: Event) {
   align-items: center;
   width: 100%;
   padding: var(--m-spacing);
+  flex-direction: column;
 
   @media (max-width: 1024px) {
-    flex-direction: column;
     gap: var(--xs-spacing);
   }
 
   @media (min-width: 1025px) {
-    flex-direction: row;
-    gap: var(--l-spacing);
+    gap: var(--s-spacing);
   }
 }
 
