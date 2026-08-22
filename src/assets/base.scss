@@ -79,10 +79,12 @@ $colors: (
 
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
+  --p-selectbutton-border-radius: 0 !important;
+  --p-message-border-radius: 0 !important;
+  --p-panel-border-radius: 0 !important;
+
   --p-knob-text-color: white !important;
   --p-knob-range-background: var(--bolao-c-grey2) !important;
-  --p-selectbutton-border-radius: 0 !important;
-
   --p-togglebutton-content-border-radius: 0 !important;
   --p-togglebutton-background: var(--bolao-c-navy-l1) !important;
   --p-togglebutton-checked-background: var(--bolao-c-navy-l3) !important;
@@ -108,10 +110,10 @@ $colors: (
   --p-datatable-header-color: var(--bolao-c-white) !important;
   --p-datatable-header-cell-color: var(--bolao-c-white) !important;
   --p-datatable-sort-icon-color: var(--bolao-c-grey2) !important;
-  --p-datatable-row-background: var(--bolao-c-navy-l1) !important;
   --p-datatable-row-striped-background: var(--bolao-c-navy) !important;
   --p-datatable-row-color: var(--bolao-c-white) !important;
   --p-datatable-header-cell-hover-background: var(--bolao-c-navy-l3) !important;
+
   --p-button-outlined-secondary-border-color: var(--bolao-c-grey2) !important;
   --p-button-outlined-secondary-color: var(--bolao-c-grey2) !important;
   --p-button-border-radius: 0 !important;
@@ -125,11 +127,9 @@ $colors: (
   --nav-link: #9da4a7;
   --nav-link-hover: white;
 
-  --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
-  --vt-c-black: #181818;
   --vt-c-black-soft: #222222;
   --vt-c-black-mute: #282828;
 
@@ -142,9 +142,12 @@ $colors: (
 
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
+  --vt-c-text-dark-1: var(--bolao-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
+  --navbar-height: 80px;
+  --footer-height: 40px;
+  --team-component-height: 50px;
   @media (max-width: 1439px) {
     --page-width: 100%;
   }
@@ -155,37 +158,21 @@ $colors: (
 
 /* semantic color variables for this project */
 :root {
-  --color-main: var(--vt-c-white);
-  --color-contrast: var(--vt-c-black);
+  --color-main: light-dark(var(--bolao-c-white), var(--bolao-c-black));
+  --color-text: light-dark(var(--vt-c-text-light-1), var(--vt-c-text-dark-2));
+  --color-contrast: light-dark(var(--bolao-c-black), var(--bolao-c-white));
 
-  --color-background: var(--bolao-c-navy-t1);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --color-background: light-dark(var(--bolao-c-navy-t1), var(--vt-c-black-mute));
+  --color-background-soft: light-dark(var(--vt-c-white-soft), var(--vt-c-black-soft));
+  --color-background-mute: light-dark(var(--vt-c-white-mute), var(--vt-c-black-mute));
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border: light-dark(var(--vt-c-divider-light-2), var(--vt-c-divider-dark-2));
+  --color-border-hover: light-dark(var(--vt-c-divider-light-1), var(--vt-c-divider-dark-1));
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --color-heading: light-dark(var(--vt-c-text-light-1), var(--vt-c-text-dark-1));
 
   --section-gap: 160px;
 }
-
-[data-theme='dark'] {
-  --color-main: var(--vt-c-black);
-  --color-contrast: var(--vt-c-white);
-
-  --color-background: var(--vt-c-black-mute);
-  --color-background-soft: var(--vt-c-black-soft);
-  --color-background-mute: var(--vt-c-black-mute);
-
-  --color-border: var(--vt-c-divider-dark-2);
-  --color-border-hover: var(--vt-c-divider-dark-1);
-
-  --color-heading: var(--vt-c-text-dark-1);
-  --color-text: var(--vt-c-text-dark-2);
-}
-
 *,
 *::before,
 *::after {

@@ -36,7 +36,6 @@
         :rankingData="isWeeklyRanking ? filteredWeekRanking : filteredSeasonRanking"
         :columnConfig="mode === 'full' ? 'complete' : columnsOption"
         :rowSpacingConfig="mode === 'full' ? 'normal' : rowSpacing"
-        :activeProfile="activeProfile"
         :error="isWeeklyRanking ? errorSeason : errorWeek"
       />
     </div>

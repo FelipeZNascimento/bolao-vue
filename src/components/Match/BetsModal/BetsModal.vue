@@ -1,5 +1,6 @@
 <template>
   <PrimeDialog
+    v-if="selectedBetsMatch"
     dismissableMask
     modal
     v-model:visible="isVisible"
@@ -60,45 +61,40 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { BETS_VALUES, type Ribbon } from '@/constants/bets';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
+import { BETS_VALUES } from '@/constants/bets';
 import { useClockStore } from '@/stores/clock';
-import type { IMatch } from '@/stores/matches.types';
-import { type CorrectBets } from '@/util/betsCalculator';
+import { useMatchesStore } from '@/stores/matches';
+import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 import ClockComponent from '../ClockComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
 import BetsColumn from './BetsColumn.vue';
 
-const props = defineProps<{
-  correctBets: CorrectBets;
-  handleCloseModal: () => void;
-  isOpen: boolean;
-  match: IMatch;
-  ribbon: null | Ribbon;
-}>();
-
 // ------ Initialization ------
 const clockStore = useClockStore();
-const isVisible = ref(false);
+const matchesStore = useMatchesStore();
+const { selectedBetsMatch } = storeToRefs(matchesStore);
+const { closeBetsModal } = matchesStore;
 
-const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= props.match.timestamp;
+const isVisible = computed({
+  get: () => selectedBetsMatch.value !== null,
+  set: (val) => {
+    if (!val) closeBetsModal();
+  }
 });
 
-watch(
-  () => props.isOpen,
-  async (newValue) => {
-    if (newValue) {
-      isVisible.value = true;
-    }
-  }
+const match = computed(() => selectedBetsMatch.value!);
+
+const isMatchStarted = computed(
+  () => !!selectedBetsMatch.value && clockStore.currentTimestamp >= selectedBetsMatch.value.timestamp
 );
 
-watch(isVisible, async (newValue) => {
-  if (!newValue) {
-    props.handleCloseModal();
-  }
-});
+const correctBets = computed(() => calculateCorrectBets(match.value?.away.score ?? 0, match.value?.home.score ?? 0));
+
+const ribbon = computed(() =>
+  calculateRibbon(correctBets.value, match.value?.loggedUserBets?.value, isMatchStarted.value)
+);
 </script>
 <style lang="scss" scoped>
 .teams-outer {

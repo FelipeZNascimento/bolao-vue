@@ -60,6 +60,7 @@ function toggleTheme() {
 <style scoped>
 .app-footer {
   width: 100%;
+  height: var(--footer-height);
   display: flex;
   align-items: center;
   justify-content: center;

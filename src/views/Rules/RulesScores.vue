@@ -9,8 +9,8 @@
       vitória.
     </p>
     <p>
-      <span style="color: var(--bolao-c-blue); font-weight: bold">Vencedor Correto</span>: acertar o vencedor mas errar
-      a margem de vitória.
+      <span style="color: var(--bolao-c-sky); font-weight: bold">Vencedor Correto</span>: acertar o vencedor mas errar a
+      margem de vitória.
     </p>
     <p>
       <span style="color: var(--bolao-c-red); font-weight: bold">Errar o vencedor</span>: zero pontos. Sem choro nem
@@ -47,7 +47,7 @@
       <PrimeColumn
         field="valueWinner"
         header="Vencedor"
-        style="color: var(--bolao-c-blue); font-weight: bold"
+        style="color: var(--bolao-c-sky); font-weight: bold"
       >
       </PrimeColumn>
     </PrimeDataTable>

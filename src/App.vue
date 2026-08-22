@@ -2,6 +2,7 @@
   <NavbarTop />
   <PrimeToast />
   <PrimeConfirmDialog />
+  <ModalsContainer />
   <div class="outer-view">
     <RouterView />
   </div>
@@ -13,6 +14,7 @@ import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
 import { RouterView } from 'vue-router';
 import FooterComponent from './components/FooterComponent.vue';
+import ModalsContainer from './components/Modals/ModalsContainer.vue';
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';

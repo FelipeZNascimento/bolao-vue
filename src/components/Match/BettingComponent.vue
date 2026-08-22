@@ -90,7 +90,6 @@ function handleNewBet() {
 
 // ------ Functions ------
 function renderTooltip(value: BetsValues) {
-  console.log(value);
   if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
     return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
   } else {

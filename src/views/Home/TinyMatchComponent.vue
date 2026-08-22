@@ -6,7 +6,7 @@
       'match-card--half': ribbon === 'HALF',
       'match-card--miss': ribbon === 'MISS'
     }"
-    @click="openModal"
+    @click="openBetsModal(match)"
   >
     <!-- live dot / bet indicator -->
     <span
@@ -15,7 +15,7 @@
       v-tooltip.top="'Ao vivo'"
     />
     <i
-      v-else
+      v-else-if="!isStarted"
       class="bet-indicator"
       :class="match.loggedUserBets ? 'pi pi-check-square bet-indicator--placed' : 'pi pi-stop bet-indicator--missing'"
       v-tooltip.top="match.loggedUserBets ? 'Aposta feita' : 'Sem aposta'"
@@ -23,8 +23,15 @@
     <!-- away -->
     <div
       class="match-team match-team--away"
-      :style="{ background: `linear-gradient(to right, ${match.away.background}, transparent)` }"
+      :style="{
+        background: `${match.away.background}`
+      }"
     >
+      <img
+        class="team-logo"
+        :src="`/team_logos/${match.away.id}.gif`"
+        :alt="match.away.code"
+      />
       <span
         class="team-code"
         :style="{ color: match.away.foreground }"
@@ -36,47 +43,36 @@
         >{{ match.away.score }}</span
       >
     </div>
-    <!-- separator -->
-    <span class="match-sep">
-      <span
-        v-if="isLive"
-        class="live-label"
-        >{{ statusLabel }}</span
-      >
-      <span v-else-if="isFinished">Fim</span>
-      <span v-else>@</span>
-    </span>
     <!-- home -->
     <div
       class="match-team match-team--home"
-      :style="{ background: `linear-gradient(to left, ${match.home.background}, transparent)` }"
+      :style="{
+        background: `${match.home.background}`
+      }"
     >
+      <img
+        class="team-logo"
+        :src="`/team_logos/${match.home.id}.gif`"
+        :alt="match.home.code"
+      />
+      <span
+        class="team-code"
+        :style="{ color: match.home.foreground, textAlign: 'right' }"
+        >{{ match.home.code }}</span
+      >
       <span
         v-if="isStarted"
         class="match-score"
         >{{ match.home.score }}</span
       >
-      <span
-        class="team-code"
-        :style="{ color: match.home.foreground }"
-        >{{ match.home.code }}</span
-      >
     </div>
   </div>
-
-  <BetsModal
-    :match="match"
-    :correctBets="correctBets"
-    :isOpen="isModalOpen"
-    :ribbon="ribbon"
-    :handleCloseModal="closeModal"
-  />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import BetsModal from '@/components/Match/BetsModal/BetsModal.vue';
-import { FINISHED_GAME, MATCH_STATUS, MATCH_STATUS_LABELS } from '@/constants/match_status';
+import { computed } from 'vue';
+import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
+import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
 import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 
@@ -88,31 +84,16 @@ const isStarted = computed(() => props.match.status !== MATCH_STATUS.NOT_STARTED
 const isLive = computed(
   () => isStarted.value && !FINISHED_GAME.includes(props.match.status as (typeof FINISHED_GAME)[number])
 );
-const isFinished = computed(() => FINISHED_GAME.includes(props.match.status as (typeof FINISHED_GAME)[number]));
-const statusLabel = computed(() => MATCH_STATUS_LABELS[props.match.status as keyof typeof MATCH_STATUS_LABELS] ?? '');
-
-// ── BetsModal ──
-const isModalOpen = ref(false);
-
 const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
-
 const ribbon = computed(() => calculateRibbon(correctBets.value, props.match.loggedUserBets?.value, isStarted.value));
 
-function openModal() {
-  isModalOpen.value = true;
-}
-
-function closeModal() {
-  isModalOpen.value = false;
-}
+const { openBetsModal } = useMatchesStore();
 </script>
 
 <style lang="scss" scoped>
 .match-card {
   display: flex;
   align-items: center;
-  gap: var(--s-spacing);
-  padding-left: var(--m-spacing);
   background: var(--color-background-soft);
   border: 1px solid var(--bolao-c-grey2-t1);
   cursor: pointer;
@@ -142,6 +123,7 @@ function closeModal() {
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--bolao-c-red);
+  margin: 0 var(--s-spacing);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -160,6 +142,7 @@ function closeModal() {
 .bet-indicator {
   font-size: var(--s-font-size);
   flex-shrink: 0;
+  margin: 0 var(--s-spacing);
 
   &--placed {
     color: var(--bolao-c-mint);
@@ -186,7 +169,15 @@ function closeModal() {
   }
 }
 
+.team-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .team-code {
+  flex: 1;
   font-size: var(--s-font-size);
   font-weight: 800;
   padding: 2px 4px;
@@ -200,20 +191,6 @@ function closeModal() {
   color: var(--color-heading);
   min-width: 20px;
   text-align: center;
-}
-
-.match-sep {
   flex: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--xs-font-size);
-  color: var(--bolao-c-grey4);
-}
-
-.live-label {
-  color: var(--bolao-c-mint);
-  font-weight: 700;
-  font-size: var(--xs-font-size);
 }
 </style>

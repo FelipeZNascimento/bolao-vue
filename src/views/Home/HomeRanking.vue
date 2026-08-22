@@ -26,15 +26,18 @@
         v-for="line in topRanking"
         :key="line.user.id"
         class="ranking-row"
-        :class="{ 'ranking-row--me': line.user.id === activeProfileId }"
+        :class="{ 'ranking-row--me': line.user.id === activeProfile?.id }"
       >
         <span class="rank-pos">{{ line.user.position }}º</span>
-        <font-awesome-icon
-          class="rank-icon"
-          :style="{ color: line.user.color }"
+        <IconAndName
+          class="rank-name"
+          :color="line.user.color"
+          :name="line.user.name"
           :icon="line.user.icon"
+          :isActive="activeProfile?.id === line.user.id"
+          :isFavorite="activeProfile?.favorites?.includes(String(line.user.id)) ?? false"
+          @click="() => openUserTrackingModal(line.user)"
         />
-        <span class="rank-name">{{ line.user.name }}</span>
         <span class="rank-pts">{{ line.score.total }} pts</span>
         <span class="rank-pct">{{ line.score.percentage }}%</span>
       </li>
@@ -52,12 +55,16 @@
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+import IconAndName from '@/components/IconAndName.vue';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useModalsStore } from '@/stores/modals';
 import { useRankingStore } from '@/stores/ranking';
-
-defineProps<{ activeProfileId: number }>();
 
 const rankingStore = useRankingStore();
 const { isLoadingSeason: isLoadingRanking, seasonRanking } = storeToRefs(rankingStore);
+const { activeProfile } = storeToRefs(useActiveProfileStore());
+const { openUserTrackingModal } = useModalsStore();
+
 const topRanking = computed(() => seasonRanking.value.slice(0, 10));
 </script>
 
@@ -120,15 +127,9 @@ const topRanking = computed(() => seasonRanking.value.slice(0, 10));
   text-align: right;
   flex-shrink: 0;
 }
-.rank-icon {
-  font-size: var(--m-font-size);
-  flex-shrink: 0;
-}
 .rank-name {
+  cursor: pointer;
   flex: 1;
-  font-size: var(--s-font-size);
-  color: var(--color-heading);
-  font-weight: 600;
 }
 .rank-pts {
   font-size: var(--s-font-size);

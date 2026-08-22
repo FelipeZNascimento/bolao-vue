@@ -103,10 +103,12 @@
           <PrimeButton
             label="Entrar no Telegram"
             severity="secondary"
-            variant="outlined"
           >
             <template #icon>
-              <font-awesome-icon :icon="['fab', 'telegram']" />
+              <font-awesome-icon
+                style="color: var(--bolao-c-sky)"
+                :icon="['fab', 'telegram']"
+              />
             </template>
           </PrimeButton>
         </a>

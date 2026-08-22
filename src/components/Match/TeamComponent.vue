@@ -10,7 +10,6 @@
         'team-shield-grid': isGridMode && isMatchStarted,
         'team-shield-grid--not-started': isGridMode && !isMatchStarted
       }"
-      class="team-shield"
     >
       <img
         :class="isScoreless || (isGridMode && !isMatchStarted) ? 'team-shield-image-small' : 'team-shield-image'"
@@ -30,12 +29,6 @@
         {{ props.team.winLosses }}
       </p>
     </div>
-    <!-- <div
-      v-if="!isScoreless && !isMatchStarted && odds"
-      class="team-odds"
-    >
-      {{ odds }}
-    </div> -->
     <div
       v-if="!isScoreless && isMatchStarted"
       class="team-score"
@@ -77,8 +70,9 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   flex: 1;
   align-items: center;
   justify-content: flex-end;
-  height: 50px;
-  max-height: 50px;
+  min-height: var(--team-component-height);
+  height: var(--team-component-height);
+  max-height: var(--team-component-height);
   background-image: url('/match_layer.png');
   position: relative;
   overflow: hidden;
@@ -90,23 +84,21 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 
 .team-shield-grid {
   position: absolute;
-  height: 60px;
+  height: calc(var(--team-component-height) * 2);
   left: 20px;
-  top: -50%;
 
   @media (max-width: 1024px) {
-    top: 50%;
-    transform: translateY(-50%);
+    left: 5px;
+    height: calc(var(--team-component-height) * 1.2);
   }
 
   &--not-started {
     position: absolute;
-    height: 60px;
-    left: 25%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: -10px;
+    height: calc(var(--team-component-height) * 2);
+
     @media (max-width: 1024px) {
-      height: 50px;
+      height: calc(var(--team-component-height) * 1.2);
     }
   }
 }
@@ -114,29 +106,30 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 .team-shield-line {
   position: absolute;
   left: 5%;
-  top: 50%;
-  transform: translate(0, -50%);
+  height: calc(var(--team-component-height) * 2);
 
   @media (max-width: 1024px) {
-    left: 5%;
-    top: 0%;
-    transform: none;
+    height: calc(var(--team-component-height) * 1.2);
   }
 }
 
 .team-shield-image {
-  height: 100px;
+  height: calc(var(--team-component-height) * 2);
   z-index: -1;
   transition: all 0.2s;
 
   @media (max-width: 1024px) {
-    height: 60px;
+    height: calc(var(--team-component-height) * 1.2);
   }
 }
 
 .team-shield-image-small {
-  height: 50px;
+  height: calc(var(--team-component-height) * 2);
   z-index: -1;
+
+  @media (max-width: 1024px) {
+    height: calc(var(--team-component-height) * 1.2);
+  }
 }
 
 .team-alias {
@@ -169,7 +162,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 
 .team-score {
   min-width: 55px;
-  height: 100%;
+  height: var(--team-component-height);
   display: flex;
   align-items: center;
   justify-content: center;

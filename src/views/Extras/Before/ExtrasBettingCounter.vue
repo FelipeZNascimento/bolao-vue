@@ -250,9 +250,10 @@ const progressPercentage = computed(() => {
 <style lang="scss" scoped>
 .outer-extras-counter {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: var(--bolao-c-navbar);
+  top: var(--navbar-height);
+  height: calc(100vh - var(--navbar-height) - var(--footer-height));
+  overflow-y: auto;
+  background-color: var(--bolao-c-navy);
   color: white;
   padding: var(--s-spacing);
   font-size: var(--xs-font-size);

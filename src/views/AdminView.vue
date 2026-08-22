@@ -1,6 +1,33 @@
 <template>
   <div class="outer-admin">
-    <h1>Admin</h1>
+    <div class="admin-header">
+      <h1>Admin</h1>
+      <PrimeButton
+        icon="pi pi-refresh"
+        severity="secondary"
+        variant="outlined"
+        :loading="isLoading"
+        @click="fetchUsers"
+      />
+    </div>
+
+    <div
+      v-if="users.length"
+      class="stats-row"
+    >
+      <div class="stat-card">
+        <span class="stat-label">Total de usuários</span>
+        <span class="stat-value">{{ users.length }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Usuários ativos</span>
+        <span class="stat-value">{{ activeCount }}/{{ users.length }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Extras completas</span>
+        <span class="stat-value">{{ extrasCompleteCount }}/{{ users.length }}</span>
+      </div>
+    </div>
 
     <PrimeMessage
       v-if="error"
@@ -93,7 +120,7 @@
 
 <script setup lang="ts">
 import { useConfirm } from 'primevue/useconfirm';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ApiService from '@/services/api_request';
 import type { IUser } from '@/stores/activeProfile.types';
 
@@ -105,7 +132,10 @@ const isLoading = ref(false);
 const error = ref<Error | null>(null);
 const togglingId = ref<null | number>(null);
 
-onMounted(async () => {
+const activeCount = computed(() => users.value.filter((u) => u.active).length);
+const extrasCompleteCount = computed(() => users.value.filter((u) => u.extraBetsCount === 17).length);
+
+async function fetchUsers() {
   isLoading.value = true;
   error.value = null;
   try {
@@ -115,7 +145,9 @@ onMounted(async () => {
   } finally {
     isLoading.value = false;
   }
-});
+}
+
+onMounted(fetchUsers);
 
 function confirmToggle(user: IUser) {
   const activating = !user.active;
@@ -157,5 +189,61 @@ async function toggleActiveStatus(user: IUser) {
   display: flex;
   align-items: center;
   gap: var(--m-spacing);
+}
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: var(--m-spacing);
+}
+
+.stats-row {
+  display: flex;
+  gap: var(--m-spacing);
+  flex-wrap: wrap;
+
+  @media (max-width: 767px) {
+    gap: var(--s-spacing);
+  }
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--m-spacing) var(--l-spacing);
+  border: 1px solid var(--p-surface-border);
+  border-radius: var(--p-border-radius-md);
+  min-width: 160px;
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--p-text-muted-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--p-text-color);
+  }
+
+  @media (max-width: 767px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-width: unset;
+    flex: 1;
+    padding: var(--s-spacing) var(--m-spacing);
+    gap: var(--s-spacing);
+
+    .stat-label {
+      font-size: 0.7rem;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+    }
+  }
 }
 </style>

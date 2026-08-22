@@ -118,11 +118,6 @@
     :isOpen="isConfigModalOpen"
     :handleCloseModal="() => (isConfigModalOpen = false)"
   />
-  <SeasonRegisterModal
-    :isOpen="isSeasonRegisterModalOpen"
-    :currentSeason="currentSeason"
-    :handleCloseModal="activeProfileStore.closeSeasonRegisterModal"
-  />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
@@ -132,12 +127,12 @@ import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useModalsStore } from '@/stores/modals';
 import IconAndName from '../IconAndName.vue';
 import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTES } from './routes';
-import SeasonRegisterModal from './SeasonRegisterModal.vue';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
@@ -162,7 +157,8 @@ onMounted(() => {
   }
 });
 
-const { activeProfile, isLoading: isProfileLoading, isSeasonRegisterModalOpen } = storeToRefs(activeProfileStore);
+const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+const { isSeasonRegisterModalOpen } = storeToRefs(useModalsStore());
 const { currentSeason } = storeToRefs(configurationStore);
 
 // ------ Computed Properties ------
@@ -210,7 +206,7 @@ header {
 nav {
   font-size: 24px;
   text-align: center;
-  height: 80px;
+  height: var(--navbar-height);
   display: flex;
   align-items: center;
   position: sticky;
