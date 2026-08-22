@@ -34,24 +34,16 @@
       :ribbon="ribbon"
     />
   </div>
-  <BetsModal
-    :match="match"
-    :activeUserBet="match.loggedUserBets ?? null"
-    :correctBets="correctBets"
-    :isOpen="isBetsModalOpen"
-    :ribbon="ribbon"
-    :handleCloseModal="handleCloseModal"
-  />
 </template>
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import { useClockStore } from '@/stores/clock';
+import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
 import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
-import BetsModal from './BetsModal/BetsModal.vue';
 import ClockComponent from './ClockComponent.vue';
 import ScoreComponent from './ScoreComponent.vue';
 
@@ -69,12 +61,10 @@ const props = withDefaults(
   }
 );
 
-// ------ Refs ------
-const isBetsModalOpen = ref(false);
-
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { activeProfile } = storeToRefs(useActiveProfileStore());
+const { openBetsModal } = useMatchesStore();
 
 // ------ Computed Properties ------
 const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
@@ -87,16 +77,12 @@ const ribbon = computed(() =>
   calculateRibbon(correctBets.value, props.match.loggedUserBets?.value, isMatchStarted.value)
 );
 
-function handleCloseModal() {
-  isBetsModalOpen.value = false;
-}
-
 // ------ Functions ------
 function handleMatchClick() {
   if (props.isBetting || props.isDemo) {
     return;
   }
-  isBetsModalOpen.value = true;
+  openBetsModal(props.match);
 }
 </script>
 <style lang="scss" scoped>
@@ -139,7 +125,7 @@ function handleMatchClick() {
 }
 
 .line {
-  min-height: 50px;
+  min-height: var(--team-component-height);
   width: 100%;
 }
 
@@ -151,7 +137,7 @@ function handleMatchClick() {
   }
 
   @media (min-width: 1024px) {
-    max-height: 140px;
+    // max-height: 140px;
     width: 250px;
   }
 

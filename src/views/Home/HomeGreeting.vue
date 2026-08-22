@@ -52,11 +52,13 @@
         <PrimeButton
           label="Entrar no Telegram"
           severity="secondary"
-          variant="outlined"
           fluid
         >
           <template #icon>
-            <font-awesome-icon :icon="['fab', 'telegram']" />
+            <font-awesome-icon
+              style="color: var(--bolao-c-sky)"
+              :icon="['fab', 'telegram']"
+            />
           </template>
         </PrimeButton>
       </a>
@@ -99,20 +101,20 @@ import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useModalsStore } from '@/stores/modals';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 defineProps<{
   myRankingLine: IRankingLine | undefined;
 }>();
 
-const activeProfileStore = useActiveProfileStore();
-const { activeProfile } = storeToRefs(activeProfileStore);
+const { activeProfile } = storeToRefs(useActiveProfileStore());
 const { currentSeason } = storeToRefs(useConfigurationStore());
 
 const seasonRegistered = computed(() => activeProfile.value && activeProfile.value.seasonId === currentSeason.value);
 const activeProfileActive = computed(() => activeProfile.value?.active && seasonRegistered.value);
 
-const { openSeasonRegisterModal } = activeProfileStore;
+const { openSeasonRegisterModal } = useModalsStore();
 </script>
 
 <style lang="scss" scoped>

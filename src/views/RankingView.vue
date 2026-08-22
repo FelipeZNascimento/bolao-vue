@@ -1,9 +1,12 @@
 <template>
+  <PaginatorComponent />
+
   <div class="outer-ranking-view">
     <RankingComponent mode="full" />
   </div>
 </template>
 <script setup lang="ts">
+import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 </script>
 <style scoped>

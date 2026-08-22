@@ -57,13 +57,13 @@ import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import IconAndName from '@/components/IconAndName.vue';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useModalsStore } from '@/stores/modals';
 import { useRankingStore } from '@/stores/ranking';
 
 const rankingStore = useRankingStore();
 const { isLoadingSeason: isLoadingRanking, seasonRanking } = storeToRefs(rankingStore);
-const activeProfileStore = useActiveProfileStore();
-const { activeProfile } = storeToRefs(activeProfileStore);
-const { openUserTrackingModal } = activeProfileStore;
+const { activeProfile } = storeToRefs(useActiveProfileStore());
+const { openUserTrackingModal } = useModalsStore();
 
 const topRanking = computed(() => seasonRanking.value.slice(0, 10));
 </script>

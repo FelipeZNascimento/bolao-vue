@@ -127,6 +127,7 @@ import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useModalsStore } from '@/stores/modals';
 import IconAndName from '../IconAndName.vue';
 import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
@@ -156,7 +157,8 @@ onMounted(() => {
   }
 });
 
-const { activeProfile, isLoading: isProfileLoading, isSeasonRegisterModalOpen } = storeToRefs(activeProfileStore);
+const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
+const { isSeasonRegisterModalOpen } = storeToRefs(useModalsStore());
 const { currentSeason } = storeToRefs(configurationStore);
 
 // ------ Computed Properties ------

@@ -6,7 +6,7 @@
       'match-card--half': ribbon === 'HALF',
       'match-card--miss': ribbon === 'MISS'
     }"
-    @click="openModal"
+    @click="openBetsModal(match)"
   >
     <!-- live dot / bet indicator -->
     <span
@@ -24,7 +24,7 @@
     <div
       class="match-team match-team--away"
       :style="{
-        background: `linear-gradient(to right, ${match.away.background} 0%, ${match.away.background}cc 40%, ${match.away.background}00 100%)`
+        background: `${match.away.background}`
       }"
     >
       <img
@@ -43,24 +43,11 @@
         >{{ match.away.score }}</span
       >
     </div>
-    <!-- separator -->
-    <span class="match-sep">
-      <span
-        v-if="isLive"
-        class="live-label"
-        >{{ statusLabel }}</span
-      >
-      <span
-        v-else
-        style="color: white"
-        >@</span
-      >
-    </span>
     <!-- home -->
     <div
       class="match-team match-team--home"
       :style="{
-        background: `linear-gradient(to left, ${match.home.background} 0%, ${match.home.background}cc 40%, ${match.home.background}00 100%)`
+        background: `${match.home.background}`
       }"
     >
       <img
@@ -80,20 +67,12 @@
       >
     </div>
   </div>
-
-  <BetsModal
-    :match="match"
-    :correctBets="correctBets"
-    :isOpen="isModalOpen"
-    :ribbon="ribbon"
-    :handleCloseModal="closeModal"
-  />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import BetsModal from '@/components/Match/BetsModal/BetsModal.vue';
-import { FINISHED_GAME, MATCH_STATUS, MATCH_STATUS_LABELS } from '@/constants/match_status';
+import { computed } from 'vue';
+import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
+import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
 import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 
@@ -105,29 +84,16 @@ const isStarted = computed(() => props.match.status !== MATCH_STATUS.NOT_STARTED
 const isLive = computed(
   () => isStarted.value && !FINISHED_GAME.includes(props.match.status as (typeof FINISHED_GAME)[number])
 );
-const statusLabel = computed(() => MATCH_STATUS_LABELS[props.match.status as keyof typeof MATCH_STATUS_LABELS] ?? '');
-
-// ── BetsModal ──
-const isModalOpen = ref(false);
-
 const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
-
 const ribbon = computed(() => calculateRibbon(correctBets.value, props.match.loggedUserBets?.value, isStarted.value));
 
-function openModal() {
-  isModalOpen.value = true;
-}
-
-function closeModal() {
-  isModalOpen.value = false;
-}
+const { openBetsModal } = useMatchesStore();
 </script>
 
 <style lang="scss" scoped>
 .match-card {
   display: flex;
   align-items: center;
-  gap: var(--s-spacing);
   background: var(--color-background-soft);
   border: 1px solid var(--bolao-c-grey2-t1);
   cursor: pointer;
@@ -157,7 +123,7 @@ function closeModal() {
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--bolao-c-red);
-  margin-left: var(--s-spacing);
+  margin: 0 var(--s-spacing);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -176,7 +142,7 @@ function closeModal() {
 .bet-indicator {
   font-size: var(--s-font-size);
   flex-shrink: 0;
-  margin-left: var(--s-spacing);
+  margin: 0 var(--s-spacing);
 
   &--placed {
     color: var(--bolao-c-mint);
@@ -226,20 +192,5 @@ function closeModal() {
   min-width: 20px;
   text-align: center;
   flex: 0;
-}
-
-.match-sep {
-  flex: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--xs-font-size);
-  color: var(--bolao-c-grey4);
-}
-
-.live-label {
-  color: var(--bolao-c-mint);
-  font-weight: 700;
-  font-size: var(--xs-font-size);
 }
 </style>

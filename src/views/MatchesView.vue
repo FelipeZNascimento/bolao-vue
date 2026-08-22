@@ -124,6 +124,7 @@ import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import { useModalsStore } from '@/stores/modals';
 
 const {
   isLoading: isConfigurationLoading,
@@ -146,7 +147,7 @@ const liveMatches = computed(() =>
 const upcomingMatches = computed(() => matches.value.filter((m) => m.status === MATCH_STATUS.NOT_STARTED));
 const activeProfileStore = useActiveProfileStore();
 const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
-const { openSeasonRegisterModal } = activeProfileStore;
+const { openSeasonRegisterModal } = useModalsStore();
 
 const activeProfileActive = computed(
   () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value

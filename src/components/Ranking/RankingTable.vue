@@ -112,6 +112,7 @@ import IconAndName from '@/components/IconAndName.vue';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
+import { useModalsStore } from '@/stores/modals';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 defineProps<{
@@ -123,9 +124,8 @@ defineProps<{
   rowSpacingConfig: TRowSpacingValue;
 }>();
 
-const activeProfileStore = useActiveProfileStore();
-const { activeProfile } = storeToRefs(activeProfileStore);
-const { openUserTrackingModal } = activeProfileStore;
+const { activeProfile } = storeToRefs(useActiveProfileStore());
+const { openUserTrackingModal } = useModalsStore();
 
 // ------ Functions ------
 function handleUserClick(user: IUser) {
