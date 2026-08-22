@@ -118,11 +118,6 @@
     :isOpen="isConfigModalOpen"
     :handleCloseModal="() => (isConfigModalOpen = false)"
   />
-  <SeasonRegisterModal
-    :isOpen="isSeasonRegisterModalOpen"
-    :currentSeason="currentSeason"
-    :handleCloseModal="activeProfileStore.closeSeasonRegisterModal"
-  />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
@@ -137,7 +132,6 @@ import PasswordModal from './PasswordModal.vue';
 import PreferencesModal from './PreferencesModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTES } from './routes';
-import SeasonRegisterModal from './SeasonRegisterModal.vue';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
@@ -210,7 +204,7 @@ header {
 nav {
   font-size: 24px;
   text-align: center;
-  height: 80px;
+  height: var(--navbar-height);
   display: flex;
   align-items: center;
   position: sticky;

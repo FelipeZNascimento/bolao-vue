@@ -4,7 +4,7 @@
     <HomeExtras v-if="!isSeasonStarted" />
     <HomeMatches />
     <HomeNews />
-    <HomeRanking :activeProfileId="activeProfile.id" />
+    <HomeRanking />
   </div>
 </template>
 

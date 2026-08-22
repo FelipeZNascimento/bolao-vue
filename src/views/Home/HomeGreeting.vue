@@ -155,6 +155,12 @@ const { openSeasonRegisterModal } = activeProfileStore;
 
 .greeting-icon {
   font-size: 48px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: default;
+
+  &:hover {
+    transform: rotate(-15deg) scale(1.25);
+  }
 }
 
 .greeting-title {

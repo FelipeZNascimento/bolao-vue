@@ -105,23 +105,16 @@
     </p>
     <p>{{ error?.message }}</p>
   </PrimeMessage>
-  <UserTrackingModal
-    :isOpen="isUserTrackingModalOpen"
-    :isUserActive="activeProfile?.id === selectedUser?.id"
-    :selectedUser="selectedUser"
-    :handleCloseModal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
-  />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import IconAndName from '@/components/IconAndName.vue';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
 import type { IRankingLine } from '@/stores/ranking.types';
-import UserTrackingModal from './UserTrackingModal.vue';
 
 defineProps<{
-  activeProfile: IUser | null;
   columnConfig: TColumnsValue;
   error: Error | null;
   isLoading: boolean;
@@ -130,14 +123,13 @@ defineProps<{
   rowSpacingConfig: TRowSpacingValue;
 }>();
 
-// ------ Refs ------
-const isUserTrackingModalOpen = ref<boolean>(false);
-const selectedUser = ref<IUser | null>(null);
+const activeProfileStore = useActiveProfileStore();
+const { activeProfile } = storeToRefs(activeProfileStore);
+const { openUserTrackingModal } = activeProfileStore;
 
 // ------ Functions ------
 function handleUserClick(user: IUser) {
-  isUserTrackingModalOpen.value = true;
-  selectedUser.value = user;
+  openUserTrackingModal(user);
 }
 </script>
 <style lang="scss" scoped>

@@ -46,31 +46,66 @@
         </p>
         <p>{{ errorMatches?.message }}</p>
       </PrimeMessage>
-      <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
-        <span
+      <span
+        :class="{
+          'outer-skeleton-line': view === 'lines',
+          'outer-skeleton-grid': view === 'grid'
+        }"
+        v-if="isLoading"
+      >
+        <PrimeSkeleton
+          v-for="index in 16"
+          :key="index"
           :class="{
-            'outer-skeleton-line': view === 'lines',
-            'outer-skeleton-grid': view === 'grid'
+            'skeleton-match-line': view === 'lines',
+            'skeleton-match-grid': view === 'grid'
           }"
-          v-if="isLoading"
-        >
-          <PrimeSkeleton
-            v-for="index in 16"
-            :key="index"
-            :class="{
-              'skeleton-match-line': view === 'lines',
-              'skeleton-match-grid': view === 'grid'
-            }"
-          />
-        </span>
-        <MatchComponent
-          v-else
-          v-for="match in matches"
-          :isGridMode="view === 'grid'"
-          :match="match"
-          :key="match.id"
         />
-      </div>
+      </span>
+      <template v-else>
+        <template v-if="finishedMatches.length">
+          <div class="section-header">
+            <i class="pi pi-flag" />
+            Encerradas
+          </div>
+          <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
+            <MatchComponent
+              v-for="match in finishedMatches"
+              :key="match.id"
+              :isGridMode="view === 'grid'"
+              :match="match"
+            />
+          </div>
+        </template>
+        <template v-if="liveMatches.length">
+          <div class="section-header section-header--live">
+            <i class="pi pi-circle-fill" />
+            Ao vivo
+          </div>
+          <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
+            <MatchComponent
+              v-for="match in liveMatches"
+              :key="match.id"
+              :isGridMode="view === 'grid'"
+              :match="match"
+            />
+          </div>
+        </template>
+        <template v-if="upcomingMatches.length">
+          <div class="section-header">
+            <i class="pi pi-clock" />
+            Em breve
+          </div>
+          <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
+            <MatchComponent
+              v-for="match in upcomingMatches"
+              :key="match.id"
+              :isGridMode="view === 'grid'"
+              :match="match"
+            />
+          </div>
+        </template>
+      </template>
     </div>
     <RankingComponent
       v-if="isDesktop && rankingPosition === 'active'"
@@ -85,6 +120,7 @@ import { computed } from 'vue';
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
+import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
@@ -98,6 +134,16 @@ const {
 } = storeToRefs(useConfigurationStore());
 const { isLoading: isMatchesLoading, matches, error: errorMatches } = storeToRefs(useMatchesStore());
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
+
+const finishedMatches = computed(() =>
+  matches.value.filter((m) => FINISHED_GAME.includes(m.status as (typeof FINISHED_GAME)[number]))
+);
+const liveMatches = computed(() =>
+  matches.value.filter(
+    (m) => m.status !== MATCH_STATUS.NOT_STARTED && !FINISHED_GAME.includes(m.status as (typeof FINISHED_GAME)[number])
+  )
+);
+const upcomingMatches = computed(() => matches.value.filter((m) => m.status === MATCH_STATUS.NOT_STARTED));
 const activeProfileStore = useActiveProfileStore();
 const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
 const { openSeasonRegisterModal } = activeProfileStore;
@@ -145,6 +191,37 @@ const activeProfileActive = computed(
 
   @media (min-width: 1024px) {
     gap: var(--xl-spacing);
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-spacing);
+  font-size: var(--m-font-size);
+  font-weight: 700;
+  width: 100%;
+  padding: var(--s-spacing) 0;
+  border-bottom: 1px solid var(--bolao-c-grey3);
+  color: var(--color-text);
+
+  &--live {
+    color: var(--bolao-c-red);
+
+    i {
+      font-size: var(--xs-font-size);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
   }
 }
 

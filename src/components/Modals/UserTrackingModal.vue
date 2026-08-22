@@ -141,19 +141,25 @@ const chartOptions = {
   maintainAspectRatio: false,
   responsive: true,
   scales: {
-    x: { stacked: true },
+    x: { stacked: true, ticks: { color: 'white' }, grid: { color: '#ffffff20' } },
     y: {
       position: 'left',
       stacked: true,
+      grid: { color: '#ffffff20' },
+      ticks: {
+        color: 'white'
+      },
       title: {
         display: true,
-        text: 'Porcentagem de Pontos'
+        text: 'Porcentagem de Pontos',
+        color: 'white'
       }
     },
     y1: {
       display: true,
       grid: {
-        color: '#f4b303',
+        display: false,
+        color: 'white',
         drawOnChartArea: false
       },
       max: 35,
@@ -163,11 +169,13 @@ const chartOptions = {
       stacked: false,
       ticks: {
         min: 1,
-        stepSize: 1
+        stepSize: 1,
+        color: 'white'
       },
       title: {
         display: true,
-        text: 'Posição'
+        text: 'Posição',
+        color: 'white'
       },
       type: 'linear'
     }

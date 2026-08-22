@@ -5,6 +5,7 @@
       :value="teams"
       dataKey="id"
       size="small"
+      stripedRows
     >
       <template #header>
         <div>
