@@ -1,6 +1,34 @@
 <template>
   <section class="dashboard-section">
-    <h2 class="section-title">Notícias NFL</h2>
+    <div class="section-header">
+      <h2 class="section-title">ESPN NFL News</h2>
+      <div class="lang-flags">
+        <span
+          class="lang-flag"
+          :class="{ 'lang-flag--active': activeLang === 'pt-br' }"
+          v-tooltip.top="'Português'"
+          @click="switchLang('pt-br')"
+        >
+          <FlagIcon
+            code="BR"
+            square
+            :size="20"
+          />
+        </span>
+        <span
+          class="lang-flag"
+          :class="{ 'lang-flag--active': activeLang === 'en' }"
+          v-tooltip.top="'English'"
+          @click="switchLang('en')"
+        >
+          <FlagIcon
+            code="US"
+            square
+            :size="20"
+          />
+        </span>
+      </div>
+    </div>
     <div
       v-if="isLoadingNews"
       class="news-grid"
@@ -46,6 +74,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import FlagIcon from 'vue3-flag-icons';
 
 interface NewsArticle {
   id: number;
@@ -59,12 +88,25 @@ interface NewsArticle {
 const news = ref<NewsArticle[]>([]);
 const isLoadingNews = ref(false);
 const newsError = ref(false);
+const activeLang = ref<'pt-br' | 'en'>('pt-br');
+const newsBaseUrl = 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/news';
 
-onMounted(async () => {
+onMounted(() => {
+  fetchNews(activeLang.value);
+});
+
+function switchLang(lang: 'pt-br' | 'en') {
+  if (activeLang.value === lang) return;
+  activeLang.value = lang;
+  fetchNews(lang);
+}
+
+async function fetchNews(lang: 'pt-br' | 'en') {
   isLoadingNews.value = true;
   newsError.value = false;
+  const langParam = `?lang=${lang}`;
   try {
-    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?lang=pt-br');
+    const res = await fetch(`${newsBaseUrl}${langParam}`);
     const data = await res.json();
     news.value = (data.articles ?? []).map((a: any) => ({
       id: a.id,
@@ -79,7 +121,7 @@ onMounted(async () => {
   } finally {
     isLoadingNews.value = false;
   }
-});
+}
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -93,10 +135,39 @@ function formatDate(iso: string): string {
   gap: var(--m-spacing);
 }
 
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-spacing);
+}
+
 .section-title {
   font-size: var(--l-font-size);
   font-weight: 700;
   color: var(--color-heading);
+}
+
+.lang-flags {
+  display: flex;
+  gap: var(--xs-spacing);
+}
+
+.lang-flag {
+  font-size: var(--m-font-size);
+  cursor: pointer;
+  opacity: 0.35;
+  transition:
+    opacity 0.2s,
+    transform 0.15s;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &--active {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 .news-grid {

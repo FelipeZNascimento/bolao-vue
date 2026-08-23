@@ -1,4 +1,6 @@
 import './assets/main.scss';
+// @ts-ignore - vue3-flag-icons/styles is a valid export (see package.json exports field) but lacks type declarations
+import 'vue3-flag-icons/styles';
 /* ---- FontAwesome Config ---- */
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';

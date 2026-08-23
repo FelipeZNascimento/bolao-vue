@@ -33,6 +33,7 @@
     "primevue": "^4.3.7",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1",
+    "vue3-flag-icons": "^0.1.7",
     "zod": "^4.4.3"
   },
   "devDependencies": {
