@@ -21,7 +21,7 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watchEffect } from 'vue';
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
-import MatchService from '@/services/match';
+import BetService from '@/services/bet';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
@@ -39,7 +39,7 @@ const radioButton = ref<BetsValues | null>(null);
 const isLoading = ref<boolean>(false);
 
 // ------ Initializations ------
-const matchService = new MatchService();
+const betService = new BetService();
 const matchesStore = useMatchesStore();
 const toast = useToast();
 const { activeProfile } = storeToRefs(useActiveProfileStore());
@@ -85,7 +85,7 @@ function handleNewBet() {
     return callback(true);
   }
 
-  matchService.updateBet(props.match.id, radioButton.value, callback);
+  betService.updateBet(props.match.id, radioButton.value, callback);
 }
 
 // ------ Functions ------
