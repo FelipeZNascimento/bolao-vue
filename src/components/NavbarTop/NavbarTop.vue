@@ -188,7 +188,7 @@ header {
   z-index: 999;
   background-color: var(--bolao-c-navbar);
   box-shadow: 0 0 15px 1px #0006;
-  width: 100%;
+  width: 100% !important;
   flex: 0;
 
   @media (min-width: 1024px) {
@@ -207,6 +207,10 @@ nav {
   align-items: center;
   position: sticky;
   top: 0;
+
+  @media (max-width: 1280px) {
+    font-size: var(--m-font-size) !important;
+  }
 
   .p-menubar {
     --p-menubar-mobile-button-size: 2.5rem;

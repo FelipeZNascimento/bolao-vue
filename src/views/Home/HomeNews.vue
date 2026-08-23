@@ -8,25 +8,15 @@
           :class="{ 'lang-flag--active': activeLang === 'pt-br' }"
           v-tooltip.top="'Português'"
           @click="switchLang('pt-br')"
+          >🇧🇷</span
         >
-          <FlagIcon
-            code="BR"
-            square
-            :size="20"
-          />
-        </span>
         <span
           class="lang-flag"
           :class="{ 'lang-flag--active': activeLang === 'en' }"
           v-tooltip.top="'English'"
           @click="switchLang('en')"
+          >🇺🇸</span
         >
-          <FlagIcon
-            code="US"
-            square
-            :size="20"
-          />
-        </span>
       </div>
     </div>
     <div
@@ -74,7 +64,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import FlagIcon from 'vue3-flag-icons';
 
 interface NewsArticle {
   id: number;
