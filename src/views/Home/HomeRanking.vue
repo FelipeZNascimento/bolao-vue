@@ -31,12 +31,10 @@
         <span class="rank-pos">{{ line.user.position }}º</span>
         <IconAndName
           class="rank-name"
-          :color="line.user.color"
-          :name="line.user.name"
-          :icon="line.user.icon"
+          :user="line.user"
           :isActive="activeProfile?.id === line.user.id"
           :isFavorite="activeProfile?.favorites?.includes(String(line.user.id)) ?? false"
-          @click="() => openUserTrackingModal(line.user)"
+          isClickable
         />
         <span class="rank-pts">{{ line.score.total }} pts</span>
         <span class="rank-pct">{{ line.score.percentage }}%</span>

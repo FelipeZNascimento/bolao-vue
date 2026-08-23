@@ -41,11 +41,7 @@
               variant="outlined"
               severity="secondary"
             >
-              <IconAndName
-                :color="activeProfile.color"
-                :icon="activeProfile.icon"
-                :name="activeProfile.name"
-              />
+              <IconAndName :user="activeProfile" />
             </PrimeButton>
             <PrimeButton
               v-else

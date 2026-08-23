@@ -13,9 +13,7 @@
       <div class="modal-header">
         <IconAndName
           v-if="selectedUser"
-          :color="selectedUser.color"
-          :name="selectedUser.name"
-          :icon="selectedUser.icon"
+          :user="selectedUser"
           :isActive="isUserActive"
           :isFavorite="isFavorite"
         />
@@ -88,7 +86,7 @@ const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
   isUserActive: boolean;
-  selectedUser: IUser | null;
+  selectedUser: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'> | null;
 }>();
 
 // ------ Refs ------

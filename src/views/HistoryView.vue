@@ -78,10 +78,8 @@
           <template #body="{ data }">
             <IconAndName
               class="clickable"
-              :color="data.user.color"
-              :icon="data.user.icon"
-              :name="data.user.name"
-              @click="() => openUserTrackingModal(data.user)"
+              :user="data.user"
+              isClickable
             />
           </template>
         </PrimeColumn>

@@ -17,14 +17,11 @@
               slotProps.data.user.position < 10 ? `0${slotProps.data.user.position}` : slotProps.data.user.position
             }}</span>
             <IconAndName
-              class="clickable"
+              :user="slotProps.data.user"
               :isShort="columnConfig === 'complete'"
-              :color="slotProps.data.user.color"
-              :name="slotProps.data.user.name"
-              :icon="slotProps.data.user.icon"
               :isActive="activeProfile?.id === slotProps.data.user.id"
               :isFavorite="activeProfile?.favorites?.includes(String(slotProps.data.user.id)) ?? false"
-              @click="() => openUserTrackingModal(slotProps.data.user)"
+              isClickable
             />
             <div class="badge-wrapper">
               <div
@@ -189,16 +186,6 @@ const { openUserTrackingModal } = useModalsStore();
       outline: 1.5px solid var(--bolao-c-gold);
       outline-offset: 1px;
     }
-  }
-}
-
-.clickable {
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    opacity: 0.8;
-    text-decoration: underline;
   }
 }
 

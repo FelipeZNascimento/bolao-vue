@@ -23,9 +23,8 @@
       <IconAndName
         v-if="!isMobile"
         isActive
-        :color="activeUserBet.user.color"
-        :name="activeUserBet.user.name"
-        :icon="activeUserBet.user.icon"
+        isClickable
+        :user="activeUserBet.user"
       />
       <span v-else>{{ activeUserBet.user.name }}</span>
     </div>
@@ -37,9 +36,8 @@
     >
       <IconAndName
         v-if="!isMobile"
-        :color="bet.user.color"
-        :name="bet.user.name"
-        :icon="bet.user.icon"
+        isClickable
+        :user="bet.user"
       />
       <span v-else>{{ bet.user.name }}</span>
     </div>
