@@ -188,7 +188,7 @@ header {
   z-index: 999;
   background-color: var(--bolao-c-navbar);
   box-shadow: 0 0 15px 1px #0006;
-  max-width: var(--page-width);
+  width: var(--page-width);
   width: 100%;
   flex: 0;
 
