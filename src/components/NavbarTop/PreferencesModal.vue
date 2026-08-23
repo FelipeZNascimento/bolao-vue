@@ -65,9 +65,7 @@
         <IconAndName
           v-if="activeProfile"
           class="iconAndName"
-          :name="activeProfile?.name"
-          :color="newColor"
-          :icon="newIcon"
+          :user="{ ...activeProfile, color: newColor, icon: newIcon }"
         />
         <div>
           <PrimeButton
