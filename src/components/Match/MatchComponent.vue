@@ -90,17 +90,21 @@ function handleMatchClick() {
   display: flex;
   opacity: 1;
   border: 1px solid var(--bolao-c-grey3);
+  transition:
+    border-color 1.2s ease,
+    box-shadow 1.2s ease,
+    transform 0.2s ease;
 
   &--bullseye {
-    border: 1px solid var(--bolao-c-gold);
+    border-color: var(--bolao-c-gold);
     box-shadow: 0px 0px 1px 1px var(--bolao-c-gold);
   }
   &--half {
-    border: 1px solid var(--bolao-c-blue);
+    border-color: var(--bolao-c-blue);
     box-shadow: 0px 0px 1px 1px var(--bolao-c-blue);
   }
   &--miss {
-    border: 1px solid var(--bolao-c-red);
+    border-color: var(--bolao-c-red);
     box-shadow: 0px 0px 1px 1px var(--bolao-c-red);
   }
 
@@ -110,9 +114,6 @@ function handleMatchClick() {
 
   &--clickable {
     cursor: pointer;
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
 
     &:hover {
       transform: scale(1.02);
