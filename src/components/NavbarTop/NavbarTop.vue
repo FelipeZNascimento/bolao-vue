@@ -188,7 +188,8 @@ header {
   z-index: 999;
   background-color: var(--bolao-c-navbar);
   box-shadow: 0 0 15px 1px #0006;
-  width: 100% !important;
+  max-width: var(--page-width);
+  width: 100%;
   flex: 0;
 
   @media (min-width: 1024px) {
@@ -219,7 +220,11 @@ nav {
     height: 100%;
     border-radius: 0;
     background-color: var(--bolao-c-navbar);
-    width: var(--page-width);
+    width: 100%;
+
+    .p-menubar-end {
+      flex: 0 !important;
+    }
   }
 
   i {

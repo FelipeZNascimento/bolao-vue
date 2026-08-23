@@ -79,7 +79,7 @@ watch(activeProfile, async (newValue) => {
 
 <style scoped>
 .outer-view {
-  width: var(--page-width);
+  max-width: var(--page-width);
   flex: 1;
 }
 </style>

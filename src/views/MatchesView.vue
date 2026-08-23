@@ -203,7 +203,7 @@ const activeProfileActive = computed(
   font-size: var(--m-font-size);
   font-weight: 700;
   width: 100%;
-  padding: var(--s-spacing) 0;
+  padding: var(--s-spacing);
   border-bottom: 1px solid var(--bolao-c-grey3);
   color: var(--color-text);
 
