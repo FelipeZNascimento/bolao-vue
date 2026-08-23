@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.10.2
+
+### Patch Changes
+
+- df5b36f: Fix:
+  - Horizontal scrollbar on some viewports;
+
 ## 1.10.1
 
 ### Patch Changes
