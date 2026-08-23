@@ -1,5 +1,17 @@
 # bolao-vue
 
+## 1.10.0
+
+### Minor Changes
+
+- 2476ac8: Fix:
+  - Live scores update working again (webscokets were broken);
+  
+  Features:
+  - "Coming Soon" updated with newly implemented features;
+  - News now available in both Portuguese and English;
+  - Plenty new animations for live matches upon score change;
+
 ## 1.9.1
 
 ### Patch Changes
