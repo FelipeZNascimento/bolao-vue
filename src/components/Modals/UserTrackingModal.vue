@@ -13,9 +13,7 @@
       <div class="modal-header">
         <IconAndName
           v-if="selectedUser"
-          :color="selectedUser.color"
-          :name="selectedUser.name"
-          :icon="selectedUser.icon"
+          :user="selectedUser"
           :isActive="isUserActive"
           :isFavorite="isFavorite"
         />
@@ -79,6 +77,7 @@ import ApiService from '@/services/api_request';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
+import { useConfigurationStore } from '@/stores/configuration.ts';
 import { useRankingStore } from '@/stores/ranking';
 import UserReacordsWeeksSection from './UserReacordsWeeksSection.vue';
 import type { IUserRecords } from './userRecords.types';
@@ -88,7 +87,7 @@ const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
   isUserActive: boolean;
-  selectedUser: IUser | null;
+  selectedUser: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'> | null;
 }>();
 
 // ------ Refs ------
@@ -103,6 +102,7 @@ const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
 const { isFavoriteUpdating, activeProfile } = storeToRefs(activeProfileStore);
 const { weeksRanking: ranking } = storeToRefs(useRankingStore());
+const { currentWeek } = storeToRefs(useConfigurationStore());
 
 // ------ Computed ------
 const isFavorite = computed(() => activeProfile.value?.favorites?.includes(String(props.selectedUser?.id)) ?? false);
@@ -116,22 +116,24 @@ function handleFavoriteClick() {
 
 // ------ Functions  ------
 function chartData() {
-  const userWeeklyRankings = ranking.value.map((week) => {
-    const userLine = week.ranking.find((rankingLine) => rankingLine.user.id === props.selectedUser?.id);
+  const userWeeklyRankings = ranking.value
+    .filter((week) => currentWeek.value && week.week <= currentWeek.value)
+    .map((week) => {
+      const userLine = week.ranking.find((rankingLine) => rankingLine.user.id === props.selectedUser?.id);
 
-    if (!userLine) return { bullseye: 0, percentage: 0 };
-    const bullseye = userLine.score.bullseye * (parseInt(userLine.score.percentage) / userLine.score.winner);
-    const winner = parseFloat(userLine.score.percentage) - bullseye;
+      if (!userLine) return { bullseye: 0, percentage: 0 };
+      const bullseye = userLine.score.bullseye * (parseInt(userLine.score.percentage) / userLine.score.winner);
+      const winner = parseFloat(userLine.score.percentage) - bullseye;
 
-    return {
-      accumulatedBullseye: userLine.score.accumulatedBullseye,
-      accumulatedPoints: userLine.score.accumulatedPoints,
-      accumulatedPosition: userLine.score.accumulatedPosition,
-      bullseye: bullseye.toFixed(1),
-      position: userLine.user.position,
-      winner: winner.toFixed(1)
-    };
-  });
+      return {
+        accumulatedBullseye: userLine.score.accumulatedBullseye,
+        accumulatedPoints: userLine.score.accumulatedPoints,
+        accumulatedPosition: userLine.score.accumulatedPosition,
+        bullseye: bullseye.toFixed(1),
+        position: userLine.user.position,
+        winner: winner.toFixed(1)
+      };
+    });
 
   return {
     datasets: [
@@ -170,7 +172,9 @@ function chartData() {
         yAxisID: 'y'
       }
     ],
-    labels: ranking.value.map((week) => `Semana ${week.week}`)
+    labels: ranking.value
+      .filter((week) => currentWeek.value && week.week <= currentWeek.value)
+      .map((week) => `Semana ${week.week}`)
   };
 }
 

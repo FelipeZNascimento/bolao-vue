@@ -63,20 +63,6 @@
         />
       </span>
       <template v-else>
-        <template v-if="finishedMatches.length">
-          <div class="section-header">
-            <i class="pi pi-flag" />
-            Encerradas
-          </div>
-          <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
-            <MatchComponent
-              v-for="match in finishedMatches"
-              :key="match.id"
-              :isGridMode="view === 'grid'"
-              :match="match"
-            />
-          </div>
-        </template>
         <template v-if="liveMatches.length">
           <div class="section-header section-header--live">
             <span class="live-dot" />
@@ -99,6 +85,20 @@
           <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
             <MatchComponent
               v-for="match in upcomingMatches"
+              :key="match.id"
+              :isGridMode="view === 'grid'"
+              :match="match"
+            />
+          </div>
+        </template>
+        <template v-if="finishedMatches.length">
+          <div class="section-header">
+            <i class="pi pi-flag" />
+            Encerradas
+          </div>
+          <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
+            <MatchComponent
+              v-for="match in finishedMatches"
               :key="match.id"
               :isGridMode="view === 'grid'"
               :match="match"

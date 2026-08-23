@@ -18,7 +18,7 @@ export interface IConferenceTeams {
 
 export interface IExtraBet {
   bets: IExtraBetBet[];
-  user: Pick<IUser, 'color' | 'icon' | 'id' | 'name'>;
+  user: Pick<IUser, 'color' | 'icon' | 'id' | 'name' | 'isOnline'>;
 }
 export interface IExtraBetBet {
   teams: ITeam[];
@@ -43,7 +43,7 @@ export interface ITeamWithExtras {
 
 export interface ITeamWithExtrasBet {
   type: ExtraBetsValues;
-  user: Pick<IUser, 'color' | 'icon' | 'id' | 'name'>;
+  user: Pick<IUser, 'color' | 'icon' | 'id' | 'name' | 'isOnline'>;
 }
 
 export type TConference = 'AFC' | 'NFC';

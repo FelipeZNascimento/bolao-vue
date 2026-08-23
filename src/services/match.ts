@@ -13,7 +13,7 @@ interface fetchMatch {
 }
 
 export default class MatchService {
-  public websocketInstance;
+  private websocketInstance;
   private apiRequest;
   private configurationStore;
   private matchesStore;
@@ -47,35 +47,10 @@ export default class MatchService {
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
-      if (this.websocketInstance) {
-        this.websocketInstance.close();
-      }
-
       this.websocketInstance.connect();
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(error instanceof Error ? error : new Error(String(error)));
-    }
-  }
-
-  public async updateBet(matchId: number, betValue: number, callback?: (isSuccess: boolean, error?: Error) => void) {
-    const betObject = {
-      betValue,
-      matchId
-    };
-
-    try {
-      await this.apiRequest.post<IMatch>(`bet/update/`, betObject);
-      // const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
-      // Deal with the response update the match in the store?
-
-      if (callback) {
-        callback(true);
-      }
-    } catch (error: unknown) {
-      if (callback) {
-        callback(false, error as Error);
-      }
     }
   }
 

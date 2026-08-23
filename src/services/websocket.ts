@@ -1,29 +1,37 @@
-export default class WebsocketService {
-  public websocketInstance: null | WebSocket;
-  private baseUrl: string;
-  private onMessage: (this: WebSocket, ev: MessageEvent<unknown>) => void;
+type OnMessageHandler = (this: WebSocket, ev: MessageEvent<unknown>) => void;
 
-  constructor(onWebsocketUpdate: (this: WebSocket, ev: MessageEvent<unknown>) => void) {
+let sharedInstance: WebSocket | null = null;
+
+export default class WebsocketService {
+  private baseUrl: string;
+  private onMessage: OnMessageHandler;
+
+  constructor(onWebsocketUpdate: OnMessageHandler) {
     this.baseUrl = import.meta.env.VITE_BOLAO_WS_BASE_URL;
     this.onMessage = onWebsocketUpdate;
-    this.websocketInstance = null;
   }
 
   public close() {
-    this.websocketInstance?.close();
+    if (sharedInstance) {
+      sharedInstance.close();
+      sharedInstance = null;
+    }
   }
 
-  public async connect() {
-    const url = `${this.baseUrl}`;
-    this.websocketInstance = new WebSocket(url);
-    this.websocketInstance.onopen = () => console.log('WS opened');
-    this.websocketInstance.onmessage = this.onMessage;
-    this.websocketInstance.onclose = this.onClose;
+  public connect() {
+    if (
+      sharedInstance &&
+      (sharedInstance.readyState === WebSocket.OPEN || sharedInstance.readyState === WebSocket.CONNECTING)
+    ) {
+      sharedInstance.onmessage = this.onMessage;
+      return sharedInstance;
+    }
 
-    return this.websocketInstance;
-  }
+    sharedInstance = new WebSocket(this.baseUrl);
+    sharedInstance.onopen = () => console.log('WS opened');
+    sharedInstance.onmessage = this.onMessage;
+    sharedInstance.onclose = () => console.log('WS closed');
 
-  private onClose() {
-    console.log('WS closed, trying to reopen');
+    return sharedInstance;
   }
 }

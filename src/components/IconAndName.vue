@@ -1,15 +1,16 @@
 <template>
   <div
     class="outer"
-    :class="{ 'outer-short': isShort }"
+    :class="{ 'outer-short': isShort, clickable: isClickable }"
+    @click="handleUserClick()"
   >
     <span
       class="usericon"
       :class="{ 'usericon--favorite': isFavorite }"
     >
       <FontAwesomeIcon
-        :style="{ color: color }"
-        :icon="icon"
+        :style="{ color: user.color }"
+        :icon="user.icon"
       />
       <i
         v-if="isFavorite"
@@ -19,28 +20,37 @@
     <span
       class="username"
       :class="{ active: isActive }"
-      >{{ name }}</span
+      >{{ user.name }}</span
     >
   </div>
 </template>
 <script lang="ts" setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import type { IUser } from '@/stores/activeProfile.types';
+import { useModalsStore } from '@/stores/modals';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
-    color: string;
-    icon: string;
     isActive?: boolean;
     isFavorite?: boolean;
     isShort?: boolean;
-    name: string;
+    isClickable?: boolean;
+    user: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>;
   }>(),
   {
     isActive: false,
+    isClickable: false,
     isFavorite: false,
     isShort: false
   }
 );
+
+const { openUserTrackingModal } = useModalsStore();
+
+function handleUserClick() {
+  if (!props.isClickable) return;
+  openUserTrackingModal(props.user);
+}
 </script>
 <style lang="scss" scoped>
 .outer-short {
@@ -75,5 +85,15 @@ withDefaults(
 
 .active {
   font-weight: bold;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
 }
 </style>

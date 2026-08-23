@@ -16,9 +16,9 @@ export const useModalsStore = defineStore('modals', () => {
 
   // ── User Tracking Modal ──
   const isUserTrackingModalOpen = ref(false);
-  const selectedUserTracking = ref<IUser | null>(null);
+  const selectedUserTracking = ref<Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'> | null>(null);
 
-  function openUserTrackingModal(user: IUser) {
+  function openUserTrackingModal(user: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>) {
     selectedUserTracking.value = user;
     isUserTrackingModalOpen.value = true;
   }

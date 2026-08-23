@@ -11,9 +11,8 @@
     >
       <IconAndName
         v-if="!isMobile"
-        :color="user.color"
-        :name="user.name"
-        :icon="user.icon"
+        :user="user"
+        isClickable
       />
       <span v-else>{{ user.name }}</span>
     </div>
@@ -27,7 +26,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 defineProps<{
   isCorrect: boolean;
   title: string;
-  users: Pick<IUser, 'color' | 'icon' | 'id' | 'name'>[];
+  users: Pick<IUser, 'color' | 'icon' | 'id' | 'name' | 'isOnline'>[];
 }>();
 
 // ------ Computed Properties ------
