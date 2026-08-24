@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.10.5
+
+### Patch Changes
+
+- c103921: Fix:
+    Flow to link fleaflicker account has been trimmed;
+
 ## 1.10.4
 
 ### Patch Changes
