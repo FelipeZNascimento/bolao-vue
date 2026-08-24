@@ -22,7 +22,7 @@ export default class MatchService {
     this.apiRequest = new ApiService();
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
-    this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
+    this.websocketInstance = new WebsocketService(this.onWebsocketUpdate, () => this.fetch());
   }
 
   public async fetch(week?: null | number, season?: null | number) {
@@ -39,11 +39,24 @@ export default class MatchService {
     }
 
     try {
-      const response = await this.apiRequest.get<fetchMatch>(`match/${season}/${week}`);
-      this.matchesStore.setMatches(response.matches);
-      if (week === this.configurationStore.currentWeek) {
-        this.matchesStore.setCurrentWeekMatches(response.matches);
+      const currentWeek = this.configurationStore.currentWeek;
+      const isViewingCurrentWeek = week === currentWeek;
+
+      const requests: Promise<fetchMatch>[] = [this.apiRequest.get<fetchMatch>(`match/${season}/${week}`)];
+
+      // If the user is browsing a past/future week, also refresh the live week
+      // so the home dashboard stays up to date after returning from another tab
+      if (!isViewingCurrentWeek && currentWeek) {
+        requests.push(this.apiRequest.get<fetchMatch>(`match/${season}/${currentWeek}`));
       }
+
+      const [selectedResponse, currentResponse] = await Promise.all(requests);
+
+      this.matchesStore.setMatches(selectedResponse.matches);
+      this.matchesStore.setCurrentWeekMatches(
+        isViewingCurrentWeek ? selectedResponse.matches : (currentResponse?.matches ?? selectedResponse.matches)
+      );
+
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 

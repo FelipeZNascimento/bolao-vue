@@ -22,16 +22,8 @@
               :isActive="activeProfile?.id === slotProps.data.user.id"
               :isFavorite="activeProfile?.favorites?.includes(String(slotProps.data.user.id)) ?? false"
               isClickable
+              showBadge
             />
-            <div class="badge-wrapper">
-              <div
-                class="badge"
-                :class="[
-                  slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline',
-                  { 'badge--favorite': activeProfile?.favorites?.includes(String(slotProps.data.user.id)) }
-                ]"
-              ></div>
-            </div>
           </div>
         </div>
       </template>
@@ -107,9 +99,7 @@
 import { storeToRefs } from 'pinia';
 import IconAndName from '@/components/IconAndName.vue';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
-import { useModalsStore } from '@/stores/modals';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 defineProps<{
@@ -122,7 +112,6 @@ defineProps<{
 }>();
 
 const { activeProfile } = storeToRefs(useActiveProfileStore());
-const { openUserTrackingModal } = useModalsStore();
 </script>
 <style lang="scss" scoped>
 .outer-position {
@@ -130,77 +119,12 @@ const { openUserTrackingModal } = useModalsStore();
   gap: var(--s-spacing);
   align-items: center;
   overflow: visible;
+  flex: 1;
 }
 
 .position-number {
   width: 20px;
   text-align: right;
   flex-shrink: 0;
-}
-
-.badge-wrapper {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-
-.badge {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-
-  &Online {
-    @extend .badge;
-    background-color: var(--bolao-c-mint);
-
-    &::after {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      animation: ripple 2s infinite ease-in-out;
-      border: 1px solid var(--bolao-c-mint);
-      content: '';
-    }
-
-    &.badge--favorite {
-      background-color: var(--bolao-c-gold);
-
-      &::after {
-        border-color: var(--bolao-c-gold);
-      }
-    }
-  }
-
-  &Offline {
-    @extend .badge;
-    background-color: transparent;
-    opacity: 0.2;
-
-    &.badge--favorite {
-      opacity: 1;
-      outline: 1.5px solid var(--bolao-c-gold);
-      outline-offset: 1px;
-    }
-  }
-}
-
-@keyframes badge-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  70% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
 }
 </style>
