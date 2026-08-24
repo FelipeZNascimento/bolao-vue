@@ -7,7 +7,7 @@
         severity="warn"
         size="small"
         label="Admin"
-        @click="$router.push('/admin')"
+        @click="navigate('/admin')"
       />
       <PrimeButton
         variant="text"
@@ -24,25 +24,10 @@
         @click="openPreferencesModal"
       />
       <PrimeButton
-        v-if="activeProfile?.fleaflicker"
         variant="text"
         severity="secondary"
         size="small"
-        @click="$router.push('/fleaflicker')"
-      >
-        <img
-          src="/fleaflicker.png"
-          alt="Fleaflicker"
-          class="fleaflicker-logo"
-        />
-        Fleaflicker
-      </PrimeButton>
-      <PrimeButton
-        v-else
-        variant="text"
-        severity="secondary"
-        size="small"
-        @click="openFleaflickerModal"
+        @click="activeProfile?.fleaflicker ? navigate('/fleaflicker') : navigate('/fleaflicker', { tab: 'config' })"
       >
         <img
           src="/fleaflicker.png"
@@ -69,16 +54,23 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useModalsStore } from '@/stores/modals';
 
 const popover = ref();
+const router = useRouter();
 
 const { activeProfile } = storeToRefs(useActiveProfileStore());
-const { openProfileModal, openPasswordModal, openPreferencesModal, openFleaflickerModal } = useModalsStore();
+const { openProfileModal, openPasswordModal, openPreferencesModal } = useModalsStore();
 
 const userService = new UserService();
+
+function navigate(path: string, query?: Record<string, string>) {
+  popover.value.hide();
+  router.push({ path, query });
+}
 
 function handleLogout() {
   userService.logout();

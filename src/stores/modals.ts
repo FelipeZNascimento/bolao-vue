@@ -70,17 +70,6 @@ export const useModalsStore = defineStore('modals', () => {
     isConfigModalOpen.value = false;
   }
 
-  // ── Fleaflicker Modal ──
-  const isFleaflickerModalOpen = ref(false);
-
-  function openFleaflickerModal() {
-    isFleaflickerModalOpen.value = true;
-  }
-
-  function closeFleaflickerModal() {
-    isFleaflickerModalOpen.value = false;
-  }
-
   // ── Player News Modal ──
   const isPlayerNewsModalOpen = ref(false);
   const selectedPlayerNews = ref<IFleaflickerNews | null>(null);
@@ -142,9 +131,6 @@ export const useModalsStore = defineStore('modals', () => {
     isConfigModalOpen,
     openConfigModal,
     closeConfigModal,
-    isFleaflickerModalOpen,
-    openFleaflickerModal,
-    closeFleaflickerModal,
     isPlayerNewsModalOpen,
     selectedPlayerNews,
     openPlayerNewsModal,

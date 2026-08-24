@@ -44,6 +44,13 @@
       >
         Conexão verificada com sucesso!
       </PrimeMessage>
+      <PrimeMessage
+        v-if="confirmSuccess"
+        severity="success"
+        variant="outlined"
+      >
+        Conta Fleaflicker vinculada com sucesso!
+      </PrimeMessage>
 
       <div class="config-actions">
         <PrimeButton
@@ -97,6 +104,7 @@ const isConfirming = ref(false);
 const isUnlinking = ref(false);
 const testSuccess = ref(false);
 const testError = ref<string | null>(null);
+const confirmSuccess = ref(false);
 
 const isBusy = computed(() => isTesting.value || isConfirming.value || isUnlinking.value);
 const canTest = computed(() => !isBusy.value && leagueId.value.trim() !== '' && teamId.value.trim() !== '');
@@ -139,6 +147,7 @@ async function handleConfirm() {
       });
     }
     testSuccess.value = false;
+    confirmSuccess.value = true;
   } catch (e) {
     testError.value = e instanceof Error ? e.message : 'Erro ao salvar.';
   } finally {

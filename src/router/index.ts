@@ -72,7 +72,7 @@ const router = createRouter({
     {
       beforeEnter: () => {
         const { activeProfile, isLoading } = useActiveProfileStore();
-        if (!activeProfile?.fleaflicker && !isLoading) return { name: 'home' };
+        if (!activeProfile && !isLoading) return { name: 'home' };
       },
       component: () => import('../views/FleaflickerView.vue'),
       name: 'fleaflicker',
