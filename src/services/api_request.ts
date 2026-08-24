@@ -42,6 +42,17 @@ export default class ApiService {
     return this.fetchWithRetry<T>(url, requestOptions);
   }
 
+  public async delete<T = void>(endpoint: string, headers?: Record<string, string>): Promise<T> {
+    const requestOptions: RequestInit = {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...headers },
+      method: 'DELETE'
+    };
+    const url = `${this.baseUrl}${endpoint}`;
+
+    return this.fetchWithRetry<T>(url, requestOptions);
+  }
+
   public async websocket(endpoint: string) {
     const url = `${this.baseUrl}${endpoint}`;
     return new WebSocket(url);

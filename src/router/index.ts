@@ -68,6 +68,15 @@ const router = createRouter({
       component: () => import('../views/AdminView.vue'),
       name: 'admin',
       path: '/admin'
+    },
+    {
+      beforeEnter: () => {
+        const { activeProfile, isLoading } = useActiveProfileStore();
+        if (!activeProfile?.fleaflicker && !isLoading) return { name: 'home' };
+      },
+      component: () => import('../views/FleaflickerView.vue'),
+      name: 'fleaflicker',
+      path: '/fleaflicker'
     }
   ]
 });
