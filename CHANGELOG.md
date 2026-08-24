@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.10.6
+
+### Patch Changes
+
+- 8fee6cc: Fix:
+    Mobile view for fleaflicker integration.
+
 ## 1.10.5
 
 ### Patch Changes
