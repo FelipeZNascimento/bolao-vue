@@ -24,10 +24,6 @@
     :isOpen="isConfigModalOpen"
     :handleCloseModal="closeConfigModal"
   />
-  <FleaflickerModal
-    :isOpen="isFleaflickerModalOpen"
-    :handleCloseModal="closeFleaflickerModal"
-  />
   <UserTrackingModal
     :isOpen="isUserTrackingModalOpen"
     :isUserActive="activeProfile?.id === selectedUserTracking?.id"
@@ -53,7 +49,6 @@ import BetsModal from '@/components/Match/BetsModal/BetsModal.vue';
 import PlayerNewsModal from '@/components/Modals/PlayerNewsModal.vue';
 import ProjectedStatsModal from '@/components/Modals/ProjectedStatsModal.vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
-import FleaflickerModal from '@/components/NavbarTop/FleaflickerModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import PasswordModal from '@/components/NavbarTop/PasswordModal.vue';
 import PreferencesModal from '@/components/NavbarTop/PreferencesModal.vue';
@@ -74,7 +69,6 @@ const {
   isPasswordModalOpen,
   isPreferencesModalOpen,
   isConfigModalOpen,
-  isFleaflickerModalOpen,
   isPlayerNewsModalOpen,
   selectedPlayerNews,
   isProjectedStatsModalOpen,
@@ -89,7 +83,6 @@ const {
   closePasswordModal,
   closePreferencesModal,
   closeConfigModal,
-  closeFleaflickerModal,
   closePlayerNewsModal,
   closeProjectedStatsModal,
   closeUserTrackingModal
