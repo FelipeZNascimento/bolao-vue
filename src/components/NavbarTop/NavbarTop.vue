@@ -48,103 +48,35 @@
               icon="pi pi-user"
               :loading="isProfileLoading"
               label="Login"
-              @click="isLoginModalOpen = true"
+              @click="openLoginModal"
             />
-            <a @click="isConfigModalOpen = true"><i class="pi pi-cog"></i></a>
+            <a @click="openConfigModal"><i class="pi pi-cog"></i></a>
           </div>
-          <PrimePopover ref="profilePopover">
-            <div class="outer-profile-popover">
-              <PrimeButton
-                v-if="activeProfile?.admin"
-                variant="text"
-                severity="warn"
-                size="small"
-                label="Admin"
-                @click="$router.push('/admin')"
-              />
-              <PrimeButton
-                variant="text"
-                severity="secondary"
-                size="small"
-                label="Perfil"
-                @click="isProfileModalOpen = true"
-              />
-              <PrimeButton
-                variant="text"
-                severity="secondary"
-                size="small"
-                label="Preferências"
-                @click="isPreferencesModalOpen = true"
-              />
-              <PrimeButton
-                variant="text"
-                severity="danger"
-                size="small"
-                label="Senha"
-                @click="isPasswordModalOpen = true"
-              />
-              <PrimeButton
-                size="small"
-                label="Sair"
-                @click="handleLogout"
-              />
-            </div>
-          </PrimePopover>
+          <ProfilePopover ref="profilePopover" />
         </template>
       </PrimeMenubar>
     </nav>
   </header>
-  <LoginModal
-    :isOpen="isLoginModalOpen"
-    :handleCloseModal="() => (isLoginModalOpen = false)"
-  />
-  <ProfileModal
-    :isOpen="isProfileModalOpen"
-    :handleCloseModal="() => (isProfileModalOpen = false)"
-  />
-  <PasswordModal
-    :isOpen="isPasswordModalOpen"
-    :handleCloseModal="() => (isPasswordModalOpen = false)"
-  />
-  <PreferencesModal
-    :isOpen="isPreferencesModalOpen"
-    :handleCloseModal="() => (isPreferencesModalOpen = false)"
-  />
-  <ConfigModal
-    :isOpen="isConfigModalOpen"
-    :handleCloseModal="() => (isConfigModalOpen = false)"
-  />
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
-import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
-import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useModalsStore } from '@/stores/modals';
 import IconAndName from '../IconAndName.vue';
-import PasswordModal from './PasswordModal.vue';
-import PreferencesModal from './PreferencesModal.vue';
-import ProfileModal from './ProfileModal.vue';
+import ProfilePopover from './ProfilePopover.vue';
 import { ROUTES } from './routes';
 
 // ------ Refs ------
 const isDarkMode = ref(false);
-const isLoginModalOpen = ref(false);
-const isProfileModalOpen = ref(false);
-const isPasswordModalOpen = ref(false);
-const isPreferencesModalOpen = ref(false);
-const profilePopover = ref();
-const isConfigModalOpen = ref(false);
+const profilePopover = ref<InstanceType<typeof ProfilePopover>>();
 const activeRoute = ref(ROUTES[0].id);
 
 // ------ Initializations ------
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 isDarkMode.value = configurationStore.isDarkMode();
-const userService = new UserService();
 onMounted(() => {
   const currentPath = window.location.pathname;
   const matchingRoute = ROUTES.find((route) => route.url === currentPath);
@@ -154,7 +86,9 @@ onMounted(() => {
 });
 
 const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
-const { isSeasonRegisterModalOpen } = storeToRefs(useModalsStore());
+const modalsStore = useModalsStore();
+const { isSeasonRegisterModalOpen } = storeToRefs(modalsStore);
+const { openLoginModal, openConfigModal } = modalsStore;
 const { currentSeason } = storeToRefs(configurationStore);
 
 // ------ Computed Properties ------
@@ -170,13 +104,8 @@ watch(activeProfile, (profile) => {
 });
 
 // ------ Functions ------
-function handleLogout() {
-  userService.logout();
-  profilePopover.value.toggle();
-}
-
 function togglePopover(event: Event) {
-  profilePopover.value.toggle(event);
+  profilePopover.value?.toggle(event);
 }
 </script>
 <style lang="scss" scoped>
@@ -277,11 +206,5 @@ nav {
   cursor: default;
   pointer-events: none;
   color: var(--nav-disabled);
-}
-
-.outer-profile-popover {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-spacing);
 }
 </style>

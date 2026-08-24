@@ -11,4 +11,8 @@ export interface IUser {
   isOnline: boolean;
   name: string;
   favorites: string[];
+  fleaflicker: {
+    leagueId: number;
+    teamId: number;
+  } | null;
 }
