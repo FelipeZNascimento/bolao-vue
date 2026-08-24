@@ -69,7 +69,7 @@
         :key="group.group"
         class="group-section"
       >
-        <h2 class="group-title">{{ groupLabel(group.group) }}</h2>
+        <h2 class="group-title">{{ group.group ? groupLabel(group.group) : 'Reservas' }}</h2>
         <div class="slots-grid">
           <FleaflickerPlayerCard
             v-for="(slot, i) in group.slots"

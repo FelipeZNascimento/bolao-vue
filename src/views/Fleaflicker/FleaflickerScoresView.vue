@@ -245,6 +245,10 @@ const emit = defineEmits<{
   display: flex;
   flex-wrap: wrap;
   gap: var(--m-spacing);
+
+  @media (max-width: 1024px) {
+    justify-content: center;
+  }
 }
 
 .matchup-card {
