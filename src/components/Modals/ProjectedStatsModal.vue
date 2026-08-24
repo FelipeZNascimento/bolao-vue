@@ -5,7 +5,7 @@
     dismissableMask
     :draggable="false"
     :style="{ width: '90vw', maxWidth: '420px' }"
-    @update:visible="(v) => !v && handleCloseModal()"
+    @update:visible="(v: boolean) => !v && handleCloseModal()"
   >
     <template #header>
       <div class="modal-header">

@@ -6,7 +6,7 @@
     :header="news?.title"
     :style="{ width: '90vw', maxWidth: '480px' }"
     :draggable="false"
-    @update:visible="(v) => !v && handleCloseModal()"
+    @update:visible="(v: boolean) => !v && handleCloseModal()"
   >
     <p
       v-if="news"
