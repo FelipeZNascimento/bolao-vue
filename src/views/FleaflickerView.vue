@@ -1,19 +1,20 @@
 <template>
   <div class="outer-fleaflicker">
     <div class="page-header">
-      <a
-        class="team-logo"
-        href="https://www.fleaflicker.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          src="/fleaflicker.png"
-          alt="Fleaflicker"
-        />
-        <h1 class="team-name">Fleaflicker <i class="pi pi-external-link" /></h1>
-      </a>
-      .
+      <div style="flex: 1; display: flex">
+        <a
+          href="https://www.fleaflicker.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="team-logo"
+        >
+          <img
+            src="/fleaflicker.png"
+            alt="Fleaflicker"
+          />
+          <p class="team-name">Fleaflicker <i class="pi pi-external-link" /></p>
+        </a>
+      </div>
       <div
         class="page-header-info"
         v-if="owner"
@@ -29,33 +30,53 @@
               :src="owner.logoUrl"
               :alt="owner.name"
             />
-            <h1 class="team-name">{{ owner.name }} <i class="pi pi-external-link" /></h1>
+            <p class="team-name">{{ owner.name }} <i class="pi pi-external-link" /></p>
           </a>
         </div>
       </div>
     </div>
 
     <nav class="tab-nav">
-      <button
-        v-for="tab in TABS"
-        :key="tab.id"
-        class="tab-btn"
-        :class="{ 'tab-btn--active': activeTab === tab.id }"
-        @click="setTab(tab.id)"
+      <!-- Desktop: tab buttons -->
+      <template v-if="!isMobile">
+        <button
+          v-for="tab in TABS"
+          :key="tab.id"
+          class="tab-btn"
+          :class="{ 'tab-btn--active': activeTab === tab.id }"
+          @click="setTab(tab.id)"
+        >
+          <i :class="tab.icon" />
+          {{ tab.label }}
+        </button>
+      </template>
+
+      <!-- Mobile: select dropdown -->
+      <select
+        v-else
+        class="tab-select"
+        :value="activeTab"
+        @change="setTab(($event.target as HTMLSelectElement).value as TTab)"
       >
-        <i :class="tab.icon" />
-        {{ tab.label }}
-      </button>
+        <option
+          v-for="tab in TABS"
+          :key="tab.id"
+          :value="tab.id"
+        >
+          {{ tab.label }}
+        </option>
+      </select>
+
+      <!-- Refresh (both) -->
       <button
-        class="tab-btn"
-        text
-        rounded
-        size="large"
-        :loading="isLoadingRoster || isLoadingStandings || isLoadingScoreboard"
-        :disabled="!activeProfile?.fleaflicker"
+        class="tab-btn refresh-btn"
+        :disabled="!activeProfile?.fleaflicker || isLoadingRoster || isLoadingStandings || isLoadingScoreboard"
         @click="refreshAll"
       >
-        <i class="pi pi-refresh" />
+        <i
+          class="pi"
+          :class="isLoadingRoster || isLoadingStandings || isLoadingScoreboard ? 'pi-spinner pi-spin' : 'pi-refresh'"
+        />
         Atualizar
       </button>
     </nav>
@@ -89,6 +110,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -274,17 +296,13 @@ watch(viewingTeamId, () => {
   display: flex;
   align-items: center;
   gap: var(--s-spacing);
+  flex: 1;
 }
 
 .team-logo {
   display: flex;
   align-items: center;
   gap: var(--s-spacing);
-
-  transition: transform 0.2s;
-  &:hover {
-    transform: scale(1.05);
-  }
 
   img {
     width: 32px;
@@ -296,6 +314,15 @@ watch(viewingTeamId, () => {
 
 .team-name {
   color: light-dark(var(--bolao-c-grey4), var(--bolao-c-grey2));
+  font-size: var(--xs-font-size);
+  transition: transform 0.2s;
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  @media (min-width: 1024px) {
+    font-size: var(--l-font-size);
+  }
 }
 
 .state-message {
@@ -332,6 +359,22 @@ watch(viewingTeamId, () => {
   gap: var(--xs-spacing);
   border-bottom: 2px solid light-dark(var(--bolao-c-grey2), var(--bolao-c-grey6));
   padding-bottom: 0;
+}
+
+.tab-select {
+  flex: 1;
+  padding: var(--xs-spacing) var(--s-spacing);
+  border-radius: var(--s-border-radius);
+  border: 1px solid light-dark(var(--bolao-c-grey2), var(--bolao-c-grey5));
+  background: light-dark(var(--bolao-c-white), var(--bolao-c-navy));
+  color: inherit;
+  font-size: var(--s-font-size);
+  cursor: pointer;
+
+  &:focus {
+    outline: 2px solid var(--p-primary-color);
+    outline-offset: 1px;
+  }
 }
 
 .refresh-btn {
