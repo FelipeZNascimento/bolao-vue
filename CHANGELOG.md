@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.10.4
+
+### Patch Changes
+
+- e1684ea: Feature:
+    Fleaflicker integration: You can now connect your Fleaflicker account and see your team's roster, standings and scores.
+
 ## 1.10.3
 
 ### Patch Changes
