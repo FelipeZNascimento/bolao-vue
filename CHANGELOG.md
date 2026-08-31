@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.11.0
+
+### Minor Changes
+
+- 0c4b11d: Features:
+  - Match modal has been vastly improved with a game center layout, including match info, drives, stats and betting;
+
 ## 1.10.6
 
 ### Patch Changes
