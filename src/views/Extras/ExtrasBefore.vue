@@ -13,7 +13,7 @@
       <p v-if="activeProfile && activeProfile.seasonId !== currentSeason">
         <span
           class="register-link"
-          @click="openSeasonRegisterModal()"
+          @click="openModal(EModal.SeasonRegister)"
           >Registre-se na atual temporada</span
         >
         e efetue o pagamento para participar do Bolão.
@@ -100,7 +100,7 @@ import type {
   TExtrasTeam,
   TWildcards
 } from '@/stores/extraBet.types';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { useTeamsStore } from '@/stores/teams';
 import ExtrasBettingCounter from './Before/ExtrasBettingCounter.vue';
 import ExtrasBettingPerConference from './Before/ExtrasBettingPerConference.vue';
@@ -143,7 +143,7 @@ const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfile
 const { isLoading, loggedUserBets } = storeToRefs(useExtraBetStore());
 const { afcTeams, nfcTeams } = storeToRefs(useTeamsStore());
 const { currentSeason } = storeToRefs(useConfigurationStore());
-const { openSeasonRegisterModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 const activeProfileActive = computed(
   () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value

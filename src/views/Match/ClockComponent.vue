@@ -7,9 +7,9 @@
       <div class="clock-time">
         <i class="pi pi-calendar-clock"></i>
         <span style="font-weight: bold">
-          {{ clockStore.formattedDate(timestamp) }}
+          {{ clockStore.formattedDate(match.timestamp) }}
         </span>
-        <span>{{ clockStore.formattedTime(timestamp) }}</span>
+        <span>{{ clockStore.formattedTime(match.timestamp) }}</span>
       </div>
     </div>
     <div
@@ -21,14 +21,14 @@
         :ribbon="ribbon"
       />
       <div style="flex: 1; display: flex; align-items: center">
-        <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-        <span v-else> {{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span>
+        <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[match.status] }}</span>
+        <span v-else> {{ match.clock }} {{ MATCH_STATUS_LABELS[match.status] }}</span>
       </div>
     </div>
     <div
       class="outer-clock-fluid"
       style="flex-direction: column"
-      v-if="odds.odds || odds.overUnder"
+      v-if="match.homeTeamOdds || match.overUnder"
     >
       <div style="font-size: var(--s-font-size)">Odds</div>
       <div style="font-size: var(--s-font-size)">
@@ -36,14 +36,14 @@
           style="text-decoration: underline dotted; cursor: help"
           v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
         >
-          {{ odds.odds }}
+          {{ match.homeTeamOdds }}
         </span>
         |
         <span
           style="text-decoration: underline dotted; cursor: help"
           v-tooltip.top="'Soma dos pontos'"
         >
-          {{ odds.overUnder }}
+          {{ match.overUnder }}
         </span>
       </div>
     </div>
@@ -65,8 +65,8 @@
       style="flex: 1; display: flex; align-items: center"
     >
       <i class="pi pi-plus-circle icon"></i>
-      <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-      <span v-else> {{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span>
+      <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[match.status] }}</span>
+      <span v-else> {{ match.clock }} {{ MATCH_STATUS_LABELS[match.status] }}</span>
     </div>
     <div
       v-if="!isMatchStarted"
@@ -76,27 +76,27 @@
       <div class="clock-time">
         <div>
           <span style="font-weight: bold; margin-right: var(--xs-spacing)"
-            ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(timestamp) }}</span
+            ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(match.timestamp) }}</span
           >
-          <span>{{ clockStore.formattedTime(timestamp) }}</span>
+          <span>{{ clockStore.formattedTime(match.timestamp) }}</span>
         </div>
         <div
           style="font-size: var(--xs-font-size)"
-          v-if="odds.odds || odds.overUnder"
+          v-if="match.homeTeamOdds || match.overUnder"
         >
           Odds:
           <span
             style="text-decoration: underline dotted; cursor: help"
             v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
           >
-            {{ odds.odds }}
+            {{ match.homeTeamOdds }}
           </span>
           |
           <span
             style="text-decoration: underline dotted; cursor: help"
             v-tooltip.top="'Soma dos pontos'"
           >
-            {{ odds.overUnder }}
+            {{ match.overUnder }}
           </span>
         </div>
       </div>
@@ -110,18 +110,16 @@ import type { Ribbon } from '@/constants/bets';
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
-import RibbonComponent from './RibbonComponent.vue';
+import type { IMatch } from '@/stores/matches.types';
+import TinyMatchComponent from '@/views/Home/TinyMatchComponent.vue';
+import RibbonComponent from '@/views/Match/RibbonComponent.vue';
 
-const props = defineProps<{
-  clock: string;
+const { match } = defineProps<{
   isGridMode?: boolean;
-  isMatchStarted: boolean;
   isClickable?: boolean;
   ribbon?: Ribbon;
-  status: TMatchStatus;
-  timestamp: number;
   fluid?: boolean;
-  odds: { overUnder: string; odds: string };
+  match: IMatch;
 }>();
 
 // ------ Initialization ------
@@ -133,7 +131,8 @@ const activeProfile = computed(() => {
   return activeProfileStore.activeProfile;
 });
 
-const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
+const isClockStopped = computed(() => STOPPED_GAME.includes(match.status));
+const isMatchStarted = computed(() => !!match && clockStore.currentTimestamp >= match.timestamp);
 </script>
 <style lang="scss" scoped>
 .clickable {

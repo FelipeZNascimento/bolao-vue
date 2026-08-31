@@ -133,7 +133,7 @@ import { computed, onMounted, ref } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
 import type { ISeasonRecord, ISeasonRecordsResponse } from '@/components/Modals/userRecords.types';
 import ApiService from '@/services/api_request';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 
 const records = ref<ISeasonRecord[] | null>(null);
 const isLoading = ref(false);
@@ -164,7 +164,7 @@ const filteredRecords = computed(() => {
 });
 
 const apiService = new ApiService();
-const { openUserTrackingModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 async function fetchRecords() {
   isLoading.value = true;

@@ -25,7 +25,7 @@
         <p v-if="activeProfile && activeProfile.seasonId !== currentSeason">
           <span
             class="register-link"
-            @click="openSeasonRegisterModal()"
+            @click="openModal(EModal.SeasonRegister)"
             >Registre-se na atual temporada</span
           >
           e efetue o pagamento para participar do Bolão.
@@ -117,14 +117,14 @@
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import MatchComponent from '@/components/Match/MatchComponent.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
+import MatchComponent from '@/views/Match/MatchComponent.vue';
 
 const {
   isLoading: isConfigurationLoading,
@@ -147,7 +147,7 @@ const liveMatches = computed(() =>
 const upcomingMatches = computed(() => matches.value.filter((m) => m.status === MATCH_STATUS.NOT_STARTED));
 const activeProfileStore = useActiveProfileStore();
 const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
-const { openSeasonRegisterModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 const activeProfileActive = computed(
   () => activeProfile.value?.active && activeProfile.value.seasonId === currentSeason.value

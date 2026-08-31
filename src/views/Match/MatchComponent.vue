@@ -17,12 +17,8 @@
       v-if="!isDemo"
       :isClickable="!isMatchStarted"
       :ribbon="ribbon"
-      :timestamp="match.timestamp"
-      :status="match.status"
-      :clock="match.clock"
       :isGridMode="isGridMode"
-      :isMatchStarted="isMatchStarted"
-      :odds="{ overUnder: match.overUnder, odds: match.homeTeamOdds }"
+      :match="match"
       @click="!isMatchStarted ? handleMatchClick() : undefined"
     />
     <ScoreComponent
@@ -41,11 +37,11 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import { useClockStore } from '@/stores/clock';
-import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
-import ClockComponent from './ClockComponent.vue';
-import ScoreComponent from './ScoreComponent.vue';
+import ClockComponent from '@/views/Match/ClockComponent.vue';
+import ScoreComponent from '@/views/Match/ScoreComponent.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -64,7 +60,7 @@ const props = withDefaults(
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { activeProfile } = storeToRefs(useActiveProfileStore());
-const { openBetsModal } = useMatchesStore();
+const { openModal } = useModalsStore();
 
 // ------ Computed Properties ------
 const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
@@ -82,7 +78,7 @@ function handleMatchClick() {
   if (props.isBetting || props.isDemo) {
     return;
   }
-  openBetsModal(props.match);
+  openModal(EModal.Match, props.match.id);
 }
 </script>
 <style lang="scss" scoped>

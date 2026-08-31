@@ -78,6 +78,8 @@ import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IUser } from '@/stores/activeProfile.types';
 import { useConfigurationStore } from '@/stores/configuration.ts';
+import { useModalsStore } from '@/stores/modals';
+import type { TUserPayload } from '@/stores/modals';
 import { useRankingStore } from '@/stores/ranking';
 import UserReacordsWeeksSection from './UserReacordsWeeksSection.vue';
 import type { IUserRecords } from './userRecords.types';
@@ -86,9 +88,10 @@ import UserRecordsSeasonSection from './UserRecordsSeasonSection.vue';
 const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
-  isUserActive: boolean;
-  selectedUser: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'> | null;
 }>();
+
+const { modalPayload } = storeToRefs(useModalsStore());
+const selectedUser = computed(() => modalPayload.value as TUserPayload | null);
 
 // ------ Refs ------
 const isVisible = ref(false);
@@ -105,12 +108,13 @@ const { weeksRanking: ranking } = storeToRefs(useRankingStore());
 const { currentWeek } = storeToRefs(useConfigurationStore());
 
 // ------ Computed ------
-const isFavorite = computed(() => activeProfile.value?.favorites?.includes(String(props.selectedUser?.id)) ?? false);
+const isUserActive = computed(() => activeProfile.value?.id === selectedUser.value?.id);
+const isFavorite = computed(() => activeProfile.value?.favorites?.includes(String(selectedUser.value?.id)) ?? false);
 
 // ------ Functions ------
 function handleFavoriteClick() {
-  if (props.selectedUser) {
-    userService.updateFavorites(props.selectedUser.id);
+  if (selectedUser.value) {
+    userService.updateFavorites(selectedUser.value.id);
   }
 }
 
@@ -119,7 +123,7 @@ function chartData() {
   const userWeeklyRankings = ranking.value
     .filter((week) => currentWeek.value && week.week <= currentWeek.value)
     .map((week) => {
-      const userLine = week.ranking.find((rankingLine) => rankingLine.user.id === props.selectedUser?.id);
+      const userLine = week.ranking.find((rankingLine) => rankingLine.user.id === selectedUser.value?.id);
 
       if (!userLine) return { bullseye: 0, percentage: 0 };
       const bullseye = userLine.score.bullseye * (parseInt(userLine.score.percentage) / userLine.score.winner);
@@ -241,7 +245,7 @@ watch(
   (newValue) => {
     if (newValue) {
       isVisible.value = true;
-      if (props.selectedUser) fetchRecords(props.selectedUser.id);
+      if (selectedUser.value) fetchRecords(selectedUser.value.id);
     } else {
       records.value = null;
     }

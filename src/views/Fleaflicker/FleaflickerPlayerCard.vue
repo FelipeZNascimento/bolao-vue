@@ -62,7 +62,7 @@
               value: statsTooltip(slot.leaguePlayer),
               disabled: isMobile
             }"
-            @click="openProjectedStatsModal(slot.leaguePlayer)"
+            @click="openModal(EModal.ProjectedStats, slot.leaguePlayer)"
             :aria-label="`Estatísticas de ${slot.leaguePlayer.proPlayer.nameFull}`"
           >
             <template v-if="game?.pointsActual">
@@ -109,7 +109,7 @@
           value: slot.leaguePlayer.proPlayer.news[0].title,
           disabled: isMobile
         }"
-        @click="openPlayerNewsModal(slot.leaguePlayer.proPlayer.news[0])"
+        @click="openModal(EModal.PlayerNews, slot.leaguePlayer.proPlayer.news[0])"
         :aria-label="`Notícias de ${slot.leaguePlayer.proPlayer.nameFull}`"
       >
         <i class="pi pi-file" />
@@ -124,14 +124,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { IFleaflickerLeaguePlayer, IFleaflickerSlot, IFleaflickerTeam } from '@/stores/fleaflicker.types';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { useTeamsStore } from '@/stores/teams';
 
 const { slot } = defineProps<{ slot: IFleaflickerSlot }>();
 
 const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-const { openPlayerNewsModal, openProjectedStatsModal } = useModalsStore();
+const { openModal } = useModalsStore();
 const { teams } = useTeamsStore();
 
 const showCardFallback = ref(!slot.leaguePlayer?.proPlayer.headshotUrl);

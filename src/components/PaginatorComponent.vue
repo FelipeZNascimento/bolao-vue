@@ -1,12 +1,6 @@
 <template>
   <div class="outer-paginator">
     <div style="display: flex; align-items: center; gap: var(--s-spacing)">
-      <div
-        style="cursor: pointer"
-        @click="() => configurationStore.setSelectedWeek(0)"
-      >
-        Pre
-      </div>
       <select
         name="weekSelector"
         id="weekSelector"

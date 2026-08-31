@@ -3,7 +3,9 @@
     <PrimeSelectButton
       :disabled="isLoading || isMatchStarted || !activeProfileActive"
       v-model="radioButton"
-      :options="Object.values(BETS_VALUES)"
+      :options="betOptions"
+      option-label="label"
+      option-value="value"
       aria-labelledby="custom"
       style="flex: 1; width: 100%"
       size="small"
@@ -11,7 +13,7 @@
       fluid
     >
       <template #option="slotProps">
-        <span v-tooltip.top="renderTooltip(slotProps.option)">{{ BETS_LABELS[slotProps.option] }}</span>
+        <span v-tooltip.top="renderTooltip(slotProps.option.value)">{{ slotProps.option.label }}</span>
       </template>
     </PrimeSelectButton>
   </div>
@@ -21,6 +23,8 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watchEffect } from 'vue';
 import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
+
+const betOptions = Object.values(BETS_VALUES).map((value) => ({ value, label: BETS_LABELS[value] }));
 import BetService from '@/services/bet';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';

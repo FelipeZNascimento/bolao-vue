@@ -45,13 +45,18 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import type { IFleaflickerLeaguePlayer } from '@/stores/fleaflicker.types';
+import { useModalsStore } from '@/stores/modals';
 
 defineProps<{
   isOpen: boolean;
-  player: IFleaflickerLeaguePlayer | null;
   handleCloseModal: () => void;
 }>();
+
+const { modalPayload } = storeToRefs(useModalsStore());
+const player = computed(() => modalPayload.value as IFleaflickerLeaguePlayer | null);
 </script>
 <style scoped>
 .modal-header {

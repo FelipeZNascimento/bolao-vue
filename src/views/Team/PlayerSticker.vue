@@ -6,8 +6,6 @@
     class="sticker"
     :style="{ '--sticker-color': color }"
   >
-    <div class="sticker-strip" />
-
     <div class="sticker-photo-wrap">
       <img
         v-if="player.headshot"
@@ -100,7 +98,6 @@ function onPhotoError(e: Event) {
 .sticker {
   display: flex;
   flex-direction: column;
-  background: var(--sticker-color, var(--bolao-c-sky));
   border: 1.5px solid var(--bolao-c-grey2-t1);
   text-decoration: none;
   color: inherit;
@@ -118,12 +115,6 @@ function onPhotoError(e: Event) {
       0 8px 24px color-mix(in srgb, var(--sticker-color, #036) 20%, transparent),
       0 1px 4px #0002;
   }
-}
-
-.sticker-strip {
-  height: 5px;
-  background: var(--sticker-color, var(--bolao-c-sky));
-  flex-shrink: 0;
 }
 
 .sticker-photo-wrap {
@@ -253,7 +244,7 @@ function onPhotoError(e: Event) {
 .sticker-college {
   font-size: 10px;
   font-weight: 600;
-  color: var(--sticker-color, var(--bolao-c-sky));
+  color: var(--bolao-c-grey3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

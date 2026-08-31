@@ -1,6 +1,8 @@
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
+import { useMatchSummaryStore } from '@/stores/matchSummary';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { useRankingStore } from '@/stores/ranking';
 import type { IRankingLine, IWeeklyRanking } from '@/stores/ranking.types';
 import ApiService from './api_request';
@@ -22,11 +24,15 @@ export default class MatchService {
     this.apiRequest = new ApiService();
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
-    this.websocketInstance = new WebsocketService(this.onWebsocketUpdate, () => this.fetch());
+    this.websocketInstance = new WebsocketService(this.onWebsocketUpdate, () =>
+      this.fetch(this.configurationStore.selectedWeek, this.configurationStore.currentSeason, true)
+    );
   }
 
-  public async fetch(week?: null | number, season?: null | number) {
-    this.matchesStore.setLoading(true);
+  public async fetch(week?: null | number, season?: null | number, isSilent = false) {
+    if (!isSilent) {
+      this.matchesStore.setLoading(true);
+    }
     this.matchesStore.setError(null);
     // Week may be "0" so needs to be checked against null and undefined
     if (week === undefined || week === null) {
@@ -69,6 +75,7 @@ export default class MatchService {
 
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<unknown>) {
     const configurationStore = useConfigurationStore();
+    const modalStore = useModalsStore();
     const selectedWeek = configurationStore.selectedWeek;
 
     const { matches, ranking, week } = JSON.parse(String(ev.data)) as {
@@ -88,6 +95,17 @@ export default class MatchService {
     // Always keep the current-week snapshot up to date for the home dashboard
     if (currentWeek === week) {
       matchesStore.updateCurrentWeekMatches(matches);
+    }
+
+    // If match modal is open, update the match summary
+    if (modalStore.currentModal === EModal.Match) {
+      const matchSummaryStore = useMatchSummaryStore();
+      const matchId = modalStore.modalPayload;
+      const match = matchesStore.matches.find((m) => m.id === matchId);
+
+      if (!match) return;
+
+      matchSummaryStore.fetch(match.espnId, match.status, true);
     }
 
     const rankingStore = useRankingStore();

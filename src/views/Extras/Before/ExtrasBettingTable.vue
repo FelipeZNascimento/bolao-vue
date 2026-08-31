@@ -126,7 +126,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import TeamComponent from '@/components/Match/TeamComponent.vue';
+import TeamComponent from '@/components/TeamComponent.vue';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type { TExtrasTeam } from '@/stores/extraBet.types';
