@@ -2,20 +2,23 @@
   <div
     class="match-card"
     :class="{
-      'match-card--bullseye': ribbon === 'BULLSEYE',
-      'match-card--half': ribbon === 'HALF',
-      'match-card--miss': ribbon === 'MISS'
+      'match-card--fluid': fluid,
+      'match-card--static': !fluid,
+      'match-card--bullseye': !fluid && ribbon === 'BULLSEYE',
+      'match-card--half': !fluid && ribbon === 'HALF',
+      'match-card--miss': !fluid && ribbon === 'MISS'
     }"
-    @click="openBetsModal(match)"
+    :style="{ flexDirection: direction ?? 'row' }"
+    @click="!fluid && openModal(EModal.Match, match.id)"
   >
     <!-- live dot / bet indicator -->
     <span
-      v-if="isLive"
+      v-if="isLive && !fluid"
       class="live-dot"
       v-tooltip.top="'Ao vivo'"
     />
     <i
-      v-else-if="!isStarted"
+      v-else-if="!isStarted && !fluid"
       class="bet-indicator"
       :class="match.loggedUserBets ? 'pi pi-check-square bet-indicator--placed' : 'pi pi-stop bet-indicator--missing'"
       v-tooltip.top="match.loggedUserBets ? 'Aposta feita' : 'Sem aposta'"
@@ -72,36 +75,46 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { FINISHED_GAME, MATCH_STATUS } from '@/constants/match_status';
-import { useMatchesStore } from '@/stores/matches';
 import type { IMatch } from '@/stores/matches.types';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 
-const props = defineProps<{
+const { match } = defineProps<{
   match: IMatch;
+  fluid?: boolean;
+  direction?: 'row' | 'column';
 }>();
 
-const isStarted = computed(() => props.match.status !== MATCH_STATUS.NOT_STARTED);
+const isStarted = computed(() => match.status !== MATCH_STATUS.NOT_STARTED);
 const isLive = computed(
-  () => isStarted.value && !FINISHED_GAME.includes(props.match.status as (typeof FINISHED_GAME)[number])
+  () => isStarted.value && !FINISHED_GAME.includes(match.status as (typeof FINISHED_GAME)[number])
 );
-const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
-const ribbon = computed(() => calculateRibbon(correctBets.value, props.match.loggedUserBets?.value, isStarted.value));
+const correctBets = computed(() => calculateCorrectBets(match.away.score, match.home.score));
+const ribbon = computed(() => calculateRibbon(correctBets.value, match.loggedUserBets?.value, isStarted.value));
 
-const { openBetsModal } = useMatchesStore();
+const { openModal } = useModalsStore();
 </script>
 
 <style lang="scss" scoped>
 .match-card {
-  display: flex;
-  align-items: center;
-  background: var(--color-background-soft);
-  border: 1px solid var(--bolao-c-grey2-t1);
-  cursor: pointer;
-  transition: box-shadow 0.2s;
-  position: relative;
+  &--fluid {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+  &--static {
+    display: flex;
+    align-items: center;
+    background: var(--color-background-soft);
+    border: 1px solid var(--bolao-c-grey2-t1);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    position: relative;
 
-  &:hover {
-    box-shadow: 0 4px 16px var(--bolao-c-grey4-t2);
+    &:hover {
+      box-shadow: 0 4px 16px var(--bolao-c-grey4-t2);
+    }
   }
 
   &--bullseye {

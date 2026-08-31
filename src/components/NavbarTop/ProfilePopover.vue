@@ -14,14 +14,14 @@
         severity="secondary"
         size="small"
         label="Perfil"
-        @click="openProfileModal"
+        @click="openModal(EModal.Profile)"
       />
       <PrimeButton
         variant="text"
         severity="secondary"
         size="small"
         label="Preferências"
-        @click="openPreferencesModal"
+        @click="openModal(EModal.Preferences)"
       />
       <PrimeButton
         variant="text"
@@ -41,7 +41,7 @@
         severity="danger"
         size="small"
         label="Senha"
-        @click="openPasswordModal"
+        @click="openModal(EModal.Password)"
       />
       <PrimeButton
         size="small"
@@ -57,13 +57,13 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 
 const popover = ref();
 const router = useRouter();
 
 const { activeProfile } = storeToRefs(useActiveProfileStore());
-const { openProfileModal, openPasswordModal, openPreferencesModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 const userService = new UserService();
 

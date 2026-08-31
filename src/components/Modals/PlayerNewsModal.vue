@@ -28,13 +28,18 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import type { IFleaflickerNews } from '@/stores/fleaflicker.types';
+import { useModalsStore } from '@/stores/modals';
 
 defineProps<{
   isOpen: boolean;
-  news: IFleaflickerNews | null;
   handleCloseModal: () => void;
 }>();
+
+const { modalPayload } = storeToRefs(useModalsStore());
+const news = computed(() => modalPayload.value as IFleaflickerNews | null);
 </script>
 <style scoped>
 .news-body {

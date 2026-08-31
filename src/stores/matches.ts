@@ -8,15 +8,6 @@ export const useMatchesStore = defineStore('matches', () => {
   const matches = ref<IMatch[]>([]);
   const currentWeekMatches = ref<IMatch[]>([]);
   const error = ref<Error | null>(null);
-  const selectedBetsMatch = ref<IMatch | null>(null);
-
-  function openBetsModal(match: IMatch) {
-    selectedBetsMatch.value = match;
-  }
-
-  function closeBetsModal() {
-    selectedBetsMatch.value = null;
-  }
 
   function resetLoggedUserBets() {
     matches.value.forEach((match) => {
@@ -83,14 +74,11 @@ export const useMatchesStore = defineStore('matches', () => {
   }
 
   return {
-    closeBetsModal,
     currentWeekMatches,
     error,
     isLoading,
     matches,
-    openBetsModal,
     resetLoggedUserBets,
-    selectedBetsMatch,
     setCurrentWeekMatches,
     setError,
     setLoading,

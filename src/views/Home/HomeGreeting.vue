@@ -70,7 +70,7 @@
       <PrimeButton
         v-if="!seasonRegistered"
         label="Inscrever-se na temporada atual"
-        @click="openSeasonRegisterModal()"
+        @click="openModal(EModal.SeasonRegister)"
         fluid
       />
       <div v-else>
@@ -101,7 +101,7 @@ import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 import type { IRankingLine } from '@/stores/ranking.types';
 
 defineProps<{
@@ -114,7 +114,7 @@ const { currentSeason } = storeToRefs(useConfigurationStore());
 const seasonRegistered = computed(() => activeProfile.value && activeProfile.value.seasonId === currentSeason.value);
 const activeProfileActive = computed(() => activeProfile.value?.active && seasonRegistered.value);
 
-const { openSeasonRegisterModal } = useModalsStore();
+const { openModal } = useModalsStore();
 </script>
 
 <style lang="scss" scoped>

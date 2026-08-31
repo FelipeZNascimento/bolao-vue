@@ -77,7 +77,6 @@ const headerIcon = computed(() => {
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
-  // border: 1px solid var(--bolao-c-grey1-t1);
   padding: var(--xs-spacing);
 }
 
@@ -112,7 +111,7 @@ const headerIcon = computed(() => {
   gap: var(--xs-spacing);
   text-align: center;
   width: 100%;
-  font-size: var(--m-font-size);
+  font-size: var(--xs-font-size);
   font-weight: bold;
 }
 

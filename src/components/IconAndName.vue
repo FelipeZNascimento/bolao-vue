@@ -10,7 +10,7 @@
     >
       <div
         class="badge"
-        :class="[user.isOnline ? 'badge--online' : 'badge--offline', { 'badge--favorite': isFavorite }]"
+        :class="[{ 'badge--online': user.isOnline, 'badge--favorite': isFavorite }]"
       ></div>
     </div>
     <span
@@ -38,7 +38,7 @@
 <script lang="ts" setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { IUser } from '@/stores/activeProfile.types';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 
 const props = withDefaults(
   defineProps<{
@@ -58,11 +58,11 @@ const props = withDefaults(
   }
 );
 
-const { openUserTrackingModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 function handleUserClick() {
   if (!props.isClickable) return;
-  openUserTrackingModal(props.user);
+  openModal(EModal.UserTracking, props.user);
 }
 </script>
 <style lang="scss" scoped>
@@ -145,20 +145,6 @@ function handleUserClick() {
       &::after {
         border-color: var(--bolao-c-gold);
       }
-    }
-  }
-
-  &--offline {
-    @extend .badge;
-    background-color: transparent;
-    opacity: 0.2;
-    outline: 1.5px solid var(--bolao-c-grey3);
-    outline-offset: 1px;
-
-    &.badge--favorite {
-      opacity: 1;
-      outline: 1.5px solid var(--bolao-c-gold);
-      outline-offset: 1px;
     }
   }
 }

@@ -14,6 +14,7 @@ export interface IMatch {
   clock: string;
   home: ITeam;
   homeTeamOdds: string;
+  espnId: number;
   id: number;
   loggedUserBets: IBet | null;
   overUnder: string;

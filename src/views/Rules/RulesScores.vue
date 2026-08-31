@@ -85,8 +85,8 @@
   </PrimePanel>
 </template>
 <script setup lang="ts">
-import MatchComponent from '@/components/Match/MatchComponent.vue';
 import type { IMatch } from '@/stores/matches.types';
+import MatchComponent from '@/views/Match/MatchComponent.vue';
 
 const tableScores = [
   {
@@ -143,6 +143,7 @@ const easyMatch: IMatch = {
     winLosses: '0-0'
   },
   homeTeamOdds: '-2.5',
+  espnId: 4455,
   id: 4455,
   loggedUserBets: null,
   overUnder: 'o47.5',
@@ -183,6 +184,7 @@ const hardMatch: IMatch = {
   },
   homeTeamOdds: '-2.5',
   id: 4455,
+  espnId: 12345,
   loggedUserBets: null,
   overUnder: 'o47.5',
   status: 0,

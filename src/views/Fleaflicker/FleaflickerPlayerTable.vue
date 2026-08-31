@@ -85,7 +85,7 @@
               value: data.leaguePlayer.proPlayer.news[0].title,
               disabled: isMobile
             }"
-            @click="openPlayerNewsModal(data.leaguePlayer.proPlayer.news[0])"
+            @click="openModal(EModal.PlayerNews, data.leaguePlayer.proPlayer.news[0])"
             :aria-label="`Notícias de ${data.leaguePlayer.proPlayer.nameFull}`"
           >
             <i class="pi pi-file" />
@@ -154,7 +154,7 @@
             value: statsTooltip(data),
             disabled: isMobile
           }"
-          @click="openProjectedStatsModal(data.leaguePlayer)"
+          @click="openModal(EModal.ProjectedStats, data.leaguePlayer)"
           :aria-label="`Estatísticas de ${data.leaguePlayer?.proPlayer.nameFull}`"
         >
           <template v-if="activeGame(data)?.pointsActual">
@@ -190,13 +190,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import type { IFleaflickerFlatSlot, IFleaflickerRequestedGame, IFleaflickerTeam } from '@/stores/fleaflicker.types';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 import { useTeamsStore } from '@/stores/teams';
 
 defineProps<{ slots: IFleaflickerFlatSlot[] }>();
 
 const isMobile = window.matchMedia('(max-width: 768px)').matches;
-const { openPlayerNewsModal, openProjectedStatsModal } = useModalsStore();
+const { openModal } = useModalsStore();
 
 function activeGame(slot: IFleaflickerFlatSlot): IFleaflickerRequestedGame | null {
   const games = slot.leaguePlayer?.requestedGames;

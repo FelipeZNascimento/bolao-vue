@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
-import TeamComponent from '@/components/Match/TeamComponent.vue';
+import TeamComponent from '@/components/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';

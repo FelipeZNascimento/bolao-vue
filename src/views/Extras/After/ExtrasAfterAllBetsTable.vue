@@ -176,7 +176,7 @@
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
-import TeamComponent from '@/components/Match/TeamComponent.vue';
+import TeamComponent from '@/components/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 import { MATCH_STATUS } from '@/constants/match_status';
 import { useExtraBetStore } from '@/stores/extraBet';

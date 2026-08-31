@@ -79,12 +79,12 @@
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
+import TeamComponent from '@/components/TeamComponent.vue';
 import { type Ribbon } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import type { IBet, IMatch } from '@/stores/matches.types';
 import { calculateCorrectMargin } from '@/util/betsCalculator.ts';
 import BettingComponent from './BettingComponent.vue';
-import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;

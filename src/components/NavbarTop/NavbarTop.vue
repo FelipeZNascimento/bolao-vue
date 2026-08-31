@@ -48,9 +48,9 @@
               icon="pi pi-user"
               :loading="isProfileLoading"
               label="Login"
-              @click="openLoginModal"
+              @click="openModal(EModal.Login)"
             />
-            <a @click="openConfigModal"><i class="pi pi-cog"></i></a>
+            <a @click="openModal(EModal.Config)"><i class="pi pi-cog"></i></a>
           </div>
           <ProfilePopover ref="profilePopover" />
         </template>
@@ -63,7 +63,7 @@ import { storeToRefs } from 'pinia';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useModalsStore } from '@/stores/modals';
+import { EModal, useModalsStore } from '@/stores/modals';
 import IconAndName from '../IconAndName.vue';
 import ProfilePopover from './ProfilePopover.vue';
 import { ROUTES } from './routes';
@@ -87,8 +87,7 @@ onMounted(() => {
 
 const { activeProfile, isLoading: isProfileLoading } = storeToRefs(activeProfileStore);
 const modalsStore = useModalsStore();
-const { isSeasonRegisterModalOpen } = storeToRefs(modalsStore);
-const { openLoginModal, openConfigModal } = modalsStore;
+const { openModal } = modalsStore;
 const { currentSeason } = storeToRefs(configurationStore);
 
 // ------ Computed Properties ------
@@ -99,7 +98,7 @@ const filteredRoutes = computed(() =>
 // ------ Watches ------
 watch(activeProfile, (profile) => {
   if (profile && currentSeason.value !== null && profile.seasonId !== currentSeason.value) {
-    isSeasonRegisterModalOpen.value = true;
+    openModal(EModal.SeasonRegister);
   }
 });
 

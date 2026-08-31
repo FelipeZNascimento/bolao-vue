@@ -271,12 +271,12 @@ const rosterTabs: { key: RosterTab; label: string; color: string }[] = [
   {
     key: 'offense',
     label: 'Ataque',
-    color: team.value?.foreground ?? '#1565c0'
+    color: 'var(--color-contrast)'
   },
   {
     key: 'defense',
     label: 'Defesa',
-    color: team.value?.background ?? '#be2a2a'
+    color: 'var(--color-contrast)'
   },
   { key: 'specialTeam', label: 'Times Especiais', color: 'var(--color-contrast)' },
   { key: 'injuredReserveOrOut', label: 'Lesionados', color: 'var(--color-contrast)' },
@@ -306,8 +306,8 @@ const STAT_CONFIG: { name: string; label: string; format?: (v: number) => string
   { name: 'gamesPlayed', label: 'Jogos' },
   { name: 'streak', label: 'Sequência', format: (v) => (v > 0 ? `${v}V` : v < 0 ? `${Math.abs(v)}D` : '—') },
   { name: 'winPercent', label: '% Vitórias', format: (v) => `${(v * 100).toFixed(1)}%` },
-  { name: 'avgPointsFor', label: 'Média de Pontos' },
-  { name: 'avgPointsAgainst', label: 'Média Sofrida' },
+  { name: 'avgPointsFor', label: 'Média de Pontos', format: (v) => `${v.toFixed(1)}%` },
+  { name: 'avgPointsAgainst', label: 'Média Sofrida', format: (v) => `${v.toFixed(1)}%` },
   { name: 'pointDifferential', label: 'Diferencial', format: (v) => (v > 0 ? `+${v}` : String(v)) },
   { name: 'playoffSeed', label: 'Seed Playoffs', format: (v) => (v > 0 ? `#${v}` : '—') },
   { name: 'divisionRecord', label: 'V-D-E Divisão' }
