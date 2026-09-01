@@ -50,7 +50,7 @@
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = defineProps<{
@@ -64,14 +64,14 @@ const isVisible = ref(false);
 
 // ------ Initializations ------
 const router = useRouter();
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const activeProfileStore = useActiveProfileStore();
 const { isLoading, error } = storeToRefs(activeProfileStore);
 
 // ------ Functions ------
 function handleRegister() {
   activeProfileStore.setError(null);
-  userService.seasonRegister(async (isSuccess) => {
+  activeProfileService.seasonRegister(async (isSuccess) => {
     if (isSuccess) {
       await router.push('/home');
       window.location.reload();

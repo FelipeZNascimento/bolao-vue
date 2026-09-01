@@ -9,7 +9,7 @@ import { useRankingStore } from '@/stores/ranking';
 import { randomHexColorGenerator } from '@/util/colorGenerator';
 import ApiService from './api_request';
 
-export default class UserService {
+export default class ActiveProfileService {
   private activeProfileStore;
   private apiRequest;
   private configurationStore;

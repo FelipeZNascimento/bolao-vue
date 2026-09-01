@@ -109,13 +109,13 @@ import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { z } from 'zod';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 // ------ Initialization ------
 const route = useRoute();
 const router = useRouter();
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const { isLoading, error } = storeToRefs(useActiveProfileStore());
 
 // ------ Refs ------
@@ -151,7 +151,7 @@ function startCountdown() {
 function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   if (!formData.valid || !formData.values) return;
   const { token, email, password } = formData.values;
-  userService.resetPassword(token, email, password, (isSuccess) => {
+  activeProfileService.resetPassword(token, email, password, (isSuccess) => {
     if (isSuccess) {
       success.value = true;
       startCountdown();

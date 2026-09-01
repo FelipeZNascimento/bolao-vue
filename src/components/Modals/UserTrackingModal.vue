@@ -73,10 +73,9 @@
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
+import ActiveProfileService from '@/services/activeProfile.ts';
 import ApiService from '@/services/api_request';
-import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import type { IUser } from '@/stores/activeProfile.types';
 import { useConfigurationStore } from '@/stores/configuration.ts';
 import { useModalsStore } from '@/stores/modals';
 import type { TUserPayload } from '@/stores/modals';
@@ -101,7 +100,7 @@ const recordsError = ref<string | null>(null);
 
 // ------ Initialization ------
 const apiService = new ApiService();
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const activeProfileStore = useActiveProfileStore();
 const { isFavoriteUpdating, activeProfile } = storeToRefs(activeProfileStore);
 const { weeksRanking: ranking } = storeToRefs(useRankingStore());
@@ -114,7 +113,7 @@ const isFavorite = computed(() => activeProfile.value?.favorites?.includes(Strin
 // ------ Functions ------
 function handleFavoriteClick() {
   if (selectedUser.value) {
-    userService.updateFavorites(selectedUser.value.id);
+    activeProfileService.updateFavorites(selectedUser.value.id);
   }
 }
 

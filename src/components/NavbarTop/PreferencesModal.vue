@@ -105,7 +105,7 @@ import { storeToRefs } from 'pinia';
 import type { PageState } from 'primevue';
 import { computed, ref, watch, watchEffect } from 'vue';
 import { faIconsListObj } from '@/constants/font-awesome';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile.ts';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import IconAndName from '../IconAndName.vue';
 
@@ -124,7 +124,7 @@ const isVisible = ref(false);
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const numOfIconsPerPage = 80;
 const { isLoading, activeProfile } = storeToRefs(activeProfileStore);
 
@@ -165,7 +165,7 @@ function handleConfirm() {
     return updateCallback(true);
   }
 
-  userService.updatePreferences(newColor.value, newIcon.value, updateCallback);
+  activeProfileService.updatePreferences(newColor.value, newIcon.value, updateCallback);
 }
 
 function handleReset() {

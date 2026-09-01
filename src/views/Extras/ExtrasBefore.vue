@@ -318,7 +318,6 @@ function updateCallback(isSuccess: boolean, error?: Error) {
     // Revert to previous values
     fillSelectedFromStore();
 
-    console.error('Error updating bet:', error);
     toast.add({
       detail: `${error?.message}`,
       life: 5000,

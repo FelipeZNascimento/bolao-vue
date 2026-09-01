@@ -67,6 +67,23 @@
         sortable
       />
       <PrimeColumn
+        field="balance"
+        header="Saldo"
+        sortable
+      >
+        <template #body="{ data }">
+          <div class="balance-cell">
+            <PrimeButton
+              label="Set"
+              size="small"
+              variant="outlined"
+              @click="openBalanceDialog(data)"
+            />
+            {{ (data.balance ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
+          </div>
+        </template>
+      </PrimeColumn>
+      <PrimeColumn
         field="extraBetsCount"
         header="Extras"
         sortable
@@ -96,7 +113,7 @@
               size="small"
               variant="outlined"
               :loading="togglingId === data.id"
-              @click="confirmToggle(data)"
+              @click="confirmActivationToggle(data)"
             />
           </div>
         </template>
@@ -116,6 +133,91 @@
       </PrimeColumn>
     </PrimeDataTable>
   </div>
+
+  <!-- Balance dialog -->
+  <PrimeDialog
+    v-model:visible="isBalanceDialogOpen"
+    modal
+    dismissableMask
+    :draggable="false"
+    :header="`Saldo — ${balanceTarget?.name}`"
+    :style="{ width: '90vw', maxWidth: '400px' }"
+    @hide="resetBalanceDialog"
+  >
+    <PrimeTabs v-model:value="balanceTab">
+      <PrimeTabList>
+        <PrimeTab value="add">Adicionar</PrimeTab>
+        <PrimeTab value="remove">Remover</PrimeTab>
+        <PrimeTab value="force">Forçar</PrimeTab>
+      </PrimeTabList>
+      <PrimeTabPanels>
+        <!-- Adicionar -->
+        <PrimeTabPanel value="add">
+          <div class="balance-tab-content">
+            <input
+              v-model.number="balanceAmount"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              class="balance-input"
+            />
+            <p class="balance-preview">
+              Novo saldo:
+              <strong>{{ previewBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</strong>
+            </p>
+          </div>
+        </PrimeTabPanel>
+        <!-- Remover -->
+        <PrimeTabPanel value="remove">
+          <div class="balance-tab-content">
+            <input
+              v-model.number="balanceAmount"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              class="balance-input"
+            />
+            <p class="balance-preview">
+              Novo saldo:
+              <strong>{{ previewBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</strong>
+            </p>
+          </div>
+        </PrimeTabPanel>
+        <!-- Forçar -->
+        <PrimeTabPanel value="force">
+          <div class="balance-tab-content">
+            <input
+              v-model.number="balanceAmount"
+              type="number"
+              step="0.01"
+              placeholder="0.00"
+              class="balance-input"
+            />
+            <p class="balance-preview">
+              Novo saldo:
+              <strong>{{ previewBalance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}</strong>
+            </p>
+          </div>
+        </PrimeTabPanel>
+      </PrimeTabPanels>
+    </PrimeTabs>
+
+    <template #footer>
+      <PrimeButton
+        label="Cancelar"
+        severity="secondary"
+        variant="outlined"
+        @click="isBalanceDialogOpen = false"
+      />
+      <PrimeButton
+        label="Confirmar"
+        :loading="isUpdatingBalance"
+        @click="confirmBalance"
+      />
+    </template>
+  </PrimeDialog>
 </template>
 
 <script setup lang="ts">
@@ -123,6 +225,51 @@ import { useConfirm } from 'primevue/useconfirm';
 import { computed, onMounted, ref } from 'vue';
 import ApiService from '@/services/api_request';
 import type { IUser } from '@/stores/activeProfile.types';
+
+// ── Balance dialog ──
+const isBalanceDialogOpen = ref(false);
+const isUpdatingBalance = ref(false);
+const balanceTarget = ref<IUser | null>(null);
+const balanceTab = ref<'add' | 'remove' | 'force'>('add');
+const balanceAmount = ref(0);
+
+const previewBalance = computed(() => {
+  const current = balanceTarget.value?.balance ?? 0;
+  const amount = balanceAmount.value || 0;
+  if (balanceTab.value === 'add') return Math.round((current + amount) * 100) / 100;
+  if (balanceTab.value === 'remove') return Math.round((current - amount) * 100) / 100;
+  return amount;
+});
+
+function openBalanceDialog(user: IUser) {
+  balanceTarget.value = user;
+  balanceTab.value = 'add';
+  balanceAmount.value = 0;
+  isBalanceDialogOpen.value = true;
+}
+
+function resetBalanceDialog() {
+  balanceTarget.value = null;
+  balanceAmount.value = 0;
+}
+
+async function confirmBalance() {
+  if (!balanceTarget.value) return;
+  isUpdatingBalance.value = true;
+  try {
+    const newBalance = previewBalance.value;
+    const updatedUser = await apiService.post<IUser>(`user/admin/update-balance/${balanceTarget.value.id}`, {
+      balance: newBalance
+    });
+    const idx = users.value.findIndex((u) => u.id === updatedUser.id);
+    if (idx !== -1) users.value[idx] = updatedUser;
+    isBalanceDialogOpen.value = false;
+  } catch (e) {
+    error.value = e instanceof Error ? e : new Error(String(e));
+  } finally {
+    isUpdatingBalance.value = false;
+  }
+}
 
 const apiService = new ApiService();
 const confirm = useConfirm();
@@ -149,7 +296,7 @@ async function fetchUsers() {
 
 onMounted(fetchUsers);
 
-function confirmToggle(user: IUser) {
+function confirmActivationToggle(user: IUser) {
   const activating = !user.active;
   confirm.require({
     message: activating
@@ -183,6 +330,51 @@ async function toggleActiveStatus(user: IUser) {
   display: flex;
   flex-direction: column;
   gap: var(--l-spacing);
+}
+
+.balance-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--s-spacing);
+}
+
+.balance-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-spacing);
+  padding: var(--l-spacing);
+}
+
+.balance-input {
+  width: 100%;
+  padding: var(--s-spacing) var(--m-spacing);
+  background: var(--p-inputtext-background, transparent);
+  border: 1px solid var(--p-inputtext-border-color, var(--bolao-c-grey4));
+  border-radius: var(--p-border-radius-sm, 4px);
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: var(--p-primary-color);
+    box-shadow: 0 0 0 1px var(--p-primary-color);
+  }
+
+  /* Hide browser spinners */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+  &[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+.balance-preview {
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey2);
 }
 
 .active-cell {

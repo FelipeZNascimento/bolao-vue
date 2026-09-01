@@ -176,7 +176,7 @@ import { storeToRefs } from 'pinia';
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watch } from 'vue';
 import { z } from 'zod';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = defineProps<{
@@ -228,7 +228,7 @@ const forgotPasswordResolver = ref(
 );
 
 // ------ Initializations ------
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const activeProfileStore = useActiveProfileStore();
 const toast = useToast();
 const { isLoading, error: loginError } = storeToRefs(activeProfileStore);
@@ -283,19 +283,19 @@ function onLoginSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   if (!formData.valid || !formData.values) return;
   activeProfileStore.setError(null);
   const { email, password } = formData.values;
-  userService.login(email, password, loginCallback);
+  activeProfileService.login(email, password, loginCallback);
 }
 
 function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   if (!formData.valid || !formData.values) return;
   const { email, name, password, username } = formData.values;
-  userService.signup(email, password, name, username, loginCallback);
+  activeProfileService.signup(email, password, name, username, loginCallback);
 }
 
 function onForgotPasswordSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   if (!formData.valid || !formData.values) return;
   const { email } = formData.values;
-  userService.forgotPassword(email, forgotPasswordCallback);
+  activeProfileService.forgotPassword(email, forgotPasswordCallback);
 }
 
 function resetState() {

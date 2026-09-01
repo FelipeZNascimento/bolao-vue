@@ -40,7 +40,7 @@
         variant="text"
         severity="danger"
         size="small"
-        label="Senha"
+        label="Trocar senha"
         @click="openModal(EModal.Password)"
       />
       <PrimeButton
@@ -48,6 +48,9 @@
         label="Sair"
         @click="handleLogout"
       />
+      <p style="font-size: var(--xs-font-size); text-align: center">
+        Saldo: {{ activeProfile?.balance?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
+      </p>
     </div>
   </PrimePopover>
 </template>
@@ -55,7 +58,7 @@
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { EModal, useModalsStore } from '@/stores/modals';
 
@@ -65,7 +68,7 @@ const router = useRouter();
 const { activeProfile } = storeToRefs(useActiveProfileStore());
 const { openModal } = useModalsStore();
 
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 
 function navigate(path: string, query?: Record<string, string>) {
   popover.value.hide();
@@ -73,7 +76,7 @@ function navigate(path: string, query?: Record<string, string>) {
 }
 
 function handleLogout() {
-  userService.logout();
+  activeProfileService.logout();
   popover.value.toggle();
 }
 

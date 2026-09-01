@@ -35,8 +35,7 @@
         :isWeekly="isWeeklyRanking"
         :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
         :rankingData="isWeeklyRanking ? filteredWeekRanking : filteredSeasonRanking"
-        :columnConfig="mode === 'full' ? 'complete' : columnsOption"
-        :rowSpacingConfig="mode === 'full' ? 'normal' : rowSpacing"
+        :mode="mode"
         :error="isWeeklyRanking ? errorSeason : errorWeek"
       />
     </div>
