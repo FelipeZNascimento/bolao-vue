@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { RouterView } from 'vue-router';
 import FooterComponent from './components/FooterComponent.vue';
 import ModalsContainer from './components/Modals/ModalsContainer.vue';
@@ -32,9 +32,12 @@ const extraBetService = new ExtraBetService();
 const clockStore = useClockStore();
 const extraBetStore = useExtraBetStore();
 
+// Set to true while startup is still resolving — prevents the activeProfile
+// watcher from double-fetching when the cookie session auto-logs the user in.
+const isInitializing = ref(true);
+
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
-    console.log('Fetching initial matches and rankings...');
     matchService.fetch();
   }
 }
@@ -43,6 +46,7 @@ function initializationCallback(isSuccess: boolean) {
 startupService.initialize(initializationCallback).then(() => {
   clockStore.startClock();
   rankingService.fetch();
+  isInitializing.value = false;
 });
 
 const { selectedWeek } = storeToRefs(useConfigurationStore());
@@ -58,8 +62,10 @@ watch(selectedWeek, async (newValue, oldValue) => {
 
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
+// Skips the initial startup transition to avoid duplicate requests.
 watch(activeProfile, async (newValue) => {
-  console.log('Fetching matches for active profile change...');
+  if (isInitializing.value) return;
+
   rankingService.fetch();
   matchService.fetch();
 
@@ -68,11 +74,6 @@ watch(activeProfile, async (newValue) => {
     extraBetService.fetch();
   } else {
     extraBetStore.setLoggedUserBets(null);
-  }
-
-  // Week is possibly zero (preseason)
-  if (!selectedWeek.value) {
-    return;
   }
 });
 </script>

@@ -44,13 +44,11 @@ const { selectedWeek } = storeToRefs(configurationStore);
 
 // ------ Functions ------
 function handlePageChange(e: PageState) {
-  console.log('Page changed to:', e.page + 1);
   configurationStore.setSelectedWeek(e.page + 1);
 }
 
 function handlePageChangeFromDropdown(e: Event) {
   const el = e.target as HTMLInputElement;
-  console.log('[Dropdown] Page changed to:', el.value);
   configurationStore.setSelectedWeek(parseInt(el.value));
 }
 </script>

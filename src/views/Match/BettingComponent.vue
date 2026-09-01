@@ -71,7 +71,6 @@ function callback(isSuccess: boolean, error?: Error) {
     });
   } else {
     radioButton.value = radioButtonPrevValue.value; // Revert to previous value
-    console.error('Error updating bet:', error);
     toast.add({
       detail: `Erro ao atualizar aposta: ${error?.message}`,
       life: 5000,

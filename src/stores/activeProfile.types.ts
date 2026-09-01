@@ -1,5 +1,6 @@
 export interface IUser {
   active: boolean;
+  balance: number;
   admin: boolean;
   color: string;
   email: string;

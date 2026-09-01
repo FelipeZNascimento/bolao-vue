@@ -118,7 +118,7 @@
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { storeToRefs } from 'pinia';
 import { ref, watch } from 'vue';
-import UserService from '@/services/user';
+import ActiveProfileService from '@/services/activeProfile';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { updatePasswordResolver } from '@/util/zodResolvers';
 
@@ -132,7 +132,7 @@ const isUpdateSuccess = ref(false);
 const isVisible = ref(false);
 
 // ------ Initializations ------
-const userService = new UserService();
+const activeProfileService = new ActiveProfileService();
 const activeProfileStore = useActiveProfileStore();
 const { isLoading, error } = storeToRefs(activeProfileStore);
 
@@ -155,7 +155,7 @@ function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
     return updateCallback(true);
   }
 
-  userService.updatePassword(currentPassword, newPassword, updateCallback);
+  activeProfileService.updatePassword(currentPassword, newPassword, updateCallback);
 }
 
 function updateCallback(isSuccess: boolean) {
