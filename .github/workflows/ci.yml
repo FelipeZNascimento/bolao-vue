@@ -40,5 +40,5 @@ jobs:
       - name: 🎨 Format
         run: pnpm exec oxfmt . --check
 
-      # - name: 🧪 Unit tests
-      #   run: pnpm test:unit --run
+      - name: 🧪 Unit tests
+        run: pnpm test
