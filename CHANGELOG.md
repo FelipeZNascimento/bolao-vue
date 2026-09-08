@@ -1,5 +1,12 @@
 # bolao-vue
 
+## 1.11.2
+
+### Patch Changes
+
+- 76e25ec: Fix:
+    - Extras are now properly loading;
+
 ## 1.11.1
 
 ### Patch Changes
