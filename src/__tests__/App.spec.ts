@@ -39,7 +39,7 @@ const MOCK_USER: IUser = {
   isOnline: true,
   name: 'Test',
   favorites: [],
-  fleaflicker: null,
+  fleaflicker: null
 };
 
 describe('App.vue', () => {
