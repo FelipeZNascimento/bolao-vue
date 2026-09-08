@@ -11,11 +11,21 @@
 
     <div
       class="extras-card"
-      :class="{ 'extras-card--complete': missingCount === 0 }"
+      :class="{ 'extras-card--complete': !isLoading && missingCount === 0 }"
     >
+      <!-- Loading state -->
+      <div
+        v-if="isLoading"
+        class="extras-skeleton"
+      >
+        <PrimeSkeleton height="2rem" />
+        <PrimeSkeleton height="3.5rem" />
+        <PrimeSkeleton height="0.5rem" />
+      </div>
+
       <!-- Completion banner -->
       <div
-        v-if="missingCount === 0"
+        v-if="!isLoading && missingCount === 0"
         class="extras-complete-banner"
       >
         <span class="extras-complete-icon">🏆</span>
@@ -26,7 +36,10 @@
       </div>
 
       <!-- Bet status -->
-      <div class="extras-stats">
+      <div
+        v-if="!isLoading"
+        class="extras-stats"
+      >
         <div class="extras-stat extras-stat--placed">
           <span class="extras-stat-value">{{ placedCount }}</span>
           <span class="extras-stat-label">apostas feitas</span>
@@ -53,14 +66,22 @@
       </div>
 
       <!-- Progress bar -->
-      <div class="extras-progress-track">
+      <div
+        v-if="!isLoading"
+        class="extras-progress-track"
+      >
         <div
           class="extras-progress-fill"
           :class="{ 'extras-progress-fill--complete': missingCount === 0 }"
           :style="{ width: progressPct + '%' }"
         />
       </div>
-      <p class="extras-progress-label">{{ progressPct }}% completo</p>
+      <p
+        v-if="!isLoading"
+        class="extras-progress-label"
+      >
+        {{ progressPct }}% completo
+      </p>
 
       <!-- Countdown -->
       <div
@@ -117,7 +138,7 @@ const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 const extraBetStore = useExtraBetStore();
 
-const { loggedUserBets } = storeToRefs(extraBetStore);
+const { isLoading, loggedUserBets } = storeToRefs(extraBetStore);
 const { seasonStart } = storeToRefs(configurationStore);
 const { currentTimestamp } = storeToRefs(clockStore);
 
@@ -171,6 +192,12 @@ const countdownSeconds = computed(() => String(Math.floor((countdownMs.value % 6
   &:hover {
     text-decoration: underline;
   }
+}
+
+.extras-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-spacing);
 }
 
 .extras-card {

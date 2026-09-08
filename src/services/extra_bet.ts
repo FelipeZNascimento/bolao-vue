@@ -1,5 +1,4 @@
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import type { IExtraBet, IExtraBetBet, ITeamWithExtras } from '@/stores/extraBet.types';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
@@ -8,13 +7,11 @@ import ApiService from './api_request';
 export default class ExtraBetService {
   private activeProfileStore;
   private apiRequest;
-  private configurationStore;
   private extraBetStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.extraBetStore = useExtraBetStore();
-    this.configurationStore = useConfigurationStore();
     this.activeProfileStore = useActiveProfileStore();
   }
 

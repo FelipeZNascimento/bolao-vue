@@ -46,6 +46,7 @@ function initializationCallback(isSuccess: boolean) {
 startupService.initialize(initializationCallback).then(() => {
   clockStore.startClock();
   rankingService.fetch();
+  if (activeProfile.value) extraBetService.fetch();
   isInitializing.value = false;
 });
 
@@ -68,9 +69,11 @@ watch(activeProfile, async (newValue) => {
 
   rankingService.fetch();
   matchService.fetch();
+  console.log('FZN -------- activeProfile changed --------', newValue);
 
   // Fetches extra bets if user logged in, clears bets if user logged out
   if (newValue) {
+    console.log('FZN -------- Fetching extra bets --------', newValue);
     extraBetService.fetch();
   } else {
     extraBetStore.setLoggedUserBets(null);
