@@ -57,7 +57,8 @@ export default class StartupService {
 
     // Active profile: a 401 (guest) is not an error — treat rejection as "no user"
     this.activeProfileStore.setLoading(false);
-    this.activeProfileStore.setActiveProfile(isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null);
+    const activeProfile = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
+    this.activeProfileStore.setActiveProfile(activeProfile);
 
     // Season config: required for the app to function
     this.configurationStore.setLoading(false);
