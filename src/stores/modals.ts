@@ -22,16 +22,16 @@ export type TModalPayload = number | IFleaflickerNews | IFleaflickerLeaguePlayer
 
 export const useModalsStore = defineStore('modals', () => {
   const currentModal = ref<EModal | null>(null);
-  const modalPayload = ref<TModalPayload | null>(null);
+  const modalPayload = ref<TModalPayload[]>([]);
 
-  function openModal(modal: EModal, payload?: TModalPayload) {
+  function openModal(modal: EModal, payload?: TModalPayload[]) {
     currentModal.value = modal;
-    modalPayload.value = payload ?? null;
+    modalPayload.value = payload ?? [];
   }
 
   function closeModal() {
     currentModal.value = null;
-    modalPayload.value = null;
+    modalPayload.value = [];
   }
 
   return {

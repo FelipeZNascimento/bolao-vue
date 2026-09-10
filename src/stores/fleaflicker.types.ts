@@ -2,6 +2,7 @@ export interface IFleaflickerInjury {
   typeAbbreviaition: string;
   severity: string;
   typeFull: string;
+  description: string;
 }
 
 export interface IFleaflickerProPlayer {

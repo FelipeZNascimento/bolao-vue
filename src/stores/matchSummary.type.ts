@@ -145,10 +145,44 @@ export interface IEspnTeamLinescores {
   team: IEspnTeamRef;
 }
 
+interface IEspnDriveStartEnd {
+  text: string;
+  yardLine: number;
+  clock: {
+    displayValue: string;
+  };
+  period: {
+    number: number;
+    type: string;
+  };
+}
 export interface IEspnDrive {
   description: string;
+  start: IEspnDriveStartEnd;
+  end: IEspnDriveStartEnd;
+  displayResult: string;
   id: string;
   team: IEspnTeamRef;
+  timeElapsed: {
+    displayValue: string;
+  };
+  result: string;
+  shortDisplayResult: string;
+  yards: number;
+  plays: {
+    awayScore: number;
+    homeScore: number;
+    end: IEspnDriveStartEnd;
+    start: IEspnDriveStartEnd;
+    text: string;
+    isTurnover: boolean;
+    isPenalty: boolean;
+    startYardage: number;
+    type: {
+      text: string;
+      abbreviation: string;
+    };
+  }[];
 }
 
 export interface IEspnDrives {

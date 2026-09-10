@@ -3,28 +3,35 @@
     :visible="isOpen"
     modal
     dismissableMask
-    :header="news?.title"
-    :style="{ width: '90vw', maxWidth: '480px' }"
+    header="Notícias"
+    :style="{ width: '90vw', maxWidth: '520px' }"
     :draggable="false"
     @update:visible="(v: boolean) => !v && handleCloseModal()"
   >
-    <p
-      v-if="news"
-      class="news-body"
+    <div
+      v-for="(item, index) in news"
+      :key="index"
+      class="news-item"
+      :class="{ 'news-item--divider': index > 0 }"
     >
-      {{ news.contents }}
-    </p>
-    <template #footer>
+      <p class="news-title">{{ item.title }}</p>
+      <p class="news-body">{{ item.contents }}</p>
       <a
-        v-if="news?.url"
-        :href="news.url"
+        v-if="item.url"
+        :href="item.url"
         target="_blank"
         rel="noopener noreferrer"
         class="news-link"
       >
         Leia mais <i class="pi pi-external-link" />
       </a>
-    </template>
+    </div>
+    <p
+      v-if="!news?.length"
+      class="news-empty"
+    >
+      Nenhuma notícia disponível.
+    </p>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -39,13 +46,31 @@ defineProps<{
 }>();
 
 const { modalPayload } = storeToRefs(useModalsStore());
-const news = computed(() => modalPayload.value as IFleaflickerNews | null);
+const news = computed(() => modalPayload.value as IFleaflickerNews[]);
 </script>
 <style scoped>
+.news-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xs-spacing);
+  padding-block: var(--s-spacing);
+
+  &--divider {
+    border-top: 1px solid var(--p-content-border-color);
+  }
+}
+
+.news-title {
+  font-size: var(--s-font-size);
+  font-weight: 600;
+  margin: 0;
+}
+
 .news-body {
   font-size: var(--s-font-size);
   line-height: 1.5;
   color: var(--bolao-c-grey2);
+  margin: 0;
 }
 
 .news-link {
@@ -59,5 +84,10 @@ const news = computed(() => modalPayload.value as IFleaflickerNews | null);
   &:hover {
     text-decoration: underline;
   }
+}
+
+.news-empty {
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey2);
 }
 </style>

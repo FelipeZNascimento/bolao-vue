@@ -9,7 +9,7 @@
       'match-card--miss': !fluid && ribbon === 'MISS'
     }"
     :style="{ flexDirection: direction ?? 'row' }"
-    @click="!fluid && openModal(EModal.Match, match.id)"
+    @click="!fluid && openModal(EModal.Match, [match.id])"
   >
     <!-- live dot / bet indicator -->
     <span

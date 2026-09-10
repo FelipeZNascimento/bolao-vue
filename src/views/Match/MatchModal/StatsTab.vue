@@ -15,21 +15,21 @@
     v-else-if="summary"
     class="stats-outer"
   >
+    <!-- header row -->
+    <div class="stat-row stat-row--header">
+      <span class="stat-col stat-col--away">{{ awayAlias }}</span>
+      <span class="stat-col stat-col--label" />
+      <span class="stat-col stat-col--home">{{ homeAlias }}</span>
+    </div>
+    <!-- one row per stat -->
     <div
-      v-for="(teamStats, side) in { away: summary.away, home: summary.home }"
-      :key="side"
-      class="stats-team"
+      v-for="(awayStat, i) in summary.away.statistics"
+      :key="awayStat.name"
+      class="stat-row"
     >
-      <p class="stats-team-label">{{ side === 'away' ? awayAlias : homeAlias }}</p>
-      <div
-        v-for="stat in teamStats.statistics"
-        :key="stat.name"
-        class="stat-row"
-        :class="{ 'stat-row--home': side === 'home' }"
-      >
-        <span class="stat-label">{{ stat.label }}</span>
-        <span class="stat-value">{{ stat.displayValue }}</span>
-      </div>
+      <span class="stat-col stat-col--away">{{ awayStat.displayValue }}</span>
+      <span class="stat-col stat-col--label">{{ awayStat.label }}</span>
+      <span class="stat-col stat-col--home">{{ summary.home.statistics[i]?.displayValue }}</span>
     </div>
   </div>
   <div
@@ -66,32 +66,22 @@ defineProps<{
 
 .stats-outer {
   display: flex;
-  gap: var(--l-spacing);
-  padding: var(--l-spacing);
-}
-
-.stats-team {
-  flex: 1;
-  display: flex;
   flex-direction: column;
-  gap: var(--s-spacing);
-}
-
-.stats-team-label {
-  font-weight: 700;
-  font-size: var(--m-font-size);
-  margin-bottom: var(--xs-spacing);
+  padding: var(--m-spacing) var(--l-spacing);
 }
 
 .stat-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   border-bottom: 1px solid var(--bolao-c-grey5);
   padding: var(--xs-spacing) 0;
+  gap: var(--xs-spacing);
 
-  &--home {
-    flex-direction: row-reverse;
+  &--header {
+    border-bottom: 2px solid var(--bolao-c-grey4);
+    margin-bottom: var(--xs-spacing);
+    padding-bottom: var(--s-spacing);
   }
 
   @media (max-width: 1023px) {
@@ -102,11 +92,28 @@ defineProps<{
   }
 }
 
-.stat-label {
-  color: var(--bolao-c-grey3);
-}
+.stat-col {
+  &--away {
+    text-align: left;
+    font-weight: 600;
+  }
 
-.stat-value {
-  font-weight: 600;
+  &--label {
+    text-align: center;
+    color: var(--bolao-c-grey3);
+    white-space: nowrap;
+    padding: 0 var(--xs-spacing);
+  }
+
+  &--home {
+    text-align: right;
+    font-weight: 600;
+  }
+
+  .stat-row--header & {
+    font-weight: 700;
+    color: inherit;
+    font-size: var(--s-font-size);
+  }
 }
 </style>

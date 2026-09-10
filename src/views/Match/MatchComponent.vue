@@ -78,7 +78,7 @@ function handleMatchClick() {
   if (props.isBetting || props.isDemo) {
     return;
   }
-  openModal(EModal.Match, props.match.id);
+  openModal(EModal.Match, [props.match.id]);
 }
 </script>
 <style lang="scss" scoped>

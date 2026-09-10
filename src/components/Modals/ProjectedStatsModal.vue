@@ -56,7 +56,7 @@ defineProps<{
 }>();
 
 const { modalPayload } = storeToRefs(useModalsStore());
-const player = computed(() => modalPayload.value as IFleaflickerLeaguePlayer | null);
+const player = computed(() => modalPayload.value[0] as IFleaflickerLeaguePlayer | undefined);
 </script>
 <style scoped>
 .modal-header {

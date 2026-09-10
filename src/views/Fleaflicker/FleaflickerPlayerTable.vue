@@ -85,7 +85,7 @@
               value: data.leaguePlayer.proPlayer.news[0].title,
               disabled: isMobile
             }"
-            @click="openModal(EModal.PlayerNews, data.leaguePlayer.proPlayer.news[0])"
+            @click="openModal(EModal.PlayerNews, data.leaguePlayer.proPlayer.news)"
             :aria-label="`Notícias de ${data.leaguePlayer.proPlayer.nameFull}`"
           >
             <i class="pi pi-file" />
@@ -154,7 +154,7 @@
             value: statsTooltip(data),
             disabled: isMobile
           }"
-          @click="openModal(EModal.ProjectedStats, data.leaguePlayer)"
+          @click="openModal(EModal.ProjectedStats, [data.leaguePlayer])"
           :aria-label="`Estatísticas de ${data.leaguePlayer?.proPlayer.nameFull}`"
         >
           <template v-if="activeGame(data)?.pointsActual">

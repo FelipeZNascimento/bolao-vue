@@ -62,7 +62,7 @@ const { openModal } = useModalsStore();
 
 function handleUserClick() {
   if (!props.isClickable) return;
-  openModal(EModal.UserTracking, props.user);
+  openModal(EModal.UserTracking, [props.user]);
 }
 </script>
 <style lang="scss" scoped>
