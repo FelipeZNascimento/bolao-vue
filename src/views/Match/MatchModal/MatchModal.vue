@@ -26,7 +26,21 @@
         panels: { style: 'flex: 1; min-height: 0; display: flex; flex-direction: column;' }
       }"
     >
-      <PrimeTabList class="modal-tab-list">
+      <PrimeTabList
+        class="modal-tab-list"
+        v-if="isMatchStarted"
+      >
+        <PrimeTab
+          v-if="activeProfile && isMatchStarted"
+          value="apostas"
+          class="modal-tab"
+        >
+          <FontAwesomeIcon
+            :style="{ color: activeProfile.color }"
+            :icon="activeProfile.icon"
+          />
+          <span v-if="!isMobileOnly">Apostas</span>
+        </PrimeTab>
         <PrimeTab
           value="ficha"
           class="modal-tab"
@@ -39,6 +53,7 @@
           <span v-if="!isMobileOnly">Ficha Técnica</span>
         </PrimeTab>
         <PrimeTab
+          v-if="isMatchStarted"
           value="drives"
           class="modal-tab"
         >
@@ -50,6 +65,7 @@
           <span v-if="!isMobileOnly">Drives</span>
         </PrimeTab>
         <PrimeTab
+          v-if="isMatchStarted"
           value="estatisticas"
           class="modal-tab"
         >
@@ -70,6 +86,12 @@
         />
       </div>
       <PrimeTabPanels ref="tabPanelsRef">
+        <PrimeTabPanel value="apostas">
+          <MatchBets
+            :match="match"
+            :correctBets="correctBets"
+          />
+        </PrimeTabPanel>
         <PrimeTabPanel value="ficha">
           <MatchInfoTab
             :summary="summary"
@@ -101,8 +123,10 @@
 </template>
 <script setup lang="ts">
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
+import { useActiveProfileStore } from '@/stores/activeProfile.ts';
 import { useClockStore } from '@/stores/clock';
 import { useMatchesStore } from '@/stores/matches';
 import { useMatchSummaryStore } from '@/stores/matchSummary';
@@ -111,6 +135,7 @@ import { calculateCorrectBets, calculateRibbon } from '@/util/betsCalculator';
 import ClockComponent from '@/views/Match/ClockComponent.vue';
 import ScoreComponent from '@/views/Match/ScoreComponent.vue';
 import DrivesTab from './DrivesTab.vue';
+import MatchBets from './MatchBets.vue';
 import MatchInfoTab from './MatchInfoTab.vue';
 import StatsTab from './StatsTab.vue';
 
@@ -124,6 +149,8 @@ const clockStore = useClockStore();
 const { closeModal } = useModalsStore();
 const { modalPayload } = storeToRefs(useModalsStore());
 const { matches } = storeToRefs(useMatchesStore());
+const { activeProfile } = storeToRefs(useActiveProfileStore());
+
 const matchSummaryStore = useMatchSummaryStore();
 const { summary, isLoading: isSummaryLoading, error: summaryError } = storeToRefs(matchSummaryStore);
 
@@ -132,7 +159,7 @@ const dialogPt = computed(() => ({
   root: { style: 'display: flex; flex-direction: column;' }
 }));
 
-const TAB_ORDER = ['ficha', 'drives', 'estatisticas'] as const;
+const TAB_ORDER = ['apostas', 'ficha', 'drives', 'estatisticas'] as const;
 
 const activeTab = ref<(typeof TAB_ORDER)[number]>('ficha');
 const tabPanelsRef = ref<{ $el: HTMLElement } | null>(null);
@@ -189,14 +216,16 @@ watch(tabPanelsRef, (newRef, oldRef) => {
     newEl.addEventListener('touchend', onSwipeEnd, { passive: true });
   }
 });
+const matchId = computed(() => modalPayload.value[0] as number | undefined);
+
 const isVisible = computed({
-  get: () => modalPayload.value !== null,
+  get: () => matchId.value !== undefined,
   set: (val) => {
     if (!val) closeModal();
   }
 });
 
-const match = computed(() => matches.value.find((m) => m.id === modalPayload.value));
+const match = computed(() => matches.value.find((m) => m.id === matchId.value));
 const isMatchStarted = computed(() => !!match.value && clockStore.currentTimestamp >= match.value.timestamp);
 const correctBets = computed(() => calculateCorrectBets(match.value?.away.score ?? 0, match.value?.home.score ?? 0));
 const ribbon = computed(() =>
@@ -211,6 +240,7 @@ watch(
       activeTab.value = 'ficha';
       return;
     }
+    activeTab.value = isMatchStarted.value && activeProfile.value ? 'apostas' : 'ficha';
     matchSummaryStore.fetch(newMatch.espnId, newMatch.status);
   },
   { immediate: true }

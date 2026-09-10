@@ -98,6 +98,7 @@
     <FleaflickerScoresView
       v-else-if="activeTab === 'placares'"
       :scoreboard="scoreboard"
+      :leagueId="activeProfile?.fleaflicker?.leagueId"
       :isLoading="isProfileLoading || isLoadingScoreboard"
       :isLinked="!!activeProfile?.fleaflicker"
       :error="errorScoreboard"

@@ -154,6 +154,10 @@ $colors: (
   --footer-height: 40px;
   --team-component-height: 50px;
 
+  @media (max-width: 1023px) {
+    --p-dialog-content-padding: 0 !important;
+  }
+
   @media (max-width: 1455px) {
     --page-width: 100%;
   }

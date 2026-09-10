@@ -34,7 +34,6 @@
               :isActive="activeProfile?.id === data.user.id"
               :isFavorite="activeProfile?.favorites?.includes(String(data.user.id)) ?? false"
               isClickable
-              showBadge
             />
           </div>
         </div>

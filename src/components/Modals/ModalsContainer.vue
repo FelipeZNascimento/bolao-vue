@@ -40,11 +40,16 @@
     :isOpen="isProjectedStatsModalOpen"
     :handleCloseModal="closeModal"
   />
+  <FleaflickerMatchModal
+    :isOpen="isFleaflickerMatchModalOpen"
+    :handleCloseModal="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import FleaflickerMatchModal from '@/components/Modals/FleaflickerMatchModal.vue';
 import PlayerNewsModal from '@/components/Modals/PlayerNewsModal.vue';
 import ProjectedStatsModal from '@/components/Modals/ProjectedStatsModal.vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
@@ -59,19 +64,24 @@ import SeasonRegisterModal from './SeasonRegisterModal.vue';
 import UserTrackingModal from './UserTrackingModal.vue';
 
 const modalsStore = useModalsStore();
-const { currentModal } = storeToRefs(modalsStore);
+const { modalStack } = storeToRefs(modalsStore);
 const { closeModal } = modalsStore;
 
-const isSeasonRegisterModalOpen = computed(() => currentModal.value === EModal.SeasonRegister);
-const isLoginModalOpen = computed(() => currentModal.value === EModal.Login);
-const isProfileModalOpen = computed(() => currentModal.value === EModal.Profile);
-const isPasswordModalOpen = computed(() => currentModal.value === EModal.Password);
-const isPreferencesModalOpen = computed(() => currentModal.value === EModal.Preferences);
-const isConfigModalOpen = computed(() => currentModal.value === EModal.Config);
-const isPlayerNewsModalOpen = computed(() => currentModal.value === EModal.PlayerNews);
-const isProjectedStatsModalOpen = computed(() => currentModal.value === EModal.ProjectedStats);
-const isUserTrackingModalOpen = computed(() => currentModal.value === EModal.UserTracking);
-const isMatchModalOpen = computed(() => currentModal.value === EModal.Match);
+function isOpen(modal: EModal) {
+  return computed(() => modalStack.value.some((entry) => entry.modal === modal));
+}
+
+const isSeasonRegisterModalOpen = isOpen(EModal.SeasonRegister);
+const isLoginModalOpen = isOpen(EModal.Login);
+const isProfileModalOpen = isOpen(EModal.Profile);
+const isPasswordModalOpen = isOpen(EModal.Password);
+const isPreferencesModalOpen = isOpen(EModal.Preferences);
+const isConfigModalOpen = isOpen(EModal.Config);
+const isPlayerNewsModalOpen = isOpen(EModal.PlayerNews);
+const isProjectedStatsModalOpen = isOpen(EModal.ProjectedStats);
+const isUserTrackingModalOpen = isOpen(EModal.UserTracking);
+const isMatchModalOpen = isOpen(EModal.Match);
+const isFleaflickerMatchModalOpen = isOpen(EModal.FleaflickerMatch);
 
 const { currentSeason } = storeToRefs(useConfigurationStore());
 </script>

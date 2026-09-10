@@ -2,6 +2,7 @@ export interface IFleaflickerInjury {
   typeAbbreviaition: string;
   severity: string;
   typeFull: string;
+  description: string;
 }
 
 export interface IFleaflickerProPlayer {
@@ -180,4 +181,114 @@ export interface IFleaflickerFlatSlot extends IFleaflickerSlot {
   groupLabel: string;
   positionOrder: number;
   slotOrder: number;
+}
+
+// ── Boxscore ──
+
+export interface IFleaflickerMatchPayload {
+  leagueId: number;
+  gameId: string;
+  week: number;
+}
+
+interface IFleaflickerBoxscoreProTeam {
+  abbreviation: string;
+  location: string;
+  name: string;
+}
+
+interface IFleaflickerBoxscoreInjury {
+  typeAbbreviaition?: string;
+  description?: string;
+  severity?: string;
+  typeFull?: string;
+}
+
+export interface IFleaflickerBoxscoreProPlayer {
+  id: number;
+  nameFull: string;
+  nameShort: string;
+  proTeamAbbreviation: string;
+  position: string;
+  headshotUrl?: string;
+  nflByeWeek?: number;
+  nameFirst: string;
+  nameLast: string;
+  proTeam: IFleaflickerBoxscoreProTeam;
+  positionEligibility: string[];
+  percentOwnedRatio?: number;
+  injury?: IFleaflickerBoxscoreInjury;
+}
+
+export interface IFleaflickerBoxscoreStat {
+  category: {
+    id: number;
+    abbreviation: string;
+    nameSingular: string;
+    namePlural: string;
+  };
+  value?: { value?: number; formatted: string };
+}
+
+export interface IFleaflickerBoxscoreSlotPlayer {
+  proPlayer: IFleaflickerBoxscoreProPlayer;
+  viewingProjectedPoints?: { value: number; formatted: string };
+  viewingActualPoints?: { value: number; formatted: string };
+  viewingActualStats: IFleaflickerBoxscoreStat[];
+  viewingProjectedStats: IFleaflickerBoxscoreStat[];
+  owner?: { id: number; name: string; logoUrl?: string; initials?: string };
+}
+
+export interface IFleaflickerBoxscoreSlot {
+  position: {
+    label: string;
+    group: string;
+    eligibility: string[];
+    colors?: string[];
+  };
+  away?: IFleaflickerBoxscoreSlotPlayer;
+  home?: IFleaflickerBoxscoreSlotPlayer;
+  leaguePlayer?: IFleaflickerBoxscoreSlotPlayer;
+  positionColor?: string[];
+}
+
+export interface IFleaflickerBoxscoreLineup {
+  group: string;
+  slots: IFleaflickerBoxscoreSlot[];
+}
+
+export interface IFleaflickerBoxscoreTeam {
+  id: number;
+  name: string;
+  logoUrl?: string;
+  initials?: string;
+  recordOverall?: { formatted: string };
+}
+
+export interface IFleaflickerBoxscoreScore {
+  yetToPlay?: number;
+  alreadyPlayed?: number;
+  score: { value?: number; formatted: string };
+  projected?: { value: number; formatted: string };
+  yetToPlayPositions?: string[];
+  alreadyPlayedPositions?: string[];
+}
+
+export interface IFleaflickerBoxscoreGame {
+  id: string;
+  away: IFleaflickerBoxscoreTeam;
+  home: IFleaflickerBoxscoreTeam;
+  awayScore: IFleaflickerBoxscoreScore;
+  homeScore: IFleaflickerBoxscoreScore;
+  isInProgress?: boolean;
+  isDivisional?: boolean;
+}
+
+export interface IFleaflickerBoxscore {
+  game: IFleaflickerBoxscoreGame;
+  lineups: IFleaflickerBoxscoreLineup[];
+  winProbability?: number;
+  isWinProbabilitySet?: boolean;
+  scoringPeriod: { ordinal: number; startEpochMilli: string; isNow?: boolean };
+  eligiblePeriods: { ordinal: number; startEpochMilli: string; isNow?: boolean }[];
 }

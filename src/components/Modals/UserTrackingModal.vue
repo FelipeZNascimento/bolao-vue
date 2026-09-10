@@ -90,7 +90,7 @@ const props = defineProps<{
 }>();
 
 const { modalPayload } = storeToRefs(useModalsStore());
-const selectedUser = computed(() => modalPayload.value as TUserPayload | null);
+const selectedUser = computed(() => modalPayload.value[0] as TUserPayload | undefined);
 
 // ------ Refs ------
 const isVisible = ref(false);

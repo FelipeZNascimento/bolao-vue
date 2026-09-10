@@ -49,7 +49,9 @@
           <span
             v-if="slot.leaguePlayer.proPlayer.injury"
             class="player-injury"
-            v-tooltip.top="slot.leaguePlayer.proPlayer.injury.typeFull"
+            v-tooltip.top="
+              slot.leaguePlayer.proPlayer.injury.typeFull + ': ' + slot.leaguePlayer.proPlayer.injury.description
+            "
           >
             {{ slot.leaguePlayer.proPlayer.injury.typeAbbreviaition }}
           </span>
@@ -62,7 +64,7 @@
               value: statsTooltip(slot.leaguePlayer),
               disabled: isMobile
             }"
-            @click="openModal(EModal.ProjectedStats, slot.leaguePlayer)"
+            @click="openModal(EModal.ProjectedStats, [slot.leaguePlayer])"
             :aria-label="`Estatísticas de ${slot.leaguePlayer.proPlayer.nameFull}`"
           >
             <template v-if="game?.pointsActual">
@@ -109,7 +111,7 @@
           value: slot.leaguePlayer.proPlayer.news[0].title,
           disabled: isMobile
         }"
-        @click="openModal(EModal.PlayerNews, slot.leaguePlayer.proPlayer.news[0])"
+        @click="openModal(EModal.PlayerNews, slot.leaguePlayer.proPlayer.news)"
         :aria-label="`Notícias de ${slot.leaguePlayer.proPlayer.nameFull}`"
       >
         <i class="pi pi-file" />

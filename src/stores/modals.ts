@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { IUser } from './activeProfile.types';
-import type { IFleaflickerLeaguePlayer, IFleaflickerNews } from './fleaflicker.types';
+import type { IFleaflickerLeaguePlayer, IFleaflickerMatchPayload, IFleaflickerNews } from './fleaflicker.types';
 
 export enum EModal {
   SeasonRegister = 'seasonRegister',
@@ -13,30 +13,43 @@ export enum EModal {
   Config = 'config',
   PlayerNews = 'playerNews',
   ProjectedStats = 'projectedStats',
-  UserTracking = 'userTracking'
+  UserTracking = 'userTracking',
+  FleaflickerMatch = 'fleaflickerMatch'
 }
 
 export type TUserPayload = Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>;
 
-export type TModalPayload = number | IFleaflickerNews | IFleaflickerLeaguePlayer | TUserPayload;
+export type TModalPayload =
+  | number
+  | IFleaflickerNews
+  | IFleaflickerLeaguePlayer
+  | IFleaflickerMatchPayload
+  | TUserPayload;
+
+interface IModalEntry {
+  modal: EModal;
+  payload: TModalPayload[];
+}
 
 export const useModalsStore = defineStore('modals', () => {
-  const currentModal = ref<EModal | null>(null);
-  const modalPayload = ref<TModalPayload | null>(null);
+  const modalStack = ref<IModalEntry[]>([]);
 
-  function openModal(modal: EModal, payload?: TModalPayload) {
-    currentModal.value = modal;
-    modalPayload.value = payload ?? null;
+  const top = computed(() => modalStack.value[modalStack.value.length - 1]);
+  const currentModal = computed(() => top.value?.modal ?? null);
+  const modalPayload = computed(() => top.value?.payload ?? []);
+
+  function openModal(modal: EModal, payload?: TModalPayload[]) {
+    modalStack.value = [...modalStack.value, { modal, payload: payload ?? [] }];
   }
 
   function closeModal() {
-    currentModal.value = null;
-    modalPayload.value = null;
+    modalStack.value = modalStack.value.slice(0, -1);
   }
 
   return {
     currentModal,
     modalPayload,
+    modalStack,
     openModal,
     closeModal
   };

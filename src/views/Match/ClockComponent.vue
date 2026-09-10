@@ -5,7 +5,10 @@
   >
     <div class="outer-clock-fluid">
       <div class="clock-time">
-        <i class="pi pi-calendar-clock"></i>
+        <i
+          v-if="!isMobile"
+          class="pi pi-calendar-clock"
+        ></i>
         <span style="font-weight: bold">
           {{ clockStore.formattedDate(match.timestamp) }}
         </span>
@@ -75,16 +78,19 @@
       <i class="pi pi-plus-circle icon"></i>
       <div class="clock-time">
         <div>
-          <span style="font-weight: bold; margin-right: var(--xs-spacing)"
-            ><i class="pi pi-calendar-clock"></i> {{ clockStore.formattedDate(match.timestamp) }}</span
-          >
+          <span style="font-weight: bold; margin-right: var(--xs-spacing)">
+            <i
+              v-if="!isMobile"
+              class="pi pi-calendar-clock"
+            ></i>
+            {{ clockStore.formattedDate(match.timestamp) }}
+          </span>
           <span>{{ clockStore.formattedTime(match.timestamp) }}</span>
         </div>
         <div
           style="font-size: var(--xs-font-size)"
           v-if="match.homeTeamOdds || match.overUnder"
         >
-          Odds:
           <span
             style="text-decoration: underline dotted; cursor: help"
             v-tooltip.top="'Diferença de pontos (Negativo: time da casa favorito; Positivo: visitante favorito)'"
@@ -104,7 +110,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { isMobile, isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 import type { Ribbon } from '@/constants/bets';
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
@@ -221,8 +227,8 @@ const isMatchStarted = computed(() => !!match && clockStore.currentTimestamp >= 
   flex-direction: column;
   flex: 1;
 
-  @media (max-width: 1024px) {
-    font-size: var(--s-font-size);
+  @media (max-width: 1023px) {
+    font-size: var(--xs-font-size);
   }
 }
 </style>

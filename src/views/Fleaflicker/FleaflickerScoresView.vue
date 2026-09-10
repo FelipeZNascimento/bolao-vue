@@ -93,12 +93,6 @@
                 proj. {{ game.awayScore.projected.formatted }}
               </span>
               <span
-                v-else
-                class="score-projected"
-              >
-                proj. -
-              </span>
-              <span
                 v-if="game.awayScore.yetToPlay != null"
                 class="yet-to-play"
               >
@@ -141,13 +135,6 @@
                 proj. {{ game.homeScore.projected.formatted }}
               </span>
               <span
-                v-else
-                class="score-projected"
-              >
-                proj. -
-              </span>
-
-              <span
                 v-if="game.homeScore.yetToPlay != null"
                 class="yet-to-play"
               >
@@ -162,14 +149,19 @@
             </div>
           </div>
 
+          <i
+            v-if="game.isDivisional"
+            class="pi pi-shield divisional-icon"
+            v-tooltip.top="'Confronto Divisional'"
+          />
+
           <!-- Footer -->
-          <div class="card-footer">
-            <span
-              v-if="game.isDivisional"
-              class="divisional-badge"
-            >
-              <i class="pi pi-shield" /> Divisional
-            </span>
+          <div
+            class="card-footer"
+            @click="openMatchModal(game)"
+          >
+            <span class="footer-label">Ver Boxscore</span>
+            <i class="pi pi-chevron-right footer-chevron" />
           </div>
         </div>
       </div>
@@ -177,18 +169,36 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { IFleaflickerScoreboard } from '@/stores/fleaflicker.types';
+import type {
+  IFleaflickerMatchPayload,
+  IFleaflickerScoreboard,
+  IFleaflickerScoreboardGame
+} from '@/stores/fleaflicker.types';
+import { EModal, useModalsStore } from '@/stores/modals';
 
 const props = defineProps<{
   scoreboard: IFleaflickerScoreboard | null;
   isLoading: boolean;
   isLinked: boolean;
   error: string | null;
+  leagueId: number | undefined;
 }>();
 
 const emit = defineEmits<{
   (e: 'fetch-week', week: number): void;
 }>();
+
+const { openModal } = useModalsStore();
+
+function openMatchModal(game: IFleaflickerScoreboardGame) {
+  if (!props.leagueId || !props.scoreboard) return;
+  const payload: IFleaflickerMatchPayload = {
+    leagueId: props.leagueId,
+    gameId: game.id,
+    week: props.scoreboard.schedulePeriod.value
+  };
+  openModal(EModal.FleaflickerMatch, [payload]);
+}
 </script>
 <style scoped>
 .scores-view {
@@ -252,6 +262,7 @@ const emit = defineEmits<{
 }
 
 .matchup-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--xs-spacing);
@@ -337,28 +348,49 @@ const emit = defineEmits<{
   line-height: 1;
 }
 
-.card-footer {
-  display: flex;
-  align-items: center;
-  gap: var(--s-spacing);
-  margin-top: var(--xxs-spacing);
-  padding-top: var(--xs-spacing);
-  border-top: 1px solid light-dark(var(--bolao-c-grey2), var(--bolao-c-grey5));
-}
-
 .yet-to-play {
   font-size: var(--xs-font-size);
   color: var(--bolao-c-grey4);
   line-height: 1;
 }
 
-.divisional-badge {
-  margin-left: auto;
+.divisional-icon {
+  position: absolute;
+  top: var(--xs-spacing);
+  right: var(--xs-spacing);
   font-size: 0.65rem;
   color: var(--bolao-c-gold);
+  opacity: 0.85;
+  cursor: default;
+}
+
+.card-footer {
   display: flex;
   align-items: center;
-  gap: 0.2rem;
-  opacity: 0.85;
+  justify-content: space-between;
+  gap: var(--xs-spacing);
+  margin-top: var(--xs-spacing);
+  padding-top: var(--xs-spacing);
+  border-top: 1px solid light-dark(var(--bolao-c-grey2), var(--bolao-c-grey5));
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.footer-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--p-text-muted-color);
+}
+
+.footer-chevron {
+  font-size: 0.6rem;
+  color: var(--p-text-muted-color);
 }
 </style>

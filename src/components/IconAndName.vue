@@ -5,8 +5,8 @@
     @click="handleUserClick()"
   >
     <div
-      v-if="showBadge"
       class="badge-wrapper"
+      v-if="showOnlineBadge"
     >
       <div
         class="badge"
@@ -26,7 +26,6 @@
         class="pi pi-star-fill favorite-badge"
       />
     </span>
-
     <span
       class="username"
       :class="{ active: isActive }"
@@ -46,7 +45,8 @@ const props = withDefaults(
     isFavorite?: boolean;
     isShort?: boolean;
     isClickable?: boolean;
-    showBadge?: boolean;
+    showIcon?: boolean;
+    showOnlineBadge?: boolean;
     user: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>;
   }>(),
   {
@@ -54,7 +54,8 @@ const props = withDefaults(
     isClickable: false,
     isFavorite: false,
     isShort: false,
-    showBadge: false
+    showIcon: true,
+    showOnlineBadge: true
   }
 );
 
@@ -62,7 +63,7 @@ const { openModal } = useModalsStore();
 
 function handleUserClick() {
   if (!props.isClickable) return;
-  openModal(EModal.UserTracking, props.user);
+  openModal(EModal.UserTracking, [props.user]);
 }
 </script>
 <style lang="scss" scoped>
@@ -71,20 +72,29 @@ function handleUserClick() {
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 120px;
+  max-width: 100%;
 }
 
 .outer {
   display: flex;
   align-items: center;
   flex-direction: row;
+  gap: var(--xs-spacing);
 }
 .username {
   padding: 0 var(--s-spacing);
+  @media (max-width: 1023px) {
+    padding: 0;
+  }
 }
 
 .usericon {
   position: relative;
   width: 20px;
+
+  @media (max-width: 1023px) {
+    width: 16px;
+  }
 }
 
 .favorite-badge {
@@ -94,6 +104,11 @@ function handleUserClick() {
   font-size: 8px;
   color: var(--bolao-c-gold);
   pointer-events: none;
+
+  @media (max-width: 1023px) {
+    font-size: 6px;
+    left: 8px;
+  }
 }
 
 .active {

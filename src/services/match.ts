@@ -100,7 +100,7 @@ export default class MatchService {
     // If match modal is open, update the match summary
     if (modalStore.currentModal === EModal.Match) {
       const matchSummaryStore = useMatchSummaryStore();
-      const matchId = modalStore.modalPayload;
+      const matchId = modalStore.modalPayload[0] as number;
       const match = matchesStore.matches.find((m) => m.id === matchId);
 
       if (!match) return;
