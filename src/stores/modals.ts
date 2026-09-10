@@ -34,8 +34,9 @@ interface IModalEntry {
 export const useModalsStore = defineStore('modals', () => {
   const modalStack = ref<IModalEntry[]>([]);
 
-  const currentModal = computed(() => modalStack.value.at(-1)?.modal ?? null);
-  const modalPayload = computed(() => modalStack.value.at(-1)?.payload ?? []);
+  const top = computed(() => modalStack.value[modalStack.value.length - 1]);
+  const currentModal = computed(() => top.value?.modal ?? null);
+  const modalPayload = computed(() => top.value?.payload ?? []);
 
   function openModal(modal: EModal, payload?: TModalPayload[]) {
     modalStack.value = [...modalStack.value, { modal, payload: payload ?? [] }];
