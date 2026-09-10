@@ -26,7 +26,10 @@
         panels: { style: 'flex: 1; min-height: 0; display: flex; flex-direction: column;' }
       }"
     >
-      <PrimeTabList class="modal-tab-list">
+      <PrimeTabList
+        class="modal-tab-list"
+        v-if="isMatchStarted"
+      >
         <PrimeTab
           v-if="activeProfile && isMatchStarted"
           value="apostas"
@@ -158,7 +161,7 @@ const dialogPt = computed(() => ({
 
 const TAB_ORDER = ['apostas', 'ficha', 'drives', 'estatisticas'] as const;
 
-const activeTab = ref<(typeof TAB_ORDER)[number]>(activeProfile.value ? 'apostas' : 'ficha');
+const activeTab = ref<(typeof TAB_ORDER)[number]>('ficha');
 const tabPanelsRef = ref<{ $el: HTMLElement } | null>(null);
 let swipeStartX = 0;
 
@@ -237,6 +240,7 @@ watch(
       activeTab.value = 'ficha';
       return;
     }
+    activeTab.value = isMatchStarted.value && activeProfile.value ? 'apostas' : 'ficha';
     matchSummaryStore.fetch(newMatch.espnId, newMatch.status);
   },
   { immediate: true }

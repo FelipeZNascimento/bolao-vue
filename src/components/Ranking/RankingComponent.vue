@@ -110,6 +110,7 @@ const filteredWeekRanking = computed(() => {
 
 .ranking-container {
   max-height: calc(100% - 50px);
+  min-width: 360px;
   overflow-y: auto;
 }
 

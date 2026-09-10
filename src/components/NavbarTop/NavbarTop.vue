@@ -41,7 +41,10 @@
               variant="outlined"
               severity="secondary"
             >
-              <IconAndName :user="activeProfile" />
+              <IconAndName
+                :user="activeProfile"
+                :showOnlineBadge="false"
+              />
             </PrimeButton>
             <PrimeButton
               v-else

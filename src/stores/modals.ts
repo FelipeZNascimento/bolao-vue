@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { IUser } from './activeProfile.types';
 import type { IFleaflickerLeaguePlayer, IFleaflickerMatchPayload, IFleaflickerNews } from './fleaflicker.types';
 
@@ -26,23 +26,29 @@ export type TModalPayload =
   | IFleaflickerMatchPayload
   | TUserPayload;
 
+interface IModalEntry {
+  modal: EModal;
+  payload: TModalPayload[];
+}
+
 export const useModalsStore = defineStore('modals', () => {
-  const currentModal = ref<EModal | null>(null);
-  const modalPayload = ref<TModalPayload[]>([]);
+  const modalStack = ref<IModalEntry[]>([]);
+
+  const currentModal = computed(() => modalStack.value.at(-1)?.modal ?? null);
+  const modalPayload = computed(() => modalStack.value.at(-1)?.payload ?? []);
 
   function openModal(modal: EModal, payload?: TModalPayload[]) {
-    currentModal.value = modal;
-    modalPayload.value = payload ?? [];
+    modalStack.value = [...modalStack.value, { modal, payload: payload ?? [] }];
   }
 
   function closeModal() {
-    currentModal.value = null;
-    modalPayload.value = [];
+    modalStack.value = modalStack.value.slice(0, -1);
   }
 
   return {
     currentModal,
     modalPayload,
+    modalStack,
     openModal,
     closeModal
   };

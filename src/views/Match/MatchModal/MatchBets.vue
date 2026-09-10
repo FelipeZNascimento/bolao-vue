@@ -57,15 +57,12 @@ defineProps<{
   padding: 0;
   height: 100%;
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .bets-grid {
   display: flex;
   gap: 0;
-
-  @media (max-width: 575px) {
-    flex-direction: column;
-  }
 }
 
 .bets-side {

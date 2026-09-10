@@ -17,16 +17,20 @@
     <!-- Render active user bet first -->
     <div
       class="bets-line"
+      :style="{
+        boxShadow: `inset 3px 0 0 ${activeUserBet.user.color}`,
+        backgroundColor: `color-mix(in srgb, ${activeUserBet.user.color} 12%, transparent)`
+      }"
       v-if="activeUserBet && activeUserBet?.value === columnValue"
       :key="activeUserBet.id"
     >
       <IconAndName
-        v-if="!isMobile"
         isActive
         isClickable
         :user="activeUserBet.user"
+        :showOnlineBadge="false"
+        isShort
       />
-      <span v-else>{{ activeUserBet.user.name }}</span>
     </div>
     <!-- Render remaining bets -->
     <div
@@ -35,19 +39,22 @@
       :key="bet.id"
     >
       <IconAndName
-        v-if="!isMobile"
-        isClickable
         :user="bet.user"
+        :isFavorite="activeProfile?.favorites?.includes(String(bet.user.id)) ?? false"
+        isClickable
+        :showOnlineBadge="false"
+        isShort
       />
-      <span v-else>{{ bet.user.name }}</span>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import IconAndName from '@/components/IconAndName.vue';
 import { BETS_LABELS, type BetsValues } from '@/constants/bets';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import type { IBet } from '@/stores/matches.types';
 import { type CorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
@@ -59,6 +66,8 @@ const props = defineProps<{
 }>();
 
 // ------ Computed Properties ------
+const { activeProfile } = storeToRefs(useActiveProfileStore());
+
 const isBullseyeColumn = computed(() => isBullseye(props.correctBets, props.columnValue));
 const isHalfBetColumn = computed(() => isHalfBet(props.correctBets, props.columnValue));
 const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.value);
@@ -77,7 +86,7 @@ const headerIcon = computed(() => {
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
-  padding: var(--xs-spacing);
+  padding: var(--xs-spacing) 0;
 }
 
 .bullseye-col {
@@ -122,5 +131,11 @@ const headerIcon = computed(() => {
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
+  font-size: var(--xs-font-size);
+  padding-left: var(--s-spacing);
+
+  @media (max-width: 1023px) {
+    font-size: var(--xxs-font-size);
+  }
 }
 </style>
