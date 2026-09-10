@@ -40,11 +40,16 @@
     :isOpen="isProjectedStatsModalOpen"
     :handleCloseModal="closeModal"
   />
+  <FleaflickerMatchModal
+    :isOpen="isFleaflickerMatchModalOpen"
+    :handleCloseModal="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import FleaflickerMatchModal from '@/components/Modals/FleaflickerMatchModal.vue';
 import PlayerNewsModal from '@/components/Modals/PlayerNewsModal.vue';
 import ProjectedStatsModal from '@/components/Modals/ProjectedStatsModal.vue';
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
@@ -72,6 +77,7 @@ const isPlayerNewsModalOpen = computed(() => currentModal.value === EModal.Playe
 const isProjectedStatsModalOpen = computed(() => currentModal.value === EModal.ProjectedStats);
 const isUserTrackingModalOpen = computed(() => currentModal.value === EModal.UserTracking);
 const isMatchModalOpen = computed(() => currentModal.value === EModal.Match);
+const isFleaflickerMatchModalOpen = computed(() => currentModal.value === EModal.FleaflickerMatch);
 
 const { currentSeason } = storeToRefs(useConfigurationStore());
 </script>

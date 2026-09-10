@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { IUser } from './activeProfile.types';
-import type { IFleaflickerLeaguePlayer, IFleaflickerNews } from './fleaflicker.types';
+import type { IFleaflickerLeaguePlayer, IFleaflickerMatchPayload, IFleaflickerNews } from './fleaflicker.types';
 
 export enum EModal {
   SeasonRegister = 'seasonRegister',
@@ -13,12 +13,18 @@ export enum EModal {
   Config = 'config',
   PlayerNews = 'playerNews',
   ProjectedStats = 'projectedStats',
-  UserTracking = 'userTracking'
+  UserTracking = 'userTracking',
+  FleaflickerMatch = 'fleaflickerMatch'
 }
 
 export type TUserPayload = Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>;
 
-export type TModalPayload = number | IFleaflickerNews | IFleaflickerLeaguePlayer | TUserPayload;
+export type TModalPayload =
+  | number
+  | IFleaflickerNews
+  | IFleaflickerLeaguePlayer
+  | IFleaflickerMatchPayload
+  | TUserPayload;
 
 export const useModalsStore = defineStore('modals', () => {
   const currentModal = ref<EModal | null>(null);
